@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\beberbuilds\" -Force)",
+      "Bash(Select-Object Name, Mode, LastWriteTime)",
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest add button card --yes)",
+      "PowerShell(& \"d:\\\\beberbuilds\\\\nexora\\\\node_modules\\\\.bin\\\\tsc.ps1\" --noEmit --pretty 2>&1 | Select-Object -First 80)",
+      "Bash(npx next *)",
+      "Bash(taskkill //PID 23400 //F)",
+      "Bash(dir D:\\\\beberbuilds *)",
+      "PowerShell(Get-ChildItem -Recurse -File \"D:\\\\beberbuilds\\\\nexora\\\\app\" | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Recurse -File \"D:\\\\beberbuilds\\\\nexora\\\\lib\" | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Recurse -File \"D:\\\\beberbuilds\\\\nexora\\\\public\" | ForEach-Object { $_.FullName })",
+      "Bash(Remove-Item *)",
+      "Bash(npx *)",
+      "Bash(npm ls *)",
+      "Bash(reg query *)",
+      "Bash(where chrome *)",
+      "Bash(where msedge *)",
+      "Bash(PUPPETEER_SKIP_DOWNLOAD=true npm install *)",
+      "Bash(node *)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill /PID 20608 /F)",
+      "Bash(Start-Sleep -Seconds 2)",
+      "PowerShell($response = Invoke-WebRequest -Uri \"http://localhost:3090/projects/xaubot-v2\" -UseBasicParsing; Write-Host \"Status: $\\($response.StatusCode\\)\"; Write-Host \"Title match: $\\($response.Content -match 'XAUBOT v2'\\)\"; Write-Host \"Description match: $\\($response.Content -match 'Automated XAU/USD trading bot'\\)\")",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/projects/xaubot-v2\" -UseBasicParsing; Write-Host \"Status: $\\($r.StatusCode\\)\"; Write-Host \"XAUBOT: $\\($r.Content -match 'XAUBOT v2'\\)\")",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/projects/zyn-consultancy\" -UseBasicParsing; Write-Host \"Status: $\\($r.StatusCode\\)\"; Write-Host \"Zyn: $\\($r.Content -match 'Zyn Consultancy'\\)\"; Write-Host \"WordPress: $\\($r.Content -match 'WordPress'\\)\")",
+      "PowerShell(Copy-Item *)",
+      "Bash(Get-ChildItem *)",
+      "PowerShell(Get-ChildItem -Recurse -Name -Depth 2 | Where-Object { $_ -notmatch 'node_modules' -and $_ -notmatch '\\\\.claude' })",
+      "Bash(Test-Path .gitignore *)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git rm *)"
+    ]
+  }
+}

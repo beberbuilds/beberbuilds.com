@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>XAUBOT v2 Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--gold:#C9A84C;--gold-light:#F0D080;--gold-dim:#8A6B2A;
+--bg:#0B0D0F;--surface:#12151A;--surface2:#1A1E26;--surface3:#222830;
+--border:#2A3040;--text:#E8EAF0;--muted:#6B7385;--green:#3DDC84;--red:#FF5F5F;
+}
+body{background:var(--bg);font-family:'Space Grotesk',sans-serif;color:var(--text);padding:24px;display:flex;justify-content:center}
+.shell{width:100%;max-width:820px;margin:0 auto;padding:16px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:14px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;color:#0B0D0F}
+.logo-text{font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo-text span{color:var(--gold)}
+.badge{background:#1A2A1A;border:1px solid #3DDC8440;color:var(--green);font-size:11px;padding:4px 10px;border-radius:20px;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pair-tag{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.metric-label{font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px}
+.metric-val{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600}
+.metric-val.up{color:var(--green)}
+.metric-val.down{color:var(--red)}
+.metric-val.gold{color:var(--gold)}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.main{display:grid;grid-template-columns:1fr 280px;gap:10px;margin-bottom:14px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.chip{font-size:11px;font-family:'IBM Plex Mono',monospace;background:var(--surface3);border:1px solid var(--border);padding:3px 10px;border-radius:20px;color:var(--muted)}
+svg.equity{width:100%;overflow:visible}
+.trades-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;overflow:hidden}
+.trade-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.trade-row:last-child{border:none}
+.trade-dir{font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace}
+.trade-dir.long{background:#1A2A1A;color:var(--green)}
+.trade-dir.short{background:#2A1A1A;color:var(--red)}
+.trade-info{flex:1;padding:0 10px}
+.trade-time{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.trade-price{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--text)}
+.trade-pnl{font-size:13px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.trade-pnl.win{color:var(--green)}
+.trade-pnl.loss{color:var(--red)}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.filters-card,.stats-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.filter-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.filter-row:last-child{border:none}
+.filter-label{font-size:12px;color:var(--muted)}
+.filter-val{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--gold)}
+.toggle{width:36px;height:20px;background:#2A3040;border-radius:20px;position:relative;cursor:pointer}
+.toggle.on{background:var(--gold-dim)}
+.toggle:after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.2s}
+.toggle.on:after{left:19px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-label{font-size:11px;color:var(--muted);width:55px;text-align:right;font-family:'IBM Plex Mono',monospace}
+.bar-bg{flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px}
+.bar-fill.up{background:var(--green)}
+.bar-fill.dn{background:var(--red)}
+.bar-val{font-size:11px;font-family:'IBM Plex Mono',monospace;width:40px;color:var(--text)}
+.session-row{display:flex;gap:8px;margin-top:10px}
+.session{flex:1;background:var(--surface3);border-radius:8px;padding:8px;text-align:center}
+.session-name{font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.session-val{font-size:14px;font-weight:600;font-family:'IBM Plex Mono',monospace;color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">XAU</div>
+      <div>
+        <div class="logo-text">XAUBOT <span>v2</span></div>
+        <div class="pair-tag">XAUUSD · FTMO Demo · MT5</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="chip">H1 Trend Filter &#10003;</div>
+      <div class="badge"><span class="dot"></span>LIVE</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Net P&amp;L</div><div class="metric-val up">+$160</div><div class="metric-sub">50 trades closed</div></div>
+    <div class="metric"><div class="metric-label">Win Rate</div><div class="metric-val gold">52%</div><div class="metric-sub">26W / 24L</div></div>
+    <div class="metric"><div class="metric-label">SHORT Bias</div><div class="metric-val down">+15 / &#8722;5</div><div class="metric-sub">Boosted SHORT edge</div></div>
+    <div class="metric"><div class="metric-label">BE Trigger</div><div class="metric-val gold">0.90</div><div class="metric-sub">Break-even level</div></div>
+  </div>
+  <div class="main">
+    <div class="chart-card">
+      <div class="card-header"><div class="card-title">Equity Curve</div><div class="chip">50 trades</div></div>
+      <svg class="equity" viewBox="0 0 460 160">
+        <defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3DDC84" stop-opacity=".25"/><stop offset="100%" stop-color="#3DDC84" stop-opacity="0"/></linearGradient></defs>
+        <path d="M0,140 C20,135 30,138 50,130 C70,122 80,128 100,120 C120,112 130,118 150,105 C170,92 180,100 200,90 C220,80 230,87 250,72 C270,57 280,65 300,55 C320,45 330,50 350,38 C370,26 380,35 400,22 C420,10 440,18 460,8" fill="none" stroke="#3DDC84" stroke-width="2" stroke-linecap="round"/>
+        <path d="M0,140 C20,135 30,138 50,130 C70,122 80,128 100,120 C120,112 130,118 150,105 C170,92 180,100 200,90 C220,80 230,87 250,72 C270,57 280,65 300,55 C320,45 330,50 350,38 C370,26 380,35 400,22 C420,10 440,18 460,8 L460,160 L0,160Z" fill="url(#eqg)"/>
+        <line x1="0" y1="140" x2="460" y2="140" stroke="#2A3040" stroke-width="1"/>
+        <text x="0" y="155" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B7385">$0</text>
+        <text x="430" y="12" font-family="IBM Plex Mono,monospace" font-size="9" fill="#3DDC84">+$160</text>
+        <circle cx="460" cy="8" r="4" fill="#3DDC84"/>
+        <line x1="150" y1="0" x2="150" y2="160" stroke="#2A3040" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="153" y="22" font-family="IBM Plex Mono,monospace" font-size="9" fill="#C9A84C">H1 fix</text>
+      </svg>
+    </div>
+    <div class="trades-card">
+      <div class="card-header"><div class="card-title">Recent Trades</div></div>
+      <div class="trade-row"><div class="trade-dir short">SHORT</div><div class="trade-info"><div class="trade-price">2374.80</div><div class="trade-time">14:32 · H1</div></div><div class="trade-pnl win">+$18</div></div>
+      <div class="trade-row"><div class="trade-dir long">LONG</div><div class="trade-info"><div class="trade-price">2368.20</div><div class="trade-time">11:05 · H1</div></div><div class="trade-pnl loss">&#8722;$7</div></div>
+      <div class="trade-row"><div class="trade-dir short">SHORT</div><div class="trade-info"><div class="trade-price">2381.50</div><div class="trade-time">09:14 · H1</div></div><div class="trade-pnl win">+$22</div></div>
+      <div class="trade-row"><div class="trade-dir short">SHORT</div><div class="trade-info"><div class="trade-price">2377.10</div><div class="trade-time">08:50 · H1</div></div><div class="trade-pnl win">+$14</div></div>
+      <div class="trade-row"><div class="trade-dir long">LONG</div><div class="trade-info"><div class="trade-price">2360.90</div><div class="trade-time">07:22 · H1</div></div><div class="trade-pnl loss">&#8722;$5</div></div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="filters-card">
+      <div class="card-header"><div class="card-title">Bot Config</div></div>
+      <div class="filter-row"><div class="filter-label">H1 Trend Filter</div><div class="toggle on"></div></div>
+      <div class="filter-row"><div class="filter-label">SHORT Bias Boost</div><div class="filter-val">+15 / &#8722;5</div></div>
+      <div class="filter-row"><div class="filter-label">Break-Even Trigger</div><div class="filter-val">0.90</div></div>
+      <div class="filter-row"><div class="filter-label">Pair</div><div class="filter-val">XAU/USD</div></div>
+      <div class="filter-row"><div class="filter-label">Platform</div><div class="filter-val">MT5 + Python</div></div>
+    </div>
+    <div class="stats-card">
+      <div class="card-header"><div class="card-title">Session Breakdown</div></div>
+      <div class="bar-row"><div class="bar-label">LONG</div><div class="bar-bg"><div class="bar-fill up" style="width:48%"></div></div><div class="bar-val">48%</div></div>
+      <div class="bar-row"><div class="bar-label">SHORT</div><div class="bar-bg"><div class="bar-fill up" style="width:52%"></div></div><div class="bar-val">52%</div></div>
+      <div class="bar-row" style="margin-top:8px"><div class="bar-label">WIN</div><div class="bar-bg"><div class="bar-fill up" style="width:52%"></div></div><div class="bar-val">52%</div></div>
+      <div class="bar-row"><div class="bar-label">LOSS</div><div class="bar-bg"><div class="bar-fill dn" style="width:48%"></div></div><div class="bar-val">48%</div></div>
+      <div class="session-row">
+        <div class="session"><div class="session-name">London</div><div class="session-val">+$68</div></div>
+        <div class="session"><div class="session-name">NY</div><div class="session-val">+$92</div></div>
+        <div class="session"><div class="session-name">Asia</div><div class="session-val">0</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
