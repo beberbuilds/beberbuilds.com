@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ArrowLeft, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CalendlyModal from "@/components/calendly-modal";
 import { projects } from "@/lib/data";
 
 function CountUp({ target, suffix, isInView }: { target: number; suffix: string; isInView: boolean }) {
@@ -54,6 +55,7 @@ export default function ProjectDetailContent({ slug }: { slug: string }) {
   const nextProject = projects.find((p) => p.slug === project?.nextProjectSlug) ?? null;
   const resultsRef = useRef(null);
   const resultsInView = useInView(resultsRef, { once: true, margin: "-80px" });
+  const [calendlyOpen, setCalendlyOpen] = useState(false);
 
   if (!project) notFound();
 
@@ -102,7 +104,10 @@ export default function ProjectDetailContent({ slug }: { slug: string }) {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] group w-full sm:w-auto tap-area">
+              <Button
+                onClick={() => setCalendlyOpen(true)}
+                className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] group w-full sm:w-auto tap-area"
+              >
                 Book a Free Call
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -338,6 +343,8 @@ export default function ProjectDetailContent({ slug }: { slug: string }) {
           )}
         </div>
       </section>
+
+      <CalendlyModal open={calendlyOpen} onClose={() => setCalendlyOpen(false)} />
     </>
   );
 }

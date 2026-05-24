@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ArrowLeft, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CalendlyModal from "@/components/calendly-modal";
 import { serviceDetails } from "@/lib/data";
 
 const containerVariants = {
@@ -57,6 +58,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 export default function ServiceDetailContent({ slug }: { slug: string }) {
   const service = serviceDetails.find((s) => s.slug === slug);
   const overviewRef = useRef(null);
+  const [calendlyOpen, setCalendlyOpen] = useState(false);
 
   if (!service) notFound();
 
@@ -398,12 +400,13 @@ export default function ServiceDetailContent({ slug }: { slug: string }) {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link href="/#contact">
-                  <Button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] group w-full sm:w-auto tap-area">
-                    Book a Free Call
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => setCalendlyOpen(true)}
+                  className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] group w-full sm:w-auto tap-area"
+                >
+                  Book a Free Call
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
                 <Link href="/#services">
                   <Button
                     variant="outline"
@@ -418,6 +421,8 @@ export default function ServiceDetailContent({ slug }: { slug: string }) {
           </motion.div>
         </div>
       </section>
+
+      <CalendlyModal open={calendlyOpen} onClose={() => setCalendlyOpen(false)} />
     </>
   );
 }

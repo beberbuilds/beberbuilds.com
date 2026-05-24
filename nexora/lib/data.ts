@@ -238,55 +238,55 @@ export const projects: Project[] = [
       { value: 100, suffix: "%", label: "Mobile Responsive" },
       { value: 1, suffix: "st", label: "Month — Bookings Received" },
     ],
-    nextProjectSlug: "browser-pet-app",
+    nextProjectSlug: "retail-business-management-erp",
   },
   {
-    slug: "browser-pet-app",
+    slug: "retail-business-management-erp",
     image: "/project3.png",
-    title: "Browser Pet App",
+    title: "Retail & Business Management ERP",
     description:
-      "Interactive browser extension pet that keeps users company, reacts to browsing behaviour and boosts productivity through gamification.",
-    tags: ["Chrome API", "TypeScript", "Canvas", "Firebase"],
-    client: "PixelPals Studio",
-    year: "2024",
-    role: "Extension Development & Game Design",
+      "Offline-first desktop ERP for retail stores, wholesalers, and distribution businesses — POS, inventory, HR, payroll, finance, and e-commerce orders in a single Electron + React application with local IndexedDB storage.",
+    tags: ["Electron", "React", "TypeScript", "IndexedDB", "TailwindCSS"],
+    client: "Personal Project",
+    year: "2025",
+    role: "Full-stack Desktop Development & Architecture",
     overview: {
       challenge:
-        "PixelPals wanted to combat digital loneliness and procrastination with an engaging browser companion. The challenge was creating a lightweight extension that felt alive without draining system resources or compromising user privacy.",
+        "Small and medium retail businesses and wholesalers rely on expensive cloud-based ERP software that requires constant internet — a serious problem in regions with unreliable connectivity. They also juggle disconnected tools for sales, inventory, HR, and finance, resulting in manual data entry, poor stock visibility, and operational bottlenecks that eat into margins.",
       solution:
-        "We designed a canvas-rendered virtual pet that lives in the browser sidebar. It reacts to browsing behavior — celebrating productive sessions, nudging during distractions, and evolving over time through a gamified progression system.",
+        "Built a complete offline desktop ERP application using Electron and React with IndexedDB for local persistent storage. The system centralizes 12+ business modules — POS, sales & invoicing, inventory management, procurement, customers & suppliers, HR & payroll, attendance & leaves, finance & expenses, e-commerce orders, and reports & analytics — into a single installable desktop app that runs at native speed with zero internet dependency.",
     },
     features: [
       {
-        icon: Smartphone,
-        title: "Behavior-Aware AI",
+        icon: Database,
+        title: "Offline-First Architecture",
         description:
-          "The pet observes browsing patterns locally and responds with contextual animations — cheering during focused work and gently nudging on social media.",
+          "All business data stored locally via IndexedDB using the idb library. Zero server dependency — the application runs at native desktop speed with no network latency, functioning fully without internet access.",
       },
       {
-        icon: Sparkles,
-        title: "Gamified Progression",
+        icon: Layers,
+        title: "12+ Integrated Business Modules",
         description:
-          "Users earn XP for productive browsing streaks, unlock new pet accessories and environments, and level up through 20+ evolution stages.",
+          "POS, sales & invoicing, inventory management, product catalog, customers & suppliers, purchases, HR & payroll, attendance & leaves, finance & expenses, e-commerce orders, and reports — all in one cohesive platform.",
       },
       {
-        icon: Shield,
-        title: "Privacy-First Design",
+        icon: FileText,
+        title: "Inventory Auditing System",
         description:
-          "All behavior analysis runs entirely on-device using local models. Zero browsing data leaves the user's machine — fully GDPR and CCPA compliant.",
+          "Dedicated stockMovements store tracks every inventory change with product reference, warehouse, movement type, timestamp, and source reference — enabling full audit trails, history tracking, and analytics generation.",
       },
       {
-        icon: Bot,
-        title: "Companion Personalities",
+        icon: BarChart3,
+        title: "Real-Time Dashboard & Analytics",
         description:
-          "Choose from 8 distinct pet personalities, each with unique animations, sound effects and interaction styles that evolve based on user behavior.",
+          "Revenue trends, sales analytics, inventory insights, and business metrics rendered with Recharts. Dashboard loads instantly from local data with no API calls — executives get answers in milliseconds.",
       },
     ],
     results: [
-      { value: 25, suffix: "K+", label: "Active Users" },
-      { value: 4.8, suffix: "★", label: "Chrome Store Rating" },
-      { value: 40, suffix: "%", label: "Productivity Boost" },
-      { value: 20, suffix: "min", label: "Avg. Daily Session" },
+      { value: 12, suffix: "+", label: "Business Modules" },
+      { value: 100, suffix: "%", label: "Offline Functionality" },
+      { value: 25, suffix: "+", label: "IndexedDB Stores" },
+      { value: 0, suffix: "", label: "Monthly Cloud Costs" },
     ],
     nextProjectSlug: "xaubot-v2",
   },

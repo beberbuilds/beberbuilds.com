@@ -56,7 +56,14 @@ export default function About() {
               ))}
             </div>
 
-            <Button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 sm:px-7 py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] w-full sm:w-auto tap-area">
+            <Button
+              onClick={() =>
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 sm:px-7 py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] w-full sm:w-auto tap-area"
+            >
               Learn More About Us
             </Button>
           </motion.div>

@@ -1,13 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import SectionWrapper from "./section-wrapper";
 import { Button } from "@/components/ui/button";
+import CalendlyModal from "@/components/calendly-modal";
 
 export default function CTABanner() {
+  const [calendlyOpen, setCalendlyOpen] = useState(false);
+
   return (
-    <SectionWrapper className="py-20 sm:py-24">
+    <>
+      <SectionWrapper className="py-20 sm:py-24">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
@@ -32,7 +37,10 @@ export default function CTABanner() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 sm:px-7 py-6 sm:py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] group w-full sm:w-auto tap-area">
+              <Button
+                onClick={() => setCalendlyOpen(true)}
+                className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-6 sm:px-7 py-6 sm:py-6 text-[15px] sm:text-sm font-medium transition-all duration-300 hover:shadow-[0_0_35px_rgba(124,58,237,0.45)] group w-full sm:w-auto tap-area"
+              >
                 Book a Free Call
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -47,6 +55,10 @@ export default function CTABanner() {
           </div>
         </motion.div>
       </div>
+
     </SectionWrapper>
+
+    <CalendlyModal open={calendlyOpen} onClose={() => setCalendlyOpen(false)} />
+    </>
   );
 }

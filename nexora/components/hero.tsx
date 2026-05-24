@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Bot, Globe, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CalendlyModal from "@/components/calendly-modal";
 
 const floatingCards = [
   { icon: Bot, label: "AI Automations", delay: 0 },
@@ -18,6 +20,8 @@ const avatars = [
 ];
 
 export default function Hero() {
+  const [calendlyOpen, setCalendlyOpen] = useState(false);
+
   return (
     <section
       id="home"
@@ -83,7 +87,10 @@ export default function Hero() {
                 transition={{ duration: 0.5, delay: 0.45 }}
                 className="w-full sm:w-auto"
               >
-                <Button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-7 py-6 sm:py-6 text-[15px] sm:text-sm font-semibold transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] active:scale-[0.98] group w-full tap-area">
+                <Button
+                  onClick={() => setCalendlyOpen(true)}
+                  className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-7 py-6 sm:py-6 text-[15px] sm:text-sm font-semibold transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] active:scale-[0.98] group w-full tap-area"
+                >
                   Book a Free Call
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform duration-200" />
                 </Button>
@@ -267,6 +274,8 @@ export default function Hero() {
           </motion.div>
         </div>
       </div>
+
+      <CalendlyModal open={calendlyOpen} onClose={() => setCalendlyOpen(false)} />
     </section>
   );
 }
