@@ -1,1 +1,0 @@
-{"buildCommand": "cd nexora && npm run build","outputDirectory": "nexora/.next","installCommand": "cd nexora && npm install","framework": "nextjs"}
