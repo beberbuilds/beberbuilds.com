@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Crypto Arb Bot — Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#7C5CFC;
+  --purple-light:#A98BFF;
+  --purple-dim:#4A3A99;
+  --blue:#4C9EFC;
+  --bg:#080A0F;
+  --surface:#0F1219;
+  --surface2:#161B26;
+  --surface3:#1E2535;
+  --border:#252D3D;
+  --text:#E8EAF0;
+  --muted:#6B7590;
+  --green:#3DDC84;
+  --red:#FF5F5F;
+  --yellow:#F0C040;
+}
+body{background:var(--bg);font-family:'Space Grotesk',sans-serif;color:var(--text);min-height:100vh}
+
+/* ── Layout ──────────────────────────────────────────────── */
+.shell{max-width:1280px;margin:0 auto;padding:20px 24px}
+
+/* ── Top Bar ─────────────────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;margin-bottom:16px;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--purple),var(--purple-dim));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:11px;color:#fff;
+  letter-spacing:-0.5px;
+}
+.logo-text{font-weight:700;font-size:16px;letter-spacing:0.3px}
+.logo-text span{color:var(--purple-light)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.badge{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(61,220,132,0.08);border:1px solid rgba(61,220,132,0.25);
+  color:var(--green);font-size:11px;padding:5px 12px;border-radius:20px;
+  font-family:'IBM Plex Mono',monospace;
+}
+.badge.paper{background:rgba(240,192,64,0.08);border-color:rgba(240,192,64,0.25);color:var(--yellow)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.scan-ts{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;
+}
+
+/* ── Stat Cards ──────────────────────────────────────────── */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:540px){.metrics{grid-template-columns:1fr}}
+.metric{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;position:relative;overflow:hidden;
+}
+.metric::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--purple),var(--blue));opacity:0.6;
+}
+.metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.metric-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;line-height:1}
+.metric-val.up{color:var(--green)}
+.metric-val.down{color:var(--red)}
+.metric-val.purple{color:var(--purple-light)}
+.metric-val.blue{color:var(--blue)}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:5px}
+
+/* ── Main Grid ───────────────────────────────────────────── */
+.main-grid{display:grid;grid-template-columns:1fr 380px;gap:14px;margin-bottom:14px}
+@media(max-width:1024px){.main-grid{grid-template-columns:1fr}}
+
+/* ── Card base ───────────────────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.chip{
+  font-size:10px;font-family:'IBM Plex Mono',monospace;
+  background:var(--surface3);border:1px solid var(--border);
+  padding:3px 10px;border-radius:20px;color:var(--muted);
+}
+
+/* ── Price Table ─────────────────────────────────────────── */
+.price-table{width:100%;border-collapse:collapse;font-size:12px}
+.price-table th{
+  text-align:left;padding:8px 10px;font-size:10px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid var(--border);
+  font-weight:500;
+}
+.price-table td{
+  padding:9px 10px;border-bottom:1px solid rgba(37,45,61,0.5);
+  font-family:'IBM Plex Mono',monospace;
+}
+.price-table tr:last-child td{border:none}
+.price-table tr:hover td{background:rgba(124,92,252,0.04)}
+.pair-label{font-size:12px;font-weight:600;color:var(--text);font-family:'IBM Plex Mono',monospace}
+.ex-cell{text-align:right}
+.bid{color:var(--green)}
+.ask{color:var(--red)}
+.price-cell{font-size:11px}
+.price-val{display:block}
+.price-tag{display:block;font-size:9px;color:var(--muted);margin-top:1px}
+.err-cell{color:var(--muted);font-size:10px}
+.spread-badge{
+  display:inline-block;padding:2px 7px;border-radius:4px;
+  font-size:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;
+}
+.spread-badge.hot{background:rgba(61,220,132,0.12);color:var(--green);border:1px solid rgba(61,220,132,0.3)}
+.spread-badge.cold{background:rgba(107,117,144,0.1);color:var(--muted);border:1px solid var(--border)}
+.spread-badge.warm{background:rgba(240,192,64,0.1);color:var(--yellow);border:1px solid rgba(240,192,64,0.3)}
+
+/* ── Opportunities Feed ──────────────────────────────────── */
+.opp-list{display:flex;flex-direction:column;gap:8px;max-height:480px;overflow-y:auto}
+.opp-list::-webkit-scrollbar{width:4px}
+.opp-list::-webkit-scrollbar-track{background:transparent}
+.opp-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.opp-row{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;transition:border-color 0.2s;
+}
+.opp-row.profitable{border-left:3px solid var(--green)}
+.opp-row:hover{border-color:var(--purple-dim)}
+.opp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.opp-pair{font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;color:var(--text)}
+.opp-profit{font-size:13px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.opp-profit.pos{color:var(--green)}
+.opp-profit.neg{color:var(--red)}
+.opp-bottom{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.ex-route{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--surface3);padding:2px 8px;border-radius:4px;color:var(--text);
+  font-size:10px;
+}
+.arrow{color:var(--purple-light);font-size:10px}
+.empty-feed{
+  text-align:center;padding:40px 20px;color:var(--muted);
+  font-size:12px;font-family:'IBM Plex Mono',monospace;
+}
+
+/* ── Trade History ───────────────────────────────────────── */
+.trades-table{width:100%;border-collapse:collapse;font-size:11px}
+.trades-table th{
+  text-align:left;padding:8px 10px;font-size:10px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid var(--border);font-weight:500;
+}
+.trades-table td{padding:9px 10px;border-bottom:1px solid rgba(37,45,61,0.4);font-family:'IBM Plex Mono',monospace}
+.trades-table tr:last-child td{border:none}
+.trades-table tr:hover td{background:rgba(124,92,252,0.03)}
+.win-pnl{color:var(--green);font-weight:600}
+.loss-pnl{color:var(--red);font-weight:600}
+.route-text{color:var(--purple-light);font-size:10px}
+.empty-row td{text-align:center;color:var(--muted);padding:30px;font-size:12px}
+
+/* ── Bottom Grid ─────────────────────────────────────────── */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:768px){.bottom-grid{grid-template-columns:1fr}}
+
+/* ── Equity Chart ────────────────────────────────────────── */
+.chart-wrap{position:relative;height:180px}
+
+/* ── Exchange Balances ───────────────────────────────────── */
+.balance-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.balance-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.balance-name{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px}
+.balance-val{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--text)}
+.balance-pnl{font-size:10px;font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.balance-pnl.up{color:var(--green)}
+.balance-pnl.down{color:var(--red)}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:14px}
+.footer a{color:var(--purple-light);text-decoration:none}
+
+/* ── Loading Skeleton ────────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);
+  background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── Top Bar ─────────────────────────────────────────── -->
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">ARB</div>
+      <div class="logo-text">Crypto<span>ARB</span> Bot <span style="color:var(--muted);font-size:12px;font-weight:400">v1.0</span></div>
+    </div>
+    <div class="topbar-right">
+      {% if paper_mode %}
+      <div class="badge paper"><div class="dot"></div> PAPER TRADING</div>
+      {% else %}
+      <div class="badge"><div class="dot"></div> LIVE TRADING</div>
+      {% endif %}
+      <div class="badge" id="conn-badge"><div class="dot"></div> CONNECTING…</div>
+      <div class="scan-ts" id="last-scan">—</div>
+    </div>
+  </div>
+
+  <!-- ── Stat Cards ─────────────────────────────────────── -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Total P&amp;L</div>
+      <div class="metric-val up" id="stat-pnl">$0.00</div>
+      <div class="metric-sub" id="stat-pnl-pct">+0.00%</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Win Rate</div>
+      <div class="metric-val purple" id="stat-winrate">—</div>
+      <div class="metric-sub" id="stat-trades">0 trades</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Best Opportunity</div>
+      <div class="metric-val blue" id="stat-bestopp">—</div>
+      <div class="metric-sub" id="stat-bestopp-label">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Scans</div>
+      <div class="metric-val" id="stat-scans">0</div>
+      <div class="metric-sub" id="stat-mode">{% if paper_mode %}Paper Mode{% else %}Live Mode{% endif %}</div>
+    </div>
+  </div>
+
+  <!-- ── Main Grid ──────────────────────────────────────── -->
+  <div class="main-grid">
+
+    <!-- Price Comparison Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Live Price Comparison</div>
+        <div class="chip" id="price-age">—</div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="price-table" id="price-table">
+          <thead>
+            <tr>
+              <th>Pair</th>
+              {% for ex in exchanges %}
+              <th style="text-align:right">{{ ex | upper }}</th>
+              {% endfor %}
+              <th style="text-align:right">Best Spread</th>
+            </tr>
+          </thead>
+          <tbody id="price-tbody">
+            {% for pair in pairs %}
+            <tr id="row-{{ pair | replace('/', '-') }}">
+              <td><span class="pair-label">{{ pair }}</span></td>
+              {% for ex in exchanges %}
+              <td class="ex-cell" id="cell-{{ ex }}-{{ pair | replace('/', '-') }}">
+                <span class="err-cell">…</span>
+              </td>
+              {% endfor %}
+              <td class="ex-cell" id="spread-{{ pair | replace('/', '-') }}"><span class="spread-badge cold">—</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Opportunities Feed -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Opportunities</div>
+        <div class="chip" id="opp-count">0 found</div>
+      </div>
+      <div class="opp-list" id="opp-list">
+        <div class="empty-feed">Waiting for first scan…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Bottom Grid ────────────────────────────────────── -->
+  <div class="bottom-grid">
+
+    <!-- Equity Curve Chart -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Equity Curve</div>
+        <div class="chip" id="equity-total">$0.00</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="equity-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Exchange Balances -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Paper Balances</div>
+        <div class="chip">Per Exchange</div>
+      </div>
+      <div class="balance-grid" id="balance-grid">
+        {% for ex in exchanges %}
+        <div class="balance-item">
+          <div class="balance-name">{{ ex }}</div>
+          <div class="balance-val" id="bal-{{ ex }}">$1,000.00</div>
+          <div class="balance-pnl" id="balpnl-{{ ex }}">—</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Trade History ──────────────────────────────────── -->
+  <div class="card" style="margin-top:14px">
+    <div class="card-header">
+      <div class="card-title">Trade History</div>
+      <div class="chip" id="trade-count-chip">0 trades</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="trades-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Route</th>
+            <th style="text-align:right">Buy Price</th>
+            <th style="text-align:right">Sell Price</th>
+            <th style="text-align:right">Gross Spread</th>
+            <th style="text-align:right">Net Profit %</th>
+            <th style="text-align:right">P&amp;L (USD)</th>
+          </tr>
+        </thead>
+        <tbody id="trades-tbody">
+          <tr class="empty-row"><td colspan="8">No trades yet — waiting for first opportunity…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    Crypto ARB Bot v1.0 &nbsp;·&nbsp; {% if paper_mode %}Paper Trading Mode{% else %}Live Trading Mode{% endif %}
+    &nbsp;·&nbsp; Session: <span id="session-id">{{ session_id }}</span>
+    &nbsp;·&nbsp; <a href="/health">health</a>
+  </div>
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const PAIRS     = {{ pairs | tojson }};
+const EXCHANGES = {{ exchanges | tojson }};
+const PAPER_MODE = {{ 'true' if paper_mode else 'false' }};
+const REFRESH_MS = 2000;
+const INITIAL_CAPITAL = 1000.0;
+
+// ── Equity Chart Setup ────────────────────────────────────────────────────────
+const ctx = document.getElementById('equity-chart').getContext('2d');
+const equityChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Equity (USD)',
+      data: [],
+      borderColor: '#7C5CFC',
+      backgroundColor: 'rgba(124,92,252,0.08)',
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      fill: true,
+      tension: 0.3,
+    }],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: '#0F1219',
+      borderColor: '#252D3D',
+      borderWidth: 1,
+      titleColor: '#6B7590',
+      bodyColor: '#E8EAF0',
+      callbacks: {
+        label: ctx => `$${ctx.parsed.y.toFixed(2)}`,
+      },
+    }},
+    scales: {
+      x: { display: false },
+      y: {
+        grid: { color: 'rgba(37,45,61,0.5)' },
+        ticks: {
+          color: '#6B7590', font: { family: "'IBM Plex Mono', monospace", size: 10 },
+          callback: v => `$${v.toFixed(0)}`,
+        },
+        border: { display: false },
+      },
+    },
+    animation: { duration: 400 },
+  },
+});
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function fmtUsd(v, decimals=2) {
+  if (v == null) return '—';
+  const sign = v >= 0 ? '+' : '';
+  return sign + '$' + Math.abs(v).toFixed(decimals);
+}
+function fmtPct(v, decimals=2) {
+  if (v == null) return '—';
+  const sign = v >= 0 ? '+' : '';
+  return sign + v.toFixed(decimals) + '%';
+}
+function fmtPrice(v) {
+  if (v == null || v === 0) return '—';
+  if (v >= 1000) return v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  if (v >= 1) return v.toFixed(4);
+  return v.toFixed(6);
+}
+function timeAgo(ts) {
+  if (!ts) return '—';
+  const diff = Date.now()/1000 - ts;
+  if (diff < 5) return 'just now';
+  if (diff < 60) return `${diff.toFixed(0)}s ago`;
+  return `${(diff/60).toFixed(1)}m ago`;
+}
+function fmtTime(ts) {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleTimeString('en-US', {hour12:false});
+}
+function colorPnl(el, val) {
+  el.classList.remove('up','down','win-pnl','loss-pnl');
+  if (val > 0) el.classList.add('up');
+  else if (val < 0) el.classList.add('down');
+}
+
+// ── Update Prices Table ───────────────────────────────────────────────────────
+function updatePrices(prices, opportunities) {
+  // Build best-spread lookup from opportunities
+  const bestSpread = {};
+  if (opportunities && opportunities.length > 0) {
+    for (const opp of opportunities) {
+      const key = opp.pair;
+      if (!bestSpread[key] || opp.net_profit_pct > bestSpread[key].net_profit_pct) {
+        bestSpread[key] = opp;
+      }
+    }
+  }
+
+  for (const pair of PAIRS) {
+    const rowId = pair.replace('/', '-');
+
+    for (const ex of EXCHANGES) {
+      const cell = document.getElementById(`cell-${ex}-${rowId}`);
+      if (!cell) continue;
+      const exData = prices[ex];
+      const pairData = exData && exData[pair];
+
+      if (!pairData || pairData.error) {
+        cell.innerHTML = `<span class="err-cell">${pairData && pairData.error ? 'err' : '—'}</span>`;
+      } else {
+        cell.innerHTML = `
+          <span class="price-cell">
+            <span class="price-val bid">${fmtPrice(pairData.bid)}</span>
+            <span class="price-tag">bid</span>
+            <span class="price-val ask" style="margin-top:2px">${fmtPrice(pairData.ask)}</span>
+            <span class="price-tag">ask</span>
+          </span>`;
+      }
+    }
+
+    // Best spread badge
+    const spreadEl = document.getElementById(`spread-${rowId}`);
+    if (spreadEl) {
+      const best = bestSpread[pair];
+      if (best && best.net_profit_pct > 0) {
+        const cls = best.is_profitable ? 'hot' : (best.net_profit_pct > 0 ? 'warm' : 'cold');
+        spreadEl.innerHTML = `<span class="spread-badge ${cls}">${fmtPct(best.net_profit_pct, 3)}</span>`;
+      } else {
+        spreadEl.innerHTML = `<span class="spread-badge cold">—</span>`;
+      }
+    }
+  }
+
+  // Update price age
+  const ageEl = document.getElementById('price-age');
+  if (ageEl && Object.keys(prices).length > 0) {
+    // Get any timestamp from prices
+    let ts = 0;
+    for (const ex of Object.values(prices)) {
+      for (const p of Object.values(ex)) {
+        if (p && p.timestamp && p.timestamp > ts) ts = p.timestamp;
+      }
+    }
+    ageEl.textContent = ts ? timeAgo(ts) : '—';
+  }
+}
+
+// ── Update Opportunities Feed ─────────────────────────────────────────────────
+function updateOpportunities(opps) {
+  const list = document.getElementById('opp-list');
+  const countEl = document.getElementById('opp-count');
+
+  if (!opps || opps.length === 0) {
+    list.innerHTML = '<div class="empty-feed">No opportunities detected yet…</div>';
+    if (countEl) countEl.textContent = '0 found';
+    return;
+  }
+
+  if (countEl) countEl.textContent = `${opps.length} found`;
+
+  const html = opps.slice(0, 20).map(opp => {
+    const cls = opp.is_profitable ? 'profitable' : '';
+    const profCls = opp.net_profit_pct > 0 ? 'pos' : 'neg';
+    const ts = fmtTime(opp.detected_at);
+    return `
+      <div class="opp-row ${cls}">
+        <div class="opp-top">
+          <span class="opp-pair">${opp.pair}</span>
+          <span class="opp-profit ${profCls}">${fmtPct(opp.net_profit_pct, 3)} &nbsp;${fmtUsd(opp.estimated_profit_usd, 4)}</span>
+        </div>
+        <div class="opp-bottom">
+          <span class="ex-route">
+            ${opp.buy_exchange} <span class="arrow">→</span> ${opp.sell_exchange}
+          </span>
+          <span>gross ${fmtPct(opp.gross_spread_pct, 3)}</span>
+          <span>${ts}</span>
+        </div>
+      </div>`;
+  }).join('');
+  list.innerHTML = html;
+}
+
+// ── Update Stats Cards ────────────────────────────────────────────────────────
+function updateStats(stats) {
+  if (!stats) return;
+
+  const pnlEl = document.getElementById('stat-pnl');
+  const pnlPctEl = document.getElementById('stat-pnl-pct');
+  const winrateEl = document.getElementById('stat-winrate');
+  const tradesEl = document.getElementById('stat-trades');
+  const bestOppEl = document.getElementById('stat-bestopp');
+  const bestOppLabelEl = document.getElementById('stat-bestopp-label');
+  const scansEl = document.getElementById('stat-scans');
+
+  const pnl = stats.pnl_usd || stats.total_profit_usd || 0;
+  const pnlPct = stats.pnl_pct || 0;
+
+  if (pnlEl) {
+    pnlEl.textContent = fmtUsd(pnl);
+    colorPnl(pnlEl, pnl);
+  }
+  if (pnlPctEl) pnlPctEl.textContent = fmtPct(pnlPct);
+  if (winrateEl) winrateEl.textContent = stats.win_rate_pct != null ? `${stats.win_rate_pct.toFixed(1)}%` : '—';
+  if (tradesEl) tradesEl.textContent = `${stats.total_trades || 0} trades · best: ${stats.best_pair || '—'}`;
+  if (bestOppEl) bestOppEl.textContent = stats.best_opp_pct != null ? fmtPct(stats.best_opp_pct, 3) : '—';
+  if (bestOppLabelEl) bestOppLabelEl.textContent = stats.best_opp_label || '—';
+  if (scansEl) scansEl.textContent = (stats.scan_count || 0).toLocaleString();
+
+  // Connection badge
+  const connBadge = document.getElementById('conn-badge');
+  if (connBadge) {
+    connBadge.innerHTML = '<div class="dot"></div> LIVE';
+    connBadge.style.background = 'rgba(61,220,132,0.08)';
+    connBadge.style.borderColor = 'rgba(61,220,132,0.25)';
+    connBadge.style.color = 'var(--green)';
+  }
+
+  const lastScanEl = document.getElementById('last-scan');
+  if (lastScanEl && stats.last_scan_ts) {
+    lastScanEl.textContent = `scan ${timeAgo(stats.last_scan_ts)}`;
+  }
+
+  // Update balances
+  if (stats.balances) {
+    for (const [ex, bal] of Object.entries(stats.balances)) {
+      const balEl = document.getElementById(`bal-${ex}`);
+      const pnlEl2 = document.getElementById(`balpnl-${ex}`);
+      if (balEl) balEl.textContent = `$${bal.toFixed(2)}`;
+      if (pnlEl2) {
+        const diff = bal - INITIAL_CAPITAL;
+        pnlEl2.textContent = fmtPct((diff / INITIAL_CAPITAL) * 100, 2);
+        pnlEl2.className = `balance-pnl ${diff >= 0 ? 'up' : 'down'}`;
+      }
+    }
+
+    const totalEl = document.getElementById('equity-total');
+    if (totalEl && stats.total_usd) totalEl.textContent = `$${stats.total_usd.toFixed(2)}`;
+  }
+}
+
+// ── Update Trades Table ───────────────────────────────────────────────────────
+function updateTrades(trades) {
+  const tbody = document.getElementById('trades-tbody');
+  const chipEl = document.getElementById('trade-count-chip');
+
+  if (!trades || trades.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="8">No trades yet — waiting for first opportunity…</td></tr>';
+    if (chipEl) chipEl.textContent = '0 trades';
+    return;
+  }
+
+  if (chipEl) chipEl.textContent = `${trades.length} trades`;
+
+  const html = trades.slice(0, 50).map(t => {
+    const pnlCls = t.profit_usd >= 0 ? 'win-pnl' : 'loss-pnl';
+    return `<tr>
+      <td>${fmtTime(t.executed_at)}</td>
+      <td>${t.pair}</td>
+      <td><span class="route-text">${t.buy_exchange} → ${t.sell_exchange}</span></td>
+      <td style="text-align:right">${fmtPrice(t.buy_price)}</td>
+      <td style="text-align:right">${fmtPrice(t.sell_price)}</td>
+      <td style="text-align:right">${fmtPct(t.gross_spread_pct, 3)}</td>
+      <td style="text-align:right">${fmtPct(t.net_profit_pct, 3)}</td>
+      <td style="text-align:right" class="${pnlCls}">${fmtUsd(t.profit_usd, 4)}</td>
+    </tr>`;
+  }).join('');
+  tbody.innerHTML = html;
+}
+
+// ── Update Equity Chart ───────────────────────────────────────────────────────
+function updateEquityChart(series) {
+  if (!series || series.length === 0) return;
+  const labels = series.map(pt => fmtTime(pt.ts));
+  const data = series.map(pt => pt.equity_usd);
+  equityChart.data.labels = labels;
+  equityChart.data.datasets[0].data = data;
+  equityChart.update('none');
+}
+
+// ── Fetch All Data ────────────────────────────────────────────────────────────
+let latestOpps = [];
+let latestPrices = {};
+
+async function fetchAll() {
+  try {
+    const [pricesRes, oppsRes, statsRes, tradesRes, equityRes] = await Promise.all([
+      fetch('/api/prices'),
+      fetch('/api/opportunities'),
+      fetch('/api/stats'),
+      fetch('/api/trades'),
+      fetch('/api/equity'),
+    ]);
+
+    if (pricesRes.ok) {
+      const pd = await pricesRes.json();
+      latestPrices = pd.prices || {};
+    }
+    if (oppsRes.ok) {
+      latestOpps = await oppsRes.json();
+    }
+
+    updatePrices(latestPrices, latestOpps);
+    updateOpportunities(latestOpps);
+
+    if (statsRes.ok) {
+      const stats = await statsRes.json();
+      updateStats(stats);
+    }
+    if (tradesRes.ok) {
+      const trades = await tradesRes.json();
+      updateTrades(trades);
+    }
+    if (equityRes.ok) {
+      const series = await equityRes.json();
+      updateEquityChart(series);
+    }
+  } catch (err) {
+    const connBadge = document.getElementById('conn-badge');
+    if (connBadge) {
+      connBadge.innerHTML = '<div class="dot" style="background:var(--red)"></div> DISCONNECTED';
+      connBadge.style.color = 'var(--red)';
+    }
+    console.warn('Fetch error:', err);
+  }
+}
+
+// ── SSE for real-time push (supplements polling) ──────────────────────────────
+function connectSSE() {
+  const es = new EventSource('/api/stream');
+  es.addEventListener('scan', async () => { await fetchAll(); });
+  es.addEventListener('heartbeat', () => {});
+  es.onerror = () => { setTimeout(connectSSE, 5000); es.close(); };
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+fetchAll();
+setInterval(fetchAll, REFRESH_MS);
+connectSSE();
+
+// Update "last scan" timestamp live
+setInterval(() => {
+  const lastScanEl = document.getElementById('last-scan');
+  if (lastScanEl && lastScanEl.dataset.ts) {
+    lastScanEl.textContent = `scan ${timeAgo(parseFloat(lastScanEl.dataset.ts))}`;
+  }
+}, 1000);
+</script>
+</body>
+</html>
