@@ -343,7 +343,7 @@ export const testimonials: Testimonial[] = [
     avatar: "",
     stars: 5,
     quote:
-      "Beber Builds transformed our entire workflow. Their AI automation saved us 40+ hours per week. The team is incredibly talented and responsive.",
+      "BeberBuilds transformed our entire workflow. Their AI automation saved us 40+ hours per week. The team is incredibly talented and responsive.",
   },
   {
     name: "Marcus Rivera",
