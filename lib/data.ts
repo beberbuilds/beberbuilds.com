@@ -415,10 +415,8 @@ export const footerLinks = {
 };
 
 export const socialLinks = [
-  { icon: MessageCircle, href: "#", label: "Twitter" },
-  { icon: Briefcase, href: "#", label: "LinkedIn" },
-  { icon: GitFork, href: "#", label: "GitHub" },
-  { icon: Camera, href: "#", label: "Instagram" },
+  { icon: Camera, href: "https://www.instagram.com/beberbuilds", label: "Instagram" },
+  { icon: Camera, href: "https://www.facebook.com/beberbuilds", label: "Facebook" },
 ];
 
 export const brandLogos = [

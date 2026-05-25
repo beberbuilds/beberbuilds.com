@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import LogoMark from "@/components/logo-mark";
 import { navLinks } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LogoMark from "@/components/logo-mark";
 
 function resolveHref(href: string, pathname: string) {
   if (pathname === "/") return href;
