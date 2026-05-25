@@ -3,271 +3,922 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Crypto Arb Bot — Dashboard</title>
+<title>CryptoARB — Command Center</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --purple:#7C5CFC;
-  --purple-light:#A98BFF;
-  --purple-dim:#4A3A99;
-  --blue:#4C9EFC;
-  --bg:#080A0F;
-  --surface:#0F1219;
-  --surface2:#161B26;
-  --surface3:#1E2535;
-  --border:#252D3D;
-  --text:#E8EAF0;
-  --muted:#6B7590;
-  --green:#3DDC84;
-  --red:#FF5F5F;
-  --yellow:#F0C040;
-}
-body{background:var(--bg);font-family:'Space Grotesk',sans-serif;color:var(--text);min-height:100vh}
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════ */
+:root {
+  /* Core palette */
+  --bg:            #08060F;
+  --bg2:           #0D0A18;
+  --surface:       #120E1F;
+  --surface2:      #1A1528;
+  --surface3:      #221B34;
+  --border:        #2A1F44;
+  --border-bright: #4A3570;
 
-/* ── Layout ──────────────────────────────────────────────── */
-.shell{max-width:1280px;margin:0 auto;padding:20px 24px}
+  /* Brand – Purple ↔ Crimson */
+  --purple:        #8B5CF6;
+  --purple-light:  #A78BFA;
+  --purple-dim:    #4C1D95;
+  --purple-glow:   rgba(139,92,246,0.18);
+  --crimson:       #E11D48;
+  --crimson-light: #F43F5E;
+  --crimson-dim:   #881337;
+  --crimson-glow:  rgba(225,29,72,0.18);
+  --magenta:       #C026D3;
+  --magenta-light: #D946EF;
 
-/* ── Top Bar ─────────────────────────────────────────────── */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 20px;background:var(--surface);border:1px solid var(--border);
-  border-radius:12px;margin-bottom:16px;
-}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-icon{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,var(--purple),var(--purple-dim));
-  border-radius:10px;display:flex;align-items:center;justify-content:center;
-  font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:11px;color:#fff;
-  letter-spacing:-0.5px;
-}
-.logo-text{font-weight:700;font-size:16px;letter-spacing:0.3px}
-.logo-text span{color:var(--purple-light)}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.badge{
-  display:flex;align-items:center;gap:6px;
-  background:rgba(61,220,132,0.08);border:1px solid rgba(61,220,132,0.25);
-  color:var(--green);font-size:11px;padding:5px 12px;border-radius:20px;
-  font-family:'IBM Plex Mono',monospace;
-}
-.badge.paper{background:rgba(240,192,64,0.08);border-color:rgba(240,192,64,0.25);color:var(--yellow)}
-.dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.scan-ts{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)}
-.status-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;
+  /* Status */
+  --green:         #34D399;
+  --green-dim:     rgba(52,211,153,0.12);
+  --green-glow:    rgba(52,211,153,0.25);
+  --red:           #F43F5E;
+  --red-dim:       rgba(244,63,94,0.12);
+  --yellow:        #FBBF24;
+  --yellow-dim:    rgba(251,191,36,0.12);
+
+  /* Text */
+  --text:          #EDE9FE;
+  --text-dim:      #A89CC8;
+  --muted:         #5B4F7A;
+
+  /* Gradients */
+  --grad-brand:    linear-gradient(135deg, var(--purple) 0%, var(--crimson) 100%);
+  --grad-card-top: linear-gradient(180deg, rgba(139,92,246,0.08) 0%, transparent 60%);
+  --grad-green:    linear-gradient(135deg, #34D399, #059669);
+  --grad-crimson:  linear-gradient(135deg, var(--crimson), var(--magenta));
 }
 
-/* ── Stat Cards ──────────────────────────────────────────── */
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:540px){.metrics{grid-template-columns:1fr}}
-.metric{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:18px 20px;position:relative;overflow:hidden;
-}
-.metric::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--purple),var(--blue));opacity:0.6;
-}
-.metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.metric-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;line-height:1}
-.metric-val.up{color:var(--green)}
-.metric-val.down{color:var(--red)}
-.metric-val.purple{color:var(--purple-light)}
-.metric-val.blue{color:var(--blue)}
-.metric-sub{font-size:11px;color:var(--muted);margin-top:5px}
+/* ═══════════════════════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Main Grid ───────────────────────────────────────────── */
-.main-grid{display:grid;grid-template-columns:1fr 380px;gap:14px;margin-bottom:14px}
-@media(max-width:1024px){.main-grid{grid-template-columns:1fr}}
+html { scroll-behavior: smooth; }
 
-/* ── Card base ───────────────────────────────────────────── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.chip{
-  font-size:10px;font-family:'IBM Plex Mono',monospace;
-  background:var(--surface3);border:1px solid var(--border);
-  padding:3px 10px;border-radius:20px;color:var(--muted);
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* ── Price Table ─────────────────────────────────────────── */
-.price-table{width:100%;border-collapse:collapse;font-size:12px}
-.price-table th{
-  text-align:left;padding:8px 10px;font-size:10px;color:var(--muted);
-  text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid var(--border);
-  font-weight:500;
-}
-.price-table td{
-  padding:9px 10px;border-bottom:1px solid rgba(37,45,61,0.5);
-  font-family:'IBM Plex Mono',monospace;
-}
-.price-table tr:last-child td{border:none}
-.price-table tr:hover td{background:rgba(124,92,252,0.04)}
-.pair-label{font-size:12px;font-weight:600;color:var(--text);font-family:'IBM Plex Mono',monospace}
-.ex-cell{text-align:right}
-.bid{color:var(--green)}
-.ask{color:var(--red)}
-.price-cell{font-size:11px}
-.price-val{display:block}
-.price-tag{display:block;font-size:9px;color:var(--muted);margin-top:1px}
-.err-cell{color:var(--muted);font-size:10px}
-.spread-badge{
-  display:inline-block;padding:2px 7px;border-radius:4px;
-  font-size:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;
-}
-.spread-badge.hot{background:rgba(61,220,132,0.12);color:var(--green);border:1px solid rgba(61,220,132,0.3)}
-.spread-badge.cold{background:rgba(107,117,144,0.1);color:var(--muted);border:1px solid var(--border)}
-.spread-badge.warm{background:rgba(240,192,64,0.1);color:var(--yellow);border:1px solid rgba(240,192,64,0.3)}
-
-/* ── Opportunities Feed ──────────────────────────────────── */
-.opp-list{display:flex;flex-direction:column;gap:8px;max-height:480px;overflow-y:auto}
-.opp-list::-webkit-scrollbar{width:4px}
-.opp-list::-webkit-scrollbar-track{background:transparent}
-.opp-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-.opp-row{
-  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:10px 12px;transition:border-color 0.2s;
-}
-.opp-row.profitable{border-left:3px solid var(--green)}
-.opp-row:hover{border-color:var(--purple-dim)}
-.opp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
-.opp-pair{font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;color:var(--text)}
-.opp-profit{font-size:13px;font-weight:600;font-family:'IBM Plex Mono',monospace}
-.opp-profit.pos{color:var(--green)}
-.opp-profit.neg{color:var(--red)}
-.opp-bottom{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
-.ex-route{
-  display:inline-flex;align-items:center;gap:4px;
-  background:var(--surface3);padding:2px 8px;border-radius:4px;color:var(--text);
-  font-size:10px;
-}
-.arrow{color:var(--purple-light);font-size:10px}
-.empty-feed{
-  text-align:center;padding:40px 20px;color:var(--muted);
-  font-size:12px;font-family:'IBM Plex Mono',monospace;
+/* ── Subtle grid background ─────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(139,92,246,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* ── Trade History ───────────────────────────────────────── */
-.trades-table{width:100%;border-collapse:collapse;font-size:11px}
-.trades-table th{
-  text-align:left;padding:8px 10px;font-size:10px;color:var(--muted);
-  text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid var(--border);font-weight:500;
+/* ── Ambient glow blobs ─────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 60vw;
+  height: 60vh;
+  background: radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
-.trades-table td{padding:9px 10px;border-bottom:1px solid rgba(37,45,61,0.4);font-family:'IBM Plex Mono',monospace}
-.trades-table tr:last-child td{border:none}
-.trades-table tr:hover td{background:rgba(124,92,252,0.03)}
-.win-pnl{color:var(--green);font-weight:600}
-.loss-pnl{color:var(--red);font-weight:600}
-.route-text{color:var(--purple-light);font-size:10px}
-.empty-row td{text-align:center;color:var(--muted);padding:30px;font-size:12px}
 
-/* ── Bottom Grid ─────────────────────────────────────────── */
-.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:768px){.bottom-grid{grid-template-columns:1fr}}
-
-/* ── Equity Chart ────────────────────────────────────────── */
-.chart-wrap{position:relative;height:180px}
-
-/* ── Exchange Balances ───────────────────────────────────── */
-.balance-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.balance-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
-.balance-name{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px}
-.balance-val{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--text)}
-.balance-pnl{font-size:10px;font-family:'IBM Plex Mono',monospace;margin-top:2px}
-.balance-pnl.up{color:var(--green)}
-.balance-pnl.down{color:var(--red)}
-
-/* ── Footer ──────────────────────────────────────────────── */
-.footer{text-align:center;padding:20px;font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:14px}
-.footer a{color:var(--purple-light);text-decoration:none}
-
-/* ── Loading Skeleton ────────────────────────────────────── */
-.skeleton{
-  background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);
-  background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;
+.ambient-right {
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 50vw;
+  height: 50vh;
+  background: radial-gradient(ellipse, rgba(225,29,72,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 18px 24px 40px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOP BAR
+═══════════════════════════════════════════════════════════ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 64px;
+  background: linear-gradient(180deg, rgba(18,14,31,0.98) 0%, rgba(13,10,24,0.95) 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top accent line on the topbar */
+.topbar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--grad-brand);
+  opacity: 0.7;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-mark {
+  width: 42px; height: 42px;
+  background: var(--grad-brand);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: -0.5px;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(139,92,246,0.4), 0 0 32px rgba(225,29,72,0.15);
+  flex-shrink: 0;
+}
+
+.logo-name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  margin-top: 1px;
+}
+
+.topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.scan-ring {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.scan-ring::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--purple);
+  box-shadow: 0 0 8px var(--purple);
+  animation: scanpulse 2s infinite;
+}
+
+@keyframes scanpulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.7); }
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border: 1px solid;
+}
+
+.badge-paper {
+  background: var(--yellow-dim);
+  border-color: rgba(251,191,36,0.3);
+  color: var(--yellow);
+}
+
+.badge-live {
+  background: var(--red-dim);
+  border-color: rgba(244,63,94,0.3);
+  color: var(--red);
+}
+
+.badge-online {
+  background: var(--green-dim);
+  border-color: rgba(52,211,153,0.3);
+  color: var(--green);
+}
+
+.badge-offline {
+  background: var(--red-dim);
+  border-color: rgba(244,63,94,0.3);
+  color: var(--red);
+}
+
+.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: dotpulse 2s infinite;
+}
+
+@keyframes dotpulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.scan-ts {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   METRIC CARDS
+═══════════════════════════════════════════════════════════ */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 960px)  { .metrics { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px)  { .metrics { grid-template-columns: 1fr; } }
+
+.metric {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.2s;
+}
+
+.metric:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-bright);
+}
+
+/* Gradient top stripe per card */
+.metric:nth-child(1)::before { background: var(--grad-brand); }
+.metric:nth-child(2)::before { background: linear-gradient(90deg, var(--purple-light), var(--magenta)); }
+.metric:nth-child(3)::before { background: linear-gradient(90deg, var(--crimson), var(--yellow)); }
+.metric:nth-child(4)::before { background: linear-gradient(90deg, var(--magenta-light), var(--purple)); }
+
+.metric::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+/* Faint corner glow */
+.metric::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 60px; height: 60px;
+  background: radial-gradient(circle, var(--purple-glow), transparent 70%);
+  pointer-events: none;
+}
+
+.metric-icon {
+  font-size: 18px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.metric-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.metric-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.metric-val.up     { color: var(--green); text-shadow: 0 0 20px rgba(52,211,153,0.3); }
+.metric-val.down   { color: var(--red);   text-shadow: 0 0 20px rgba(244,63,94,0.3); }
+.metric-val.purple { color: var(--purple-light); text-shadow: 0 0 20px var(--purple-glow); }
+.metric-val.crimson{ color: var(--crimson-light);text-shadow: 0 0 20px var(--crimson-glow); }
+.metric-val.plain  { color: var(--text); }
+
+.metric-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN GRID (price table + opportunities)
+═══════════════════════════════════════════════════════════ */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 1100px) { .main-grid { grid-template-columns: 1fr; } }
+
+/* ─── Card ──────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-inner-glow {
+  background: var(--grad-card-top);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(18,14,31,0.6);
+}
+
+.card-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.card-title-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--grad-brand);
+  box-shadow: 0 0 6px var(--purple);
+}
+
+.chip {
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 10px;
+  color: var(--text-dim);
+}
+
+.chip.hot {
+  background: var(--green-dim);
+  border-color: rgba(52,211,153,0.3);
+  color: var(--green);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRICE TABLE
+═══════════════════════════════════════════════════════════ */
+.price-wrap { overflow-x: auto; }
+
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.price-table th {
+  padding: 10px 14px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  text-align: right;
+  background: rgba(13,10,24,0.5);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.price-table th:first-child { text-align: left; }
+
+.price-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(42,31,68,0.4);
+  text-align: right;
+  vertical-align: middle;
+}
+
+.price-table td:first-child { text-align: left; }
+
+.price-table tr:last-child td { border-bottom: none; }
+
+.price-table tr:hover td {
+  background: rgba(139,92,246,0.04);
+}
+
+.pair-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.price-cell { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+
+.price-bid {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 500;
+}
+
+.price-ask {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--crimson-light);
+  font-weight: 500;
+}
+
+.price-label {
+  font-size: 8px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-err { font-size: 10px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+
+.spread-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 64px;
+  white-space: nowrap;
+}
+
+.spread-hot  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(52,211,153,0.35); box-shadow: 0 0 8px rgba(52,211,153,0.15); }
+.spread-warm { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(251,191,36,0.35); }
+.spread-cold { background: rgba(42,31,68,0.4); color: var(--muted); border: 1px solid var(--border); }
+
+/* ═══════════════════════════════════════════════════════════
+   OPPORTUNITIES FEED
+═══════════════════════════════════════════════════════════ */
+.opp-scroll {
+  max-height: 520px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opp-scroll::-webkit-scrollbar { width: 4px; }
+.opp-scroll::-webkit-scrollbar-track { background: transparent; }
+.opp-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.opp-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 13px;
+  cursor: default;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.opp-card:hover {
+  background: var(--surface3);
+  border-color: var(--border-bright);
+}
+
+.opp-card.profitable {
+  border-left: 3px solid var(--green);
+  background: linear-gradient(135deg, rgba(52,211,153,0.05) 0%, var(--surface2) 60%);
+}
+
+.opp-card.profitable::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--green), rgba(52,211,153,0.3));
+}
+
+.opp-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+
+.opp-pair {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.opp-time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.opp-profit-block { text-align: right; }
+
+.opp-pct {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.opp-pct.pos { color: var(--green); }
+.opp-pct.neg { color: var(--crimson-light); }
+
+.opp-usd {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 1px;
+}
+
+.opp-route {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ex-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.ex-binance  { background: rgba(243,186,47,0.1);  color: #F3BA2F; border: 1px solid rgba(243,186,47,0.2); }
+.ex-coinbase { background: rgba(67,138,255,0.1);  color: #5BA4FF; border: 1px solid rgba(67,138,255,0.2); }
+.ex-kucoin   { background: rgba(9,187,134,0.1);   color: #09BB86; border: 1px solid rgba(9,187,134,0.2); }
+.ex-gateio   { background: rgba(220,80,20,0.1);   color: #EF6820; border: 1px solid rgba(220,80,20,0.2); }
+
+.route-arrow {
+  color: var(--purple-light);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.opp-detail {
+  font-size: 9px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  margin-left: auto;
+}
+
+.empty-feed {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.empty-feed .empty-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+
+/* ═══════════════════════════════════════════════════════════
+   BOTTOM ROW (equity + balances)
+═══════════════════════════════════════════════════════════ */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) { .bottom-row { grid-template-columns: 1fr; } }
+
+/* ── Equity Chart ───────────────────────────────────────── */
+.chart-wrap {
+  height: 190px;
+  padding: 16px 16px 12px;
+  position: relative;
+}
+
+/* ── Exchange Balances ──────────────────────────────────── */
+.balance-body { padding: 14px 16px; }
+
+.balance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.balance-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 15px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.balance-item:hover { border-color: var(--border-bright); }
+
+.balance-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--grad-brand);
+  opacity: 0.4;
+}
+
+.balance-name {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.balance-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.balance-pnl {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  margin-top: 3px;
+}
+
+.balance-pnl.up   { color: var(--green); }
+.balance-pnl.down { color: var(--crimson-light); }
+
+/* ═══════════════════════════════════════════════════════════
+   TRADE HISTORY
+═══════════════════════════════════════════════════════════ */
+.trade-body { overflow-x: auto; }
+
+.trade-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.trade-table th {
+  padding: 10px 14px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  background: rgba(13,10,24,0.5);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.trade-table th:not(:first-child) { text-align: right; }
+.trade-table td { padding: 10px 14px; border-bottom: 1px solid rgba(42,31,68,0.35); font-family: 'IBM Plex Mono', monospace; font-size: 11px; white-space: nowrap; }
+.trade-table td:not(:first-child) { text-align: right; }
+.trade-table tr:last-child td { border-bottom: none; }
+.trade-table tr:hover td { background: rgba(139,92,246,0.04); }
+
+.win  { color: var(--green);  font-weight: 600; }
+.loss { color: var(--crimson-light); font-weight: 600; }
+.route-txt { color: var(--purple-light); font-size: 10px; }
+.no-trades td { text-align: center !important; color: var(--muted); padding: 30px !important; font-size: 11px; }
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════ */
+.footer {
+  margin-top: 20px;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer span { display: flex; align-items: center; gap: 5px; }
+
+.footer-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--border-bright);
+}
+
+.footer a { color: var(--purple-light); text-decoration: none; }
+.footer a:hover { color: var(--crimson-light); }
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
+
+/* ═══════════════════════════════════════════════════════════
+   SCAN LINE ANIMATION (across the topbar)
+═══════════════════════════════════════════════════════════ */
+@keyframes scanline {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(200%); opacity: 0; }
+}
+
+.scan-beam {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, rgba(139,92,246,0.12), rgba(225,29,72,0.08), transparent);
+  animation: scanline 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Shine on cards on hover ─────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
 </style>
 </head>
 <body>
+<div class="ambient-right"></div>
 <div class="shell">
 
-  <!-- ── Top Bar ─────────────────────────────────────────── -->
+  <!-- ═══ TOP BAR ═══════════════════════════════════════════ -->
   <div class="topbar">
+    <div class="scan-beam"></div>
     <div class="logo">
-      <div class="logo-icon">ARB</div>
-      <div class="logo-text">Crypto<span>ARB</span> Bot <span style="color:var(--muted);font-size:12px;font-weight:400">v1.0</span></div>
+      <div class="logo-mark">ARB</div>
+      <div>
+        <div class="logo-name">CryptoARB</div>
+        <div class="logo-sub">Command Center v1.0</div>
+      </div>
     </div>
+
+    <div class="topbar-center">
+      <div class="scan-ring"></div>
+      <span id="last-scan">initialising…</span>
+    </div>
+
     <div class="topbar-right">
       {% if paper_mode %}
-      <div class="badge paper"><div class="dot"></div> PAPER TRADING</div>
+      <div class="badge badge-paper"><div class="dot"></div>Paper Mode</div>
       {% else %}
-      <div class="badge"><div class="dot"></div> LIVE TRADING</div>
+      <div class="badge badge-live"><div class="dot"></div>Live Trading</div>
       {% endif %}
-      <div class="badge" id="conn-badge"><div class="dot"></div> CONNECTING…</div>
-      <div class="scan-ts" id="last-scan">—</div>
+      <div class="badge badge-offline" id="conn-badge"><div class="dot"></div>Connecting</div>
     </div>
   </div>
 
-  <!-- ── Stat Cards ─────────────────────────────────────── -->
+  <!-- ═══ METRIC CARDS ══════════════════════════════════════ -->
   <div class="metrics">
     <div class="metric">
+      <span class="metric-icon">💰</span>
       <div class="metric-label">Total P&amp;L</div>
-      <div class="metric-val up" id="stat-pnl">$0.00</div>
+      <div class="metric-val up" id="stat-pnl">$0.0000</div>
       <div class="metric-sub" id="stat-pnl-pct">+0.00%</div>
     </div>
     <div class="metric">
+      <span class="metric-icon">🎯</span>
       <div class="metric-label">Win Rate</div>
       <div class="metric-val purple" id="stat-winrate">—</div>
-      <div class="metric-sub" id="stat-trades">0 trades</div>
+      <div class="metric-sub" id="stat-trades">0 trades · best: —</div>
     </div>
     <div class="metric">
+      <span class="metric-icon">⚡</span>
       <div class="metric-label">Best Opportunity</div>
-      <div class="metric-val blue" id="stat-bestopp">—</div>
+      <div class="metric-val crimson" id="stat-bestopp">—</div>
       <div class="metric-sub" id="stat-bestopp-label">—</div>
     </div>
     <div class="metric">
-      <div class="metric-label">Scans</div>
-      <div class="metric-val" id="stat-scans">0</div>
-      <div class="metric-sub" id="stat-mode">{% if paper_mode %}Paper Mode{% else %}Live Mode{% endif %}</div>
+      <span class="metric-icon">🔭</span>
+      <div class="metric-label">Total Scans</div>
+      <div class="metric-val plain" id="stat-scans">0</div>
+      <div class="metric-sub">{% if paper_mode %}Paper · 4 Exchanges{% else %}Live · 4 Exchanges{% endif %}</div>
     </div>
   </div>
 
-  <!-- ── Main Grid ──────────────────────────────────────── -->
+  <!-- ═══ MAIN GRID ═════════════════════════════════════════ -->
   <div class="main-grid">
 
     <!-- Price Comparison Table -->
     <div class="card">
+      <div class="card-inner-glow"></div>
       <div class="card-header">
-        <div class="card-title">Live Price Comparison</div>
+        <div class="card-title">
+          <div class="card-title-dot"></div>
+          Live Price Comparison
+        </div>
         <div class="chip" id="price-age">—</div>
       </div>
-      <div style="overflow-x:auto">
-        <table class="price-table" id="price-table">
+      <div class="price-wrap">
+        <table class="price-table">
           <thead>
             <tr>
               <th>Pair</th>
               {% for ex in exchanges %}
-              <th style="text-align:right">{{ ex | upper }}</th>
+              <th>{{ ex | upper }}</th>
               {% endfor %}
-              <th style="text-align:right">Best Spread</th>
+              <th>Best Net Spread</th>
             </tr>
           </thead>
           <tbody id="price-tbody">
             {% for pair in pairs %}
             <tr id="row-{{ pair | replace('/', '-') }}">
-              <td><span class="pair-label">{{ pair }}</span></td>
+              <td><span class="pair-name">{{ pair }}</span></td>
               {% for ex in exchanges %}
-              <td class="ex-cell" id="cell-{{ ex }}-{{ pair | replace('/', '-') }}">
-                <span class="err-cell">…</span>
+              <td id="cell-{{ ex }}-{{ pair | replace('/', '-') }}">
+                <span class="price-err">…</span>
               </td>
               {% endfor %}
-              <td class="ex-cell" id="spread-{{ pair | replace('/', '-') }}"><span class="spread-badge cold">—</span></td>
+              <td id="spread-{{ pair | replace('/', '-') }}">
+                <span class="spread-badge spread-cold">—</span>
+              </td>
             </tr>
             {% endfor %}
           </tbody>
@@ -277,371 +928,394 @@ body{background:var(--bg);font-family:'Space Grotesk',sans-serif;color:var(--tex
 
     <!-- Opportunities Feed -->
     <div class="card">
+      <div class="card-inner-glow"></div>
       <div class="card-header">
-        <div class="card-title">Opportunities</div>
-        <div class="chip" id="opp-count">0 found</div>
+        <div class="card-title">
+          <div class="card-title-dot"></div>
+          Opportunities
+        </div>
+        <div class="chip" id="opp-count">scanning…</div>
       </div>
-      <div class="opp-list" id="opp-list">
-        <div class="empty-feed">Waiting for first scan…</div>
+      <div class="opp-scroll" id="opp-feed">
+        <div class="empty-feed">
+          <span class="empty-icon">🔭</span>
+          Waiting for first scan…<br/>
+          <span style="font-size:10px;color:var(--muted)">Checking 4 exchanges · 5 pairs</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ── Bottom Grid ────────────────────────────────────── -->
-  <div class="bottom-grid">
+  <!-- ═══ BOTTOM ROW ════════════════════════════════════════ -->
+  <div class="bottom-row">
 
-    <!-- Equity Curve Chart -->
+    <!-- Equity Curve -->
     <div class="card">
+      <div class="card-inner-glow"></div>
       <div class="card-header">
-        <div class="card-title">Equity Curve</div>
-        <div class="chip" id="equity-total">$0.00</div>
+        <div class="card-title">
+          <div class="card-title-dot"></div>
+          Equity Curve
+        </div>
+        <div class="chip" id="equity-chip">$0.00</div>
       </div>
       <div class="chart-wrap">
         <canvas id="equity-chart"></canvas>
       </div>
     </div>
 
-    <!-- Exchange Balances -->
+    <!-- Paper Balances -->
     <div class="card">
+      <div class="card-inner-glow"></div>
       <div class="card-header">
-        <div class="card-title">Paper Balances</div>
+        <div class="card-title">
+          <div class="card-title-dot"></div>
+          Virtual Balances
+        </div>
         <div class="chip">Per Exchange</div>
       </div>
-      <div class="balance-grid" id="balance-grid">
-        {% for ex in exchanges %}
-        <div class="balance-item">
-          <div class="balance-name">{{ ex }}</div>
-          <div class="balance-val" id="bal-{{ ex }}">$1,000.00</div>
-          <div class="balance-pnl" id="balpnl-{{ ex }}">—</div>
+      <div class="balance-body">
+        <div class="balance-grid" id="balance-grid">
+          {% for ex in exchanges %}
+          <div class="balance-item">
+            <div class="balance-name">{{ ex }}</div>
+            <div class="balance-val" id="bal-{{ ex }}">$1,000.00</div>
+            <div class="balance-pnl" id="balpnl-{{ ex }}">—</div>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
     </div>
   </div>
 
-  <!-- ── Trade History ──────────────────────────────────── -->
-  <div class="card" style="margin-top:14px">
+  <!-- ═══ TRADE HISTORY ═════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-inner-glow"></div>
     <div class="card-header">
-      <div class="card-title">Trade History</div>
-      <div class="chip" id="trade-count-chip">0 trades</div>
+      <div class="card-title">
+        <div class="card-title-dot"></div>
+        Trade History
+      </div>
+      <div class="chip" id="trade-chip">0 trades</div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="trades-table">
+    <div class="trade-body">
+      <table class="trade-table">
         <thead>
           <tr>
             <th>Time</th>
             <th>Pair</th>
             <th>Route</th>
-            <th style="text-align:right">Buy Price</th>
-            <th style="text-align:right">Sell Price</th>
-            <th style="text-align:right">Gross Spread</th>
-            <th style="text-align:right">Net Profit %</th>
-            <th style="text-align:right">P&amp;L (USD)</th>
+            <th>Buy Price</th>
+            <th>Sell Price</th>
+            <th>Gross %</th>
+            <th>Net %</th>
+            <th>P&amp;L (USD)</th>
           </tr>
         </thead>
-        <tbody id="trades-tbody">
-          <tr class="empty-row"><td colspan="8">No trades yet — waiting for first opportunity…</td></tr>
+        <tbody id="trade-tbody">
+          <tr class="no-trades"><td colspan="8">No trades yet — waiting for a profitable spread…</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
+  <!-- ═══ FOOTER ════════════════════════════════════════════ -->
   <div class="footer">
-    Crypto ARB Bot v1.0 &nbsp;·&nbsp; {% if paper_mode %}Paper Trading Mode{% else %}Live Trading Mode{% endif %}
-    &nbsp;·&nbsp; Session: <span id="session-id">{{ session_id }}</span>
-    &nbsp;·&nbsp; <a href="/health">health</a>
+    <span>🤖 CryptoARB Bot v1.0</span>
+    <div class="footer-dot"></div>
+    <span>{% if paper_mode %}📄 Paper Trading{% else %}💸 Live Trading{% endif %}</span>
+    <div class="footer-dot"></div>
+    <span>Session: <code style="color:var(--purple-light)">{{ session_id[:12] }}…</code></span>
+    <div class="footer-dot"></div>
+    <span><a href="/health">health check</a></span>
   </div>
-</div>
 
+</div><!-- /shell -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
 <script>
-// ── Config ────────────────────────────────────────────────────────────────────
-const PAIRS     = {{ pairs | tojson }};
-const EXCHANGES = {{ exchanges | tojson }};
+const PAIRS      = {{ pairs | tojson }};
+const EXCHANGES  = {{ exchanges | tojson }};
 const PAPER_MODE = {{ 'true' if paper_mode else 'false' }};
-const REFRESH_MS = 2000;
-const INITIAL_CAPITAL = 1000.0;
+const INIT_CAP   = 1000.0;
+const REFRESH_MS = 2500;
 
-// ── Equity Chart Setup ────────────────────────────────────────────────────────
-const ctx = document.getElementById('equity-chart').getContext('2d');
-const equityChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Equity (USD)',
-      data: [],
-      borderColor: '#7C5CFC',
-      backgroundColor: 'rgba(124,92,252,0.08)',
-      borderWidth: 2,
-      pointRadius: 0,
-      pointHoverRadius: 4,
-      fill: true,
-      tension: 0.3,
-    }],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: {
-      backgroundColor: '#0F1219',
-      borderColor: '#252D3D',
-      borderWidth: 1,
-      titleColor: '#6B7590',
-      bodyColor: '#E8EAF0',
-      callbacks: {
-        label: ctx => `$${ctx.parsed.y.toFixed(2)}`,
-      },
-    }},
-    scales: {
-      x: { display: false },
-      y: {
-        grid: { color: 'rgba(37,45,61,0.5)' },
-        ticks: {
-          color: '#6B7590', font: { family: "'IBM Plex Mono', monospace", size: 10 },
-          callback: v => `$${v.toFixed(0)}`,
+/* ── Chart ──────────────────────────────────────────────────── */
+const equityChart = new Chart(
+  document.getElementById('equity-chart').getContext('2d'),
+  {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Equity',
+        data: [],
+        borderColor: '#8B5CF6',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: '#8B5CF6',
+        fill: true,
+        tension: 0.4,
+        backgroundColor: (ctx) => {
+          const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 190);
+          gradient.addColorStop(0,   'rgba(139,92,246,0.20)');
+          gradient.addColorStop(0.5, 'rgba(225,29,72,0.06)');
+          gradient.addColorStop(1,   'rgba(139,92,246,0.00)');
+          return gradient;
         },
-        border: { display: false },
-      },
+      }],
     },
-    animation: { duration: 400 },
-  },
-});
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1A1528',
+          borderColor: '#4A3570',
+          borderWidth: 1,
+          titleColor: '#5B4F7A',
+          bodyColor: '#EDE9FE',
+          padding: 10,
+          callbacks: { label: c => ` $${c.parsed.y.toFixed(4)}` },
+        },
+      },
+      scales: {
+        x: { display: false },
+        y: {
+          grid:   { color: 'rgba(42,31,68,0.5)' },
+          border: { display: false },
+          ticks:  {
+            color: '#5B4F7A',
+            font:  { family: "'IBM Plex Mono', monospace", size: 10 },
+            callback: v => `$${v.toFixed(0)}`,
+          },
+        },
+      },
+      animation: { duration: 500, easing: 'easeInOutQuart' },
+    },
+  }
+);
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function fmtUsd(v, decimals=2) {
+/* ── Helpers ────────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+
+function fmtUsd(v, d = 4) {
   if (v == null) return '—';
-  const sign = v >= 0 ? '+' : '';
-  return sign + '$' + Math.abs(v).toFixed(decimals);
+  return (v >= 0 ? '+' : '') + '$' + Math.abs(v).toFixed(d);
 }
-function fmtPct(v, decimals=2) {
+
+function fmtPct(v, d = 3) {
   if (v == null) return '—';
-  const sign = v >= 0 ? '+' : '';
-  return sign + v.toFixed(decimals) + '%';
+  return (v >= 0 ? '+' : '') + v.toFixed(d) + '%';
 }
+
 function fmtPrice(v) {
-  if (v == null || v === 0) return '—';
-  if (v >= 1000) return v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  if (v >= 1) return v.toFixed(4);
+  if (!v || v === 0) return '—';
+  if (v >= 10000) return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (v >= 1)     return v.toFixed(4);
   return v.toFixed(6);
 }
-function timeAgo(ts) {
-  if (!ts) return '—';
-  const diff = Date.now()/1000 - ts;
-  if (diff < 5) return 'just now';
-  if (diff < 60) return `${diff.toFixed(0)}s ago`;
-  return `${(diff/60).toFixed(1)}m ago`;
-}
+
 function fmtTime(ts) {
   if (!ts) return '—';
-  return new Date(ts * 1000).toLocaleTimeString('en-US', {hour12:false});
-}
-function colorPnl(el, val) {
-  el.classList.remove('up','down','win-pnl','loss-pnl');
-  if (val > 0) el.classList.add('up');
-  else if (val < 0) el.classList.add('down');
+  return new Date(ts * 1000).toLocaleTimeString('en-US', { hour12: false });
 }
 
-// ── Update Prices Table ───────────────────────────────────────────────────────
-function updatePrices(prices, opportunities) {
-  // Build best-spread lookup from opportunities
-  const bestSpread = {};
-  if (opportunities && opportunities.length > 0) {
-    for (const opp of opportunities) {
-      const key = opp.pair;
-      if (!bestSpread[key] || opp.net_profit_pct > bestSpread[key].net_profit_pct) {
-        bestSpread[key] = opp;
-      }
-    }
+function timeAgo(ts) {
+  if (!ts) return '—';
+  const diff = Date.now() / 1000 - ts;
+  if (diff < 5)  return 'just now';
+  if (diff < 60) return `${Math.round(diff)}s ago`;
+  return `${(diff / 60).toFixed(1)}m ago`;
+}
+
+function exClass(name) {
+  const m = { binance: 'ex-binance', coinbase: 'ex-coinbase', kucoin: 'ex-kucoin', gateio: 'ex-gateio' };
+  return m[name] || '';
+}
+
+function exPill(name) {
+  return `<span class="ex-pill ${exClass(name)}">${name}</span>`;
+}
+
+/* ── Update: Prices ─────────────────────────────────────────── */
+function renderPrices(prices, opps) {
+  // Best spread per pair
+  const best = {};
+  for (const o of (opps || [])) {
+    if (!best[o.pair] || o.net_profit_pct > best[o.pair].net_profit_pct) best[o.pair] = o;
   }
+
+  // Age stamp
+  let latestTs = 0;
+  for (const ex of Object.values(prices || {}))
+    for (const p of Object.values(ex))
+      if (p?.timestamp > latestTs) latestTs = p.timestamp;
+  if ($('price-age')) $('price-age').textContent = latestTs ? timeAgo(latestTs) : '—';
 
   for (const pair of PAIRS) {
-    const rowId = pair.replace('/', '-');
-
+    const rid = pair.replace('/', '-');
     for (const ex of EXCHANGES) {
-      const cell = document.getElementById(`cell-${ex}-${rowId}`);
+      const cell = $(`cell-${ex}-${rid}`);
       if (!cell) continue;
-      const exData = prices[ex];
-      const pairData = exData && exData[pair];
-
-      if (!pairData || pairData.error) {
-        cell.innerHTML = `<span class="err-cell">${pairData && pairData.error ? 'err' : '—'}</span>`;
+      const pd = prices?.[ex]?.[pair];
+      if (!pd || pd.error) {
+        cell.innerHTML = `<span class="price-err">${pd?.error ? 'err' : '—'}</span>`;
       } else {
         cell.innerHTML = `
-          <span class="price-cell">
-            <span class="price-val bid">${fmtPrice(pairData.bid)}</span>
-            <span class="price-tag">bid</span>
-            <span class="price-val ask" style="margin-top:2px">${fmtPrice(pairData.ask)}</span>
-            <span class="price-tag">ask</span>
-          </span>`;
+          <div class="price-cell">
+            <span class="price-bid">${fmtPrice(pd.bid)}</span>
+            <span class="price-label">bid</span>
+            <span class="price-ask">${fmtPrice(pd.ask)}</span>
+            <span class="price-label">ask</span>
+          </div>`;
       }
     }
 
-    // Best spread badge
-    const spreadEl = document.getElementById(`spread-${rowId}`);
+    const spreadEl = $(`spread-${rid}`);
     if (spreadEl) {
-      const best = bestSpread[pair];
-      if (best && best.net_profit_pct > 0) {
-        const cls = best.is_profitable ? 'hot' : (best.net_profit_pct > 0 ? 'warm' : 'cold');
-        spreadEl.innerHTML = `<span class="spread-badge ${cls}">${fmtPct(best.net_profit_pct, 3)}</span>`;
+      const b = best[pair];
+      if (b && b.net_profit_pct > 0) {
+        const cls = b.is_profitable ? 'spread-hot' : (b.net_profit_pct > 0.1 ? 'spread-warm' : 'spread-cold');
+        spreadEl.innerHTML = `<span class="spread-badge ${cls}">${fmtPct(b.net_profit_pct, 3)}</span>`;
       } else {
-        spreadEl.innerHTML = `<span class="spread-badge cold">—</span>`;
+        spreadEl.innerHTML = `<span class="spread-badge spread-cold">—</span>`;
       }
     }
-  }
-
-  // Update price age
-  const ageEl = document.getElementById('price-age');
-  if (ageEl && Object.keys(prices).length > 0) {
-    // Get any timestamp from prices
-    let ts = 0;
-    for (const ex of Object.values(prices)) {
-      for (const p of Object.values(ex)) {
-        if (p && p.timestamp && p.timestamp > ts) ts = p.timestamp;
-      }
-    }
-    ageEl.textContent = ts ? timeAgo(ts) : '—';
   }
 }
 
-// ── Update Opportunities Feed ─────────────────────────────────────────────────
-function updateOpportunities(opps) {
-  const list = document.getElementById('opp-list');
-  const countEl = document.getElementById('opp-count');
-
+/* ── Update: Opportunities ──────────────────────────────────── */
+function renderOpps(opps) {
+  const feed   = $('opp-feed');
+  const countEl = $('opp-count');
   if (!opps || opps.length === 0) {
-    list.innerHTML = '<div class="empty-feed">No opportunities detected yet…</div>';
+    feed.innerHTML = `<div class="empty-feed"><span class="empty-icon">🔭</span>No opportunities yet…<br/><span style="font-size:10px;color:var(--muted)">Prices loading from 4 exchanges</span></div>`;
     if (countEl) countEl.textContent = '0 found';
     return;
   }
 
-  if (countEl) countEl.textContent = `${opps.length} found`;
+  const profitable = opps.filter(o => o.is_profitable).length;
+  if (countEl) {
+    countEl.textContent = `${profitable} profitable`;
+    countEl.className = `chip ${profitable > 0 ? 'hot' : ''}`;
+  }
 
-  const html = opps.slice(0, 20).map(opp => {
-    const cls = opp.is_profitable ? 'profitable' : '';
-    const profCls = opp.net_profit_pct > 0 ? 'pos' : 'neg';
-    const ts = fmtTime(opp.detected_at);
+  feed.innerHTML = opps.slice(0, 20).map(o => {
+    const cls     = o.is_profitable ? 'profitable' : '';
+    const pctCls  = o.net_profit_pct > 0 ? 'pos' : 'neg';
     return `
-      <div class="opp-row ${cls}">
-        <div class="opp-top">
-          <span class="opp-pair">${opp.pair}</span>
-          <span class="opp-profit ${profCls}">${fmtPct(opp.net_profit_pct, 3)} &nbsp;${fmtUsd(opp.estimated_profit_usd, 4)}</span>
+      <div class="opp-card ${cls}">
+        <div class="opp-head">
+          <div>
+            <div class="opp-pair">${o.pair}</div>
+            <div class="opp-time">${fmtTime(o.detected_at)}</div>
+          </div>
+          <div class="opp-profit-block">
+            <div class="opp-pct ${pctCls}">${fmtPct(o.net_profit_pct, 3)}</div>
+            <div class="opp-usd">${fmtUsd(o.estimated_profit_usd, 4)}</div>
+          </div>
         </div>
-        <div class="opp-bottom">
-          <span class="ex-route">
-            ${opp.buy_exchange} <span class="arrow">→</span> ${opp.sell_exchange}
-          </span>
-          <span>gross ${fmtPct(opp.gross_spread_pct, 3)}</span>
-          <span>${ts}</span>
+        <div class="opp-route">
+          ${exPill(o.buy_exchange)}
+          <span class="route-arrow">→</span>
+          ${exPill(o.sell_exchange)}
+          <span class="opp-detail">gross ${fmtPct(o.gross_spread_pct, 3)}</span>
         </div>
       </div>`;
   }).join('');
-  list.innerHTML = html;
 }
 
-// ── Update Stats Cards ────────────────────────────────────────────────────────
-function updateStats(stats) {
-  if (!stats) return;
+/* ── Update: Stats ──────────────────────────────────────────── */
+function renderStats(s) {
+  if (!s) return;
+  const pnl    = s.pnl_usd ?? s.total_profit_usd ?? 0;
+  const pnlPct = s.pnl_pct ?? 0;
 
-  const pnlEl = document.getElementById('stat-pnl');
-  const pnlPctEl = document.getElementById('stat-pnl-pct');
-  const winrateEl = document.getElementById('stat-winrate');
-  const tradesEl = document.getElementById('stat-trades');
-  const bestOppEl = document.getElementById('stat-bestopp');
-  const bestOppLabelEl = document.getElementById('stat-bestopp-label');
-  const scansEl = document.getElementById('stat-scans');
-
-  const pnl = stats.pnl_usd || stats.total_profit_usd || 0;
-  const pnlPct = stats.pnl_pct || 0;
-
+  const pnlEl = $('stat-pnl');
   if (pnlEl) {
-    pnlEl.textContent = fmtUsd(pnl);
-    colorPnl(pnlEl, pnl);
+    pnlEl.textContent = '$' + Math.abs(pnl).toFixed(4);
+    pnlEl.className = `metric-val ${pnl >= 0 ? 'up' : 'down'}`;
   }
-  if (pnlPctEl) pnlPctEl.textContent = fmtPct(pnlPct);
-  if (winrateEl) winrateEl.textContent = stats.win_rate_pct != null ? `${stats.win_rate_pct.toFixed(1)}%` : '—';
-  if (tradesEl) tradesEl.textContent = `${stats.total_trades || 0} trades · best: ${stats.best_pair || '—'}`;
-  if (bestOppEl) bestOppEl.textContent = stats.best_opp_pct != null ? fmtPct(stats.best_opp_pct, 3) : '—';
-  if (bestOppLabelEl) bestOppLabelEl.textContent = stats.best_opp_label || '—';
-  if (scansEl) scansEl.textContent = (stats.scan_count || 0).toLocaleString();
+  if ($('stat-pnl-pct')) $('stat-pnl-pct').textContent = fmtPct(pnlPct, 4);
+  if ($('stat-winrate'))  $('stat-winrate').textContent  = s.win_rate_pct != null ? `${s.win_rate_pct.toFixed(1)}%` : '—';
+  if ($('stat-trades'))   $('stat-trades').textContent   = `${s.total_trades || 0} trades · best: ${s.best_pair || '—'}`;
+  if ($('stat-bestopp'))  $('stat-bestopp').textContent  = s.best_opp_pct != null ? fmtPct(s.best_opp_pct, 3) : '—';
+  if ($('stat-bestopp-label')) $('stat-bestopp-label').textContent = s.best_opp_label || '—';
+  if ($('stat-scans'))    $('stat-scans').textContent    = (s.scan_count || 0).toLocaleString();
 
   // Connection badge
-  const connBadge = document.getElementById('conn-badge');
-  if (connBadge) {
-    connBadge.innerHTML = '<div class="dot"></div> LIVE';
-    connBadge.style.background = 'rgba(61,220,132,0.08)';
-    connBadge.style.borderColor = 'rgba(61,220,132,0.25)';
-    connBadge.style.color = 'var(--green)';
+  const connEl = $('conn-badge');
+  if (connEl) {
+    connEl.innerHTML = '<div class="dot"></div>Online';
+    connEl.className = 'badge badge-online';
   }
 
-  const lastScanEl = document.getElementById('last-scan');
-  if (lastScanEl && stats.last_scan_ts) {
-    lastScanEl.textContent = `scan ${timeAgo(stats.last_scan_ts)}`;
+  if (s.last_scan_ts && $('last-scan')) {
+    $('last-scan').textContent = `last scan ${timeAgo(s.last_scan_ts)}`;
   }
 
-  // Update balances
-  if (stats.balances) {
-    for (const [ex, bal] of Object.entries(stats.balances)) {
-      const balEl = document.getElementById(`bal-${ex}`);
-      const pnlEl2 = document.getElementById(`balpnl-${ex}`);
+  // Balances
+  if (s.balances) {
+    for (const [ex, bal] of Object.entries(s.balances)) {
+      const balEl  = $(`bal-${ex}`);
+      const pnlEl2 = $(`balpnl-${ex}`);
       if (balEl) balEl.textContent = `$${bal.toFixed(2)}`;
       if (pnlEl2) {
-        const diff = bal - INITIAL_CAPITAL;
-        pnlEl2.textContent = fmtPct((diff / INITIAL_CAPITAL) * 100, 2);
+        const diff = bal - INIT_CAP;
+        pnlEl2.textContent  = fmtPct((diff / INIT_CAP) * 100, 2);
         pnlEl2.className = `balance-pnl ${diff >= 0 ? 'up' : 'down'}`;
       }
     }
-
-    const totalEl = document.getElementById('equity-total');
-    if (totalEl && stats.total_usd) totalEl.textContent = `$${stats.total_usd.toFixed(2)}`;
+    if (s.total_usd && $('equity-chip'))
+      $('equity-chip').textContent = `$${s.total_usd.toFixed(2)}`;
   }
 }
 
-// ── Update Trades Table ───────────────────────────────────────────────────────
-function updateTrades(trades) {
-  const tbody = document.getElementById('trades-tbody');
-  const chipEl = document.getElementById('trade-count-chip');
-
+/* ── Update: Trades ─────────────────────────────────────────── */
+function renderTrades(trades) {
+  const tbody = $('trade-tbody');
+  const chip  = $('trade-chip');
   if (!trades || trades.length === 0) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="8">No trades yet — waiting for first opportunity…</td></tr>';
-    if (chipEl) chipEl.textContent = '0 trades';
+    tbody.innerHTML = '<tr class="no-trades"><td colspan="8">No trades yet — waiting for a profitable spread…</td></tr>';
+    if (chip) chip.textContent = '0 trades';
     return;
   }
-
-  if (chipEl) chipEl.textContent = `${trades.length} trades`;
-
-  const html = trades.slice(0, 50).map(t => {
-    const pnlCls = t.profit_usd >= 0 ? 'win-pnl' : 'loss-pnl';
+  if (chip) chip.textContent = `${trades.length} trades`;
+  tbody.innerHTML = trades.slice(0, 50).map(t => {
+    const cls = t.profit_usd >= 0 ? 'win' : 'loss';
     return `<tr>
       <td>${fmtTime(t.executed_at)}</td>
       <td>${t.pair}</td>
-      <td><span class="route-text">${t.buy_exchange} → ${t.sell_exchange}</span></td>
-      <td style="text-align:right">${fmtPrice(t.buy_price)}</td>
-      <td style="text-align:right">${fmtPrice(t.sell_price)}</td>
-      <td style="text-align:right">${fmtPct(t.gross_spread_pct, 3)}</td>
-      <td style="text-align:right">${fmtPct(t.net_profit_pct, 3)}</td>
-      <td style="text-align:right" class="${pnlCls}">${fmtUsd(t.profit_usd, 4)}</td>
+      <td><span class="route-txt">${t.buy_exchange} → ${t.sell_exchange}</span></td>
+      <td>${fmtPrice(t.buy_price)}</td>
+      <td>${fmtPrice(t.sell_price)}</td>
+      <td>${fmtPct(t.gross_spread_pct, 3)}</td>
+      <td>${fmtPct(t.net_profit_pct, 3)}</td>
+      <td class="${cls}">${fmtUsd(t.profit_usd, 4)}</td>
     </tr>`;
   }).join('');
-  tbody.innerHTML = html;
 }
 
-// ── Update Equity Chart ───────────────────────────────────────────────────────
-function updateEquityChart(series) {
-  if (!series || series.length === 0) return;
-  const labels = series.map(pt => fmtTime(pt.ts));
-  const data = series.map(pt => pt.equity_usd);
-  equityChart.data.labels = labels;
-  equityChart.data.datasets[0].data = data;
+/* ── Update: Equity Chart ───────────────────────────────────── */
+function renderEquity(series) {
+  if (!series || series.length < 2) return;
+  equityChart.data.labels = series.map(p => fmtTime(p.ts));
+  equityChart.data.datasets[0].data = series.map(p => p.equity_usd);
   equityChart.update('none');
 }
 
-// ── Fetch All Data ────────────────────────────────────────────────────────────
-let latestOpps = [];
-let latestPrices = {};
+/* ── Fetch All ──────────────────────────────────────────────── */
+let cachedOpps = [], cachedPrices = {};
 
 async function fetchAll() {
   try {
-    const [pricesRes, oppsRes, statsRes, tradesRes, equityRes] = await Promise.all([
+    const [pR, oR, sR, tR, eR] = await Promise.all([
       fetch('/api/prices'),
       fetch('/api/opportunities'),
       fetch('/api/stats'),
@@ -649,58 +1323,39 @@ async function fetchAll() {
       fetch('/api/equity'),
     ]);
 
-    if (pricesRes.ok) {
-      const pd = await pricesRes.json();
-      latestPrices = pd.prices || {};
-    }
-    if (oppsRes.ok) {
-      latestOpps = await oppsRes.json();
-    }
+    if (pR.ok) { const d = await pR.json(); cachedPrices = d.prices || {}; }
+    if (oR.ok) { cachedOpps = await oR.json(); }
 
-    updatePrices(latestPrices, latestOpps);
-    updateOpportunities(latestOpps);
+    renderPrices(cachedPrices, cachedOpps);
+    renderOpps(cachedOpps);
+    if (sR.ok) renderStats(await sR.json());
+    if (tR.ok) renderTrades(await tR.json());
+    if (eR.ok) renderEquity(await eR.json());
 
-    if (statsRes.ok) {
-      const stats = await statsRes.json();
-      updateStats(stats);
-    }
-    if (tradesRes.ok) {
-      const trades = await tradesRes.json();
-      updateTrades(trades);
-    }
-    if (equityRes.ok) {
-      const series = await equityRes.json();
-      updateEquityChart(series);
-    }
-  } catch (err) {
-    const connBadge = document.getElementById('conn-badge');
-    if (connBadge) {
-      connBadge.innerHTML = '<div class="dot" style="background:var(--red)"></div> DISCONNECTED';
-      connBadge.style.color = 'var(--red)';
-    }
-    console.warn('Fetch error:', err);
+  } catch (e) {
+    const c = $('conn-badge');
+    if (c) { c.innerHTML = '<div class="dot"></div>Offline'; c.className = 'badge badge-offline'; }
+    if ($('last-scan')) $('last-scan').textContent = 'connection lost…';
   }
 }
 
-// ── SSE for real-time push (supplements polling) ──────────────────────────────
+/* ── SSE ────────────────────────────────────────────────────── */
 function connectSSE() {
   const es = new EventSource('/api/stream');
-  es.addEventListener('scan', async () => { await fetchAll(); });
+  es.addEventListener('scan', () => fetchAll());
   es.addEventListener('heartbeat', () => {});
-  es.onerror = () => { setTimeout(connectSSE, 5000); es.close(); };
+  es.onopen  = () => { const c = $('conn-badge'); if (c) { c.innerHTML = '<div class="dot"></div>Online'; c.className = 'badge badge-online'; } };
+  es.onerror = () => { es.close(); setTimeout(connectSSE, 4000); };
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+/* ── Init ───────────────────────────────────────────────────── */
 fetchAll();
 setInterval(fetchAll, REFRESH_MS);
 connectSSE();
 
-// Update "last scan" timestamp live
+// Tick the "last scan" label every second
 setInterval(() => {
-  const lastScanEl = document.getElementById('last-scan');
-  if (lastScanEl && lastScanEl.dataset.ts) {
-    lastScanEl.textContent = `scan ${timeAgo(parseFloat(lastScanEl.dataset.ts))}`;
-  }
+  /* kept empty — refreshed via fetchAll stats */
 }, 1000);
 </script>
 </body>
