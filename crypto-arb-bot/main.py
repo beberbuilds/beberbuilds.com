@@ -142,11 +142,13 @@ def scanner_loop(db: Database, paper_trader: PaperTrader, session_id: str) -> No
                     success, reason = paper_trader.try_execute(best)
                     if success:
                         snapshot = paper_trader.get_portfolio_snapshot()
+                        pnl_usd = snapshot["pnl_usd"]
+                        pnl_pct = snapshot["pnl_pct"]
                         print(
                             f"  {_y('📋 PAPER TRADE')}  "
                             f"{_c(best.pair)}  "
-                            f"P&L={_g(f'${snapshot[\"pnl_usd\"]:+.4f}')}  "
-                            f"({_g(f'{snapshot[\"pnl_pct\"]:+.3f}%')})"
+                            f"P&L={_g(f'${pnl_usd:+.4f}')}  "
+                            f"({_g(f'{pnl_pct:+.3f}%')})"
                         )
 
             # 6. Broadcast SSE update (dashboard JS listens for "scan" event)
