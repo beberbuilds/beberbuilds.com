@@ -203,7 +203,7 @@ export default function Footer() {
       <div className="border-t border-white/[0.04]">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[12px] sm:text-xs text-white/20 order-2 sm:order-1">
-            &copy; {new Date().getFullYear()} Beber Builds. All rights reserved.
+            &copy; {new Date().getFullYear()} BeberBuilds. All rights reserved.
           </p>
 
           <div className="flex items-center gap-5 order-1 sm:order-2">
