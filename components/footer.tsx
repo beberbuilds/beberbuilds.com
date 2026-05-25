@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ChevronDown, ArrowUp, Mail, MapPin, Phone } from "lucide-react";
+import { ChevronDown, ArrowUp, Mail, MapPin, Phone } from "lucide-react";
 import { footerLinks, socialLinks } from "@/lib/data";
 import Link from "next/link";
+import LogoMark from "@/components/logo-mark";
 
 /* ─── Inline SVG brand icons (lucide-react doesn't include brand logos) ─── */
 function XIcon({ className }: { className?: string }) {
@@ -133,11 +134,9 @@ export default function Footer() {
           {/* ═══ Column 1: Brand (spans 2 on desktop) ═══ */}
           <div className="lg:col-span-2 flex flex-col">
             <Link href="#home" className="flex items-center gap-2.5 group mb-4">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#7C3AED] flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.3)] group-hover:shadow-[0_0_35px_rgba(124,58,237,0.5)] transition-shadow duration-300">
-                <Sparkles className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-white" />
-              </div>
+              <LogoMark className="w-9 h-9 sm:w-10 sm:h-10" />
               <span className="text-xl sm:text-2xl font-bold tracking-tight">
-                Beber<span className="text-[#A78BFA]">Builds</span>
+                beber<span className="text-[#A78BFA]">builds</span>
               </span>
             </Link>
 
