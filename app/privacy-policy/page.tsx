@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
         <p className="text-white/40 text-sm mb-10">Last updated: May 25, 2026</p>
 
         <p className="text-white/60 leading-relaxed mb-4">
-          BeberBuilds ("we," "us," or "our") is committed to protecting your privacy. This Privacy
+          BeberBuilds (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) is committed to protecting your privacy. This Privacy
           Policy explains how we collect, use, disclose, and safeguard your personal information when
           you visit our website at beberbuilds.com or engage our services. By accessing our website
           or using our services, you agree to the practices described in this policy. If you do not
@@ -70,7 +70,7 @@ export default function PrivacyPolicy() {
         </ul>
 
         <p className="text-white/60 leading-relaxed mb-4">
-          We rely on the following legal bases under applicable privacy law (including Canada's PIPEDA and, where applicable, the EU/UK GDPR): your consent, the performance of a contract with you, compliance with a legal obligation, and our legitimate business interests where those interests do not override your rights.
+          We rely on the following legal bases under applicable privacy law (including Canada&apos;s PIPEDA and, where applicable, the EU/UK GDPR): your consent, the performance of a contract with you, compliance with a legal obligation, and our legitimate business interests where those interests do not override your rights.
         </p>
 
         {/* 3. Cookies and Tracking Technologies */}
@@ -129,7 +129,7 @@ export default function PrivacyPolicy() {
           your information may be transferred to and processed in Canada or other countries where
           our service providers operate, including the United States. We take steps to ensure that
           any cross-border transfers are subject to appropriate safeguards in accordance with
-          applicable law, including PIPEDA and, where relevant, the GDPR's standard contractual
+          applicable law, including PIPEDA and, where relevant, the GDPR&apos;s standard contractual
           clauses or equivalent mechanisms.
         </p>
 
@@ -184,8 +184,8 @@ export default function PrivacyPolicy() {
           . We will respond within 30 days or as required by applicable law.
         </p>
 
-        {/* 10. Children's Privacy */}
-        <h2 className="text-xl font-semibold mt-10 mb-3 text-[#A78BFA]">10. Children's Privacy</h2>
+        {/* 10. Children’s Privacy */}
+        <h2 className="text-xl font-semibold mt-10 mb-3 text-[#A78BFA]">10. Children&apos;s Privacy</h2>
         <p className="text-white/60 leading-relaxed mb-4">
           Our website and services are not directed to individuals under the age of 18. We do not
           knowingly collect personal information from children. If you believe we have inadvertently
@@ -198,7 +198,7 @@ export default function PrivacyPolicy() {
         <p className="text-white/60 leading-relaxed mb-4">
           We may update this Privacy Policy from time to time to reflect changes in our practices,
           technology, legal requirements, or for other operational reasons. When we make material
-          changes, we will update the "Last updated" date at the top of this page and, where
+          changes, we will update the &quot;Last updated&quot; date at the top of this page and, where
           appropriate, notify you by email or a notice on our website. Your continued use of our
           website or services after the effective date constitutes acceptance of the updated policy.
         </p>

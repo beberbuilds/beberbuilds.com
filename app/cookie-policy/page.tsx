@@ -170,8 +170,7 @@ export default function CookiePolicy() {
           </table>
         </div>
         <p className="text-white/60 leading-relaxed mb-4">
-          We may not have all of the above marketing tools active at all times. The specific tools in
-          use at any given time depend on our current marketing activities. You can withdraw consent
+          We may not have all of the above marketing tools active at all times. You can withdraw consent
           for marketing cookies at any time by adjusting your cookie preferences or using the opt-out
           mechanisms described in Section 4.
         </p>
@@ -184,7 +183,7 @@ export default function CookiePolicy() {
           enhance usability. We will seek your consent for these cookies where required by applicable law.
         </p>
 
-        {/* 3. How Long Do Cookies Last */}
+        {/* 3. Cookie Duration */}
         <h2 className="text-xl font-semibold mt-10 mb-3 text-[#A78BFA]">3. Cookie Duration</h2>
         <p className="text-white/60 leading-relaxed mb-4">
           Cookies can be either <strong className="text-white/80">session cookies</strong> or{" "}
@@ -198,11 +197,6 @@ export default function CookiePolicy() {
             <strong className="text-white/80">Persistent cookies</strong> remain on your device for a set period of time (or until you manually delete them). They are used to remember your preferences across visits and to provide analytics data over time.
           </li>
         </ul>
-        <p className="text-white/60 leading-relaxed mb-4">
-          The specific duration of each cookie we use is noted in the tables in Section 2. Durations are
-          subject to change when we update our cookie practices, and the tables in this policy will be
-          updated accordingly.
-        </p>
 
         {/* 4. How to Control Cookies */}
         <h2 className="text-xl font-semibold mt-10 mb-3 text-[#A78BFA]">4. How to Control Cookies</h2>
@@ -223,16 +217,7 @@ export default function CookiePolicy() {
 
         <h3 className="text-base font-semibold mb-2 text-white/80">b) Browser Settings</h3>
         <p className="text-white/60 leading-relaxed mb-4">
-          Most web browsers allow you to control cookies through their settings. You can typically:
-        </p>
-        <ul className="list-disc list-inside text-white/60 space-y-2 mb-4">
-          <li>View the cookies stored on your device and delete them individually or in bulk.</li>
-          <li>Block all cookies or only third-party cookies.</li>
-          <li>Set your browser to notify you before a cookie is placed.</li>
-          <li>Enable private/incognito browsing, which does not save cookies after your session ends.</li>
-        </ul>
-        <p className="text-white/60 leading-relaxed mb-4">
-          Browser-specific instructions for managing cookies:
+          Most web browsers allow you to control cookies through their settings. Browser-specific instructions:
         </p>
         <ul className="list-disc list-inside text-white/60 space-y-2 mb-4">
           <li>
@@ -248,16 +233,8 @@ export default function CookiePolicy() {
             <a href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" className="text-[#A78BFA] hover:text-white underline transition-colors">Microsoft Edge</a>
           </li>
         </ul>
-        <p className="text-white/60 leading-relaxed mb-4">
-          Please note that blocking or deleting all cookies may impact website functionality and your
-          user experience. Certain features may not work correctly if essential cookies are disabled.
-        </p>
 
         <h3 className="text-base font-semibold mb-2 text-white/80">c) Third-Party Opt-Out Tools</h3>
-        <p className="text-white/60 leading-relaxed mb-4">
-          You can opt out of interest-based advertising from participating companies using industry
-          opt-out tools:
-        </p>
         <ul className="list-disc list-inside text-white/60 space-y-2 mb-4">
           <li>
             <a href="https://youradchoices.ca/" target="_blank" rel="noopener noreferrer" className="text-[#A78BFA] hover:text-white underline transition-colors">
@@ -280,19 +257,14 @@ export default function CookiePolicy() {
             </a>
           </li>
         </ul>
-        <p className="text-white/60 leading-relaxed mb-4">
-          These opt-out mechanisms work by placing an opt-out cookie on your device. If you clear your
-          cookies, you may need to opt out again.
-        </p>
 
         {/* 5. Do Not Track */}
         <h2 className="text-xl font-semibold mt-10 mb-3 text-[#A78BFA]">5. Do Not Track Signals</h2>
         <p className="text-white/60 leading-relaxed mb-4">
-          Some browsers include a &quot;Do Not Track&quot; (DNT) feature that signals to websites that you do not
-          want your browsing activity tracked. There is currently no universally agreed-upon technical
-          standard for responding to DNT signals. At this time, our website does not alter its data
-          collection practices in response to DNT signals, but you can manage your cookie preferences
-          using the methods described in Section 4.
+          Some browsers include a &quot;Do Not Track&quot; (DNT) feature. There is currently no universally
+          agreed-upon standard for responding to DNT signals. At this time, our website does not alter
+          its data collection practices in response to DNT signals; you can manage preferences using
+          the methods in Section 4.
         </p>
 
         {/* 6. Cookies and Your Privacy */}
@@ -304,15 +276,8 @@ export default function CookiePolicy() {
             Privacy Policy
           </Link>{" "}
           applies, including your rights to access, correct, delete, or restrict processing of your data.
-          We rely on consent as our legal basis for non-essential cookies. You may withdraw that consent
-          at any time without affecting the lawfulness of processing carried out prior to withdrawal.
-        </p>
-        <p className="text-white/60 leading-relaxed mb-4">
-          If you are located in the European Union or United Kingdom, the GDPR and UK GDPR apply to
-          our processing of cookie data that constitutes personal data. Canadian residents are protected
-          under PIPEDA (and applicable provincial privacy legislation). Our cookie practices comply
-          with Canada&apos;s Anti-Spam Legislation (CASL) as it relates to the installation of software
-          or tracking technologies.
+          Canadian residents are protected under PIPEDA. EU/UK residents are protected under the GDPR/UK GDPR.
+          Our cookie practices also comply with Canada&apos;s Anti-Spam Legislation (CASL).
         </p>
 
         {/* 7. Changes to This Policy */}
@@ -320,16 +285,13 @@ export default function CookiePolicy() {
         <p className="text-white/60 leading-relaxed mb-4">
           We may update this Cookie Policy from time to time to reflect changes in the cookies we use,
           applicable law, or our practices. When we make material changes, we will update the
-          &quot;Last updated&quot; date at the top of this page. If changes significantly affect the way we
-          handle your data, we will notify you through a notice on our website or by email where
-          appropriate. We encourage you to review this policy periodically.
+          &quot;Last updated&quot; date at the top of this page. We encourage you to review this policy periodically.
         </p>
 
         {/* 8. Contact Us */}
         <h2 className="text-xl font-semibold mt-10 mb-3 text-[#A78BFA]">8. Contact Us</h2>
         <p className="text-white/60 leading-relaxed mb-4">
-          If you have any questions about this Cookie Policy or wish to exercise any rights related to
-          cookies and your personal data, please contact us:
+          If you have any questions about this Cookie Policy, please contact us:
         </p>
         <div className="bg-white/5 border border-white/10 rounded-xl p-6 text-white/60 space-y-1">
           <p className="font-semibold text-white/80">BeberBuilds</p>
