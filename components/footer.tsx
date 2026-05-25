@@ -135,7 +135,7 @@ export default function Footer() {
           <div className="lg:col-span-2 flex flex-col">
             <Link href="#home" className="flex items-center gap-2.5 group mb-4">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#7C3AED] flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.3)] group-hover:shadow-[0_0_35px_rgba(124,58,237,0.5)] transition-shadow duration-300">
-                <Sparkles className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-white" />
+                <LogoMark className="w-9 h-9 sm:w-10 sm:h-10" />
               </div>
               <span className="text-xl sm:text-2xl font-bold tracking-tight">
                 beber<span className="text-[#A78BFA]">builds</span>
