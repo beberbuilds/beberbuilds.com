@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ChevronDown, ArrowUp, Mail, MapPin, Phone } from "lucide-react";
+import { ChevronDown, ArrowUp, Mail, MapPin, Phone } from "lucide-react";
+import LogoMark from "@/components/logo-mark";
 import { footerLinks, socialLinks } from "@/lib/data";
 import Link from "next/link";
 
@@ -137,7 +138,7 @@ export default function Footer() {
                 <Sparkles className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-white" />
               </div>
               <span className="text-xl sm:text-2xl font-bold tracking-tight">
-                Beber<span className="text-[#A78BFA]">Builds</span>
+                beber<span className="text-[#A78BFA]">builds</span>
               </span>
             </Link>
 
