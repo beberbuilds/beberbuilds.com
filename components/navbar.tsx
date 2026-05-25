@@ -46,7 +46,7 @@ export default function Navbar() {
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#7C3AED] flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] transition-shadow duration-300">
               <Sparkles className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white" />
             </div>
-            <span className="text-lg sm:text-xl font-bold tracking-tight">Beber Builds</span>
+            <span className="text-lg sm:text-xl font-bold tracking-tight">BeberBuilds</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">
@@ -106,7 +106,7 @@ export default function Navbar() {
                   <div className="w-8 h-8 rounded-lg bg-[#7C3AED] flex items-center justify-center">
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-base font-bold tracking-tight">Beber Builds</span>
+                  <span className="text-base font-bold tracking-tight">BeberBuilds</span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}

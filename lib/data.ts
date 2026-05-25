@@ -389,8 +389,8 @@ export type ContactInfo = {
 
 export const contactInfo: ContactInfo[] = [
   { icon: Mail, label: "Email", value: "hello@beberbuilds.com" },
-  { icon: Phone, label: "Phone", value: "+92 300 1234567" },
-  { icon: MapPin, label: "Location", value: "Worldwide — Remote" },
+  { icon: Phone, label: "Phone", value: "+1 (647) 616-5995" },
+  { icon: MapPin, label: "Location", value: "Toronto, Canada" },
 ];
 
 export const footerLinks = {
@@ -399,7 +399,6 @@ export const footerLinks = {
     { label: "Services", href: "#services" },
     { label: "Projects", href: "#projects" },
     { label: "About", href: "#about" },
-    { label: "Blog", href: "#blog" },
   ],
   services: [
     { label: "AI Automation", href: "/services/ai-automation" },
@@ -409,10 +408,9 @@ export const footerLinks = {
     { label: "Dashboards & Tools", href: "/services/dashboards-tools" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
-    { label: "Refund Policy", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Service", href: "/terms-of-service" },
+    { label: "Cookie Policy", href: "/cookie-policy" },
   ],
 };
 

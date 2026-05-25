@@ -158,19 +158,19 @@ export default function Footer() {
                 hello@beberbuilds.com
               </a>
               <a
-                href="tel:+1234567890"
+                href="tel:+16476165995"
                 className="flex items-center gap-2.5 text-[13px] text-white/30 hover:text-[#A78BFA] transition-colors duration-200 group"
               >
                 <div className="w-7 h-7 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0 group-hover:bg-[#7C3AED]/10 transition-colors">
                   <Phone className="w-3.5 h-3.5 text-white/40 group-hover:text-[#A78BFA] transition-colors" />
                 </div>
-                +1 (234) 567-890
+                +1 (647) 616-5995
               </a>
               <div className="flex items-center gap-2.5 text-[13px] text-white/30">
                 <div className="w-7 h-7 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0">
                   <MapPin className="w-3.5 h-3.5 text-white/40" />
                 </div>
-                San Francisco, CA
+                Toronto, Canada
               </div>
             </div>
 
@@ -208,13 +208,13 @@ export default function Footer() {
 
           <div className="flex items-center gap-5 order-1 sm:order-2">
             <Link
-              href="#"
+              href="/privacy-policy"
               className="text-[12px] sm:text-xs text-white/20 hover:text-white/50 transition-colors"
             >
               Privacy
             </Link>
             <Link
-              href="#"
+              href="/terms-of-service"
               className="text-[12px] sm:text-xs text-white/20 hover:text-white/50 transition-colors"
             >
               Terms

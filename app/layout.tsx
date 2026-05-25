@@ -20,14 +20,14 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Beber Builds — AI-Powered Software That Grows Businesses",
+  title: "BeberBuilds — AI-Powered Software That Grows Businesses",
   description:
     "We help startups and brands automate, scale and succeed with custom AI solutions, web applications and intelligent systems.",
   keywords: ["AI", "automation", "SaaS", "web development", "chatbots", "software"],
   openGraph: {
-    title: "Beber Builds — AI-Powered Software",
+    title: "BeberBuilds — AI-Powered Software",
     description: "Custom AI solutions, web applications and intelligent systems.",
-    siteName: "Beber Builds",
+    siteName: "BeberBuilds",
     type: "website",
   },
 };

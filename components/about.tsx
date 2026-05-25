@@ -32,7 +32,7 @@ export default function About() {
               Products
             </h2>
             <p className="text-white/45 leading-relaxed mb-5 text-[15px] sm:text-base">
-              Beber Builds is a premium AI and software development agency. We partner
+              BeberBuilds is a premium AI and software development agency. We partner
               with startups and established brands to design, build and launch powerful
               digital products that solve real problems.
             </p>
@@ -91,7 +91,7 @@ export default function About() {
               <div className="relative w-60 h-60 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-3xl overflow-hidden border-2 border-[#7C3AED]/30 shadow-[0_0_50px_rgba(124,58,237,0.2)] group">
                 <img
                   src="/about-image.png"
-                  alt="Beber Builds"
+                  alt="BeberBuilds"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-[#7C3AED]/0 group-hover:bg-[#7C3AED]/10 transition-all duration-500" />
