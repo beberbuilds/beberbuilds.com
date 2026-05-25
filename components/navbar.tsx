@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import LogoMark from "@/components/logo-mark";
 import { navLinks } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -43,10 +44,8 @@ export default function Navbar() {
       >
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#7C3AED] flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] transition-shadow duration-300">
-              <Sparkles className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white" />
-            </div>
-            <span className="text-lg sm:text-xl font-bold tracking-tight">BeberBuilds</span>
+            <LogoMark className="w-7 h-7 sm:w-8 sm:h-8" />
+            <span className="text-lg sm:text-xl font-bold tracking-tight">beber<span className="text-[#A78BFA]">builds</span></span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">
@@ -103,10 +102,8 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-2"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#7C3AED] flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="text-base font-bold tracking-tight">BeberBuilds</span>
+                  <LogoMark className="w-7 h-7" />
+                  <span className="text-base font-bold tracking-tight">beber<span className="text-[#A78BFA]">builds</span></span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}

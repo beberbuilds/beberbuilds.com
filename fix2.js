@@ -37,7 +37,6 @@ foot = foot.replace(
   'import { ChevronDown, ArrowUp, Mail, MapPin, Phone } from "lucide-react";\nimport LogoMark from "@/components/logo-mark";'
 );
 foot = foot.replace(
-  '<div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#7C3AED] flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.3)] group-hover:shadow-[0_0_35px_rgba(124,58,237,0.5)] transition-shadow duration-300">\n                <Sparkles className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-white" />\n              </div>',
   '<LogoMark className="w-9 h-9 sm:w-10 sm:h-10" />'
 );
 foot = foot.replace(
