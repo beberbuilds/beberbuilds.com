@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Bot, Globe, Code2, Star } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import CalendlyModal from "@/components/calendly-modal";
+import { useTextScramble } from "@/hooks/use-text-scramble";
+import TerminalWidget from "@/components/terminal-widget";
 
 const floatingCards = [
   { icon: Bot, label: "AI Automations", delay: 0 },
@@ -13,8 +15,43 @@ const floatingCards = [
   { icon: Code2, label: "SaaS Solutions", delay: 0.24 },
 ];
 
+function handleMagneticMove(e: React.MouseEvent<HTMLDivElement>) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = e.clientX - rect.left - rect.width / 2;
+  const y = e.clientY - rect.top - rect.height / 2;
+  e.currentTarget.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+}
+function handleMagneticLeave(e: React.MouseEvent<HTMLDivElement>) {
+  e.currentTarget.style.transform = "";
+  e.currentTarget.style.transition = "transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275)";
+}
+
 export default function Hero() {
   const [calendlyOpen, setCalendlyOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [torontoTime, setTorontoTime] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const updateTime = () => {
+      setTorontoTime(
+        new Date().toLocaleTimeString("en-CA", {
+          timeZone: "America/Toronto",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+      );
+    };
+    updateTime();
+    const id = setInterval(updateTime, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const scrambledText = useTextScramble("AI‑Powered Software", mounted, 0.3);
 
   return (
     <section
@@ -45,7 +82,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-center lg:text-left"
           >
-            {/* Status badge */}
+            {/* Status badge with Toronto time */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -56,13 +93,13 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-60" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A78BFA]" />
               </span>
-              Available for new projects
+              {torontoTime && `${torontoTime} EST · `}Available for new projects
             </motion.div>
 
             {/* Main headline */}
             <h1 className="text-[2.35rem] leading-[1.04] sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.02em] mb-5 sm:mb-7">
               We Build{" "}
-              <span className="text-gradient">AI‑Powered Software</span>
+              <span className="text-gradient">{scrambledText}</span>
               <br />
               <span className="text-white/90">That Grows Businesses</span>
             </h1>
@@ -75,11 +112,15 @@ export default function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-9 sm:mb-11">
+              {/* Magnetic Book a Free Call button */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.45 }}
                 className="w-full sm:w-auto"
+                style={{ transition: "transform 0.1s ease" }}
+                onMouseMove={handleMagneticMove}
+                onMouseLeave={handleMagneticLeave}
               >
                 <Button
                   onClick={() => setCalendlyOpen(true)}
@@ -123,6 +164,9 @@ export default function Hero() {
                 {" "}— rated by every client we&apos;ve worked with
               </p>
             </motion.div>
+
+            {/* Terminal Widget */}
+            <TerminalWidget />
           </motion.div>
 
           {/* ═══════ RIGHT — 3D CUBE + FLOATING CARDS ═══════ */}
@@ -136,10 +180,6 @@ export default function Hero() {
             <div className="absolute w-64 h-64 sm:w-80 sm:h-80 lg:w-[460px] lg:h-[460px] rounded-full border border-[#7C3AED]/8 animate-pulse-glow pointer-events-none" />
             <div className="absolute w-80 h-80 sm:w-96 sm:h-96 lg:w-[560px] lg:h-[560px] rounded-full border border-[#7C3AED]/4 pointer-events-none" />
             <div className="absolute w-[350px] h-[350px] sm:w-[420px] sm:h-[420px] lg:w-[620px] lg:h-[620px] rounded-full bg-[#7C3AED]/[0.03] blur-[80px] pointer-events-none" />
-
-            {/* ── Floating cards — absolutely positioned on ALL screen sizes ── */}
-            {/* Mobile positions: tighter orbit around cube, smaller cards */}
-            {/* Desktop positions: wider orbit, larger cards */}
 
             {/* Card 1 — AI Automations (top-left) */}
             <motion.div
