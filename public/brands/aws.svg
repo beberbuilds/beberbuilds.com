@@ -1,7 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 20" fill="none">
-  <rect x="2" y="7" width="14" height="11" rx="3" stroke="#94A3B8" stroke-width="1.5"/>
-  <rect x="8" y="3" width="10" height="8" rx="2" stroke="#94A3B8" stroke-width="1.2"/>
-  <rect x="28" y="4" width="18" height="16" rx="4" stroke="#94A3B8" stroke-width="1.5"/>
-  <circle cx="37" cy="12" r="5" stroke="#94A3B8" stroke-width="1.2"/>
-  <rect x="54" y="3" width="6" height="18" rx="2" fill="#94A3B8" opacity="0.12"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 38" fill="none">
+  <!-- AWS letterforms -->
+  <!-- A -->
+  <path d="M4 28 L10 10 L16 28 M6.5 22 L13.5 22" stroke="black" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- W -->
+  <path d="M19 10 L24 25 L29 15 L34 25 L39 10" stroke="black" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- S -->
+  <path d="M53 13 C53 13 50 10 46 11.5 C42 13 42 16 44 17.5 C46 19 52 19.5 54 21.5 C56 23.5 55 27 51 28 C47 29 43 27 43 27" stroke="black" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+  <!-- Amazon smile arrow below -->
+  <path d="M6 33 Q33 38 60 33" stroke="black" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M57 31 L62 33 L57 35" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>
