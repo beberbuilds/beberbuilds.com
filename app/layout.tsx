@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "@/components/cookie-banner";
+import AuroraBackground from "@/components/aurora-background";
+import ScrollProgress from "@/components/scroll-progress";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -48,7 +50,9 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${spaceMono.variable} dark h-full antialiased`}
       style={{ fontFamily: "var(--font-space-grotesk, system-ui, sans-serif)" }}
     >
-      <body className="min-h-full bg-[#050816] text-white flex flex-col" suppressHydrationWarning>
+      <body className="min-h-full bg-[#050816] text-white flex flex-col noise-bg" suppressHydrationWarning>
+        <AuroraBackground />
+        <ScrollProgress />
         {children}
         <CookieBanner />
       </body>

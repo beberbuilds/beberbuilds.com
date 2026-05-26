@@ -220,3 +220,108 @@
 .animate-float-reverse { animation: float-reverse 5s ease-in-out infinite; }
 .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-rotate-cube { animation: rotate-cube 20s linear infinite; }
+
+@keyframes aurora-1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33% { transform: translate(4%, -3%) scale(1.08); }
+  66% { transform: translate(-3%, 4%) scale(0.94); }
+}
+@keyframes aurora-2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33% { transform: translate(-5%, 3%) scale(1.06); }
+  66% { transform: translate(4%, -5%) scale(0.96); }
+}
+@keyframes aurora-3 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(3%, 3%) scale(1.04); }
+}
+.animate-aurora-1 { animation: aurora-1 18s ease-in-out infinite; }
+.animate-aurora-2 { animation: aurora-2 22s ease-in-out infinite; }
+.animate-aurora-3 { animation: aurora-3 15s ease-in-out infinite; }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes noise-shift {
+  0%, 100% { background-position: 0% 0%; }
+  25% { background-position: 50% 100%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 0% 100%; }
+}
+.noise-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  animation: noise-shift 8s steps(1) infinite;
+}
+
+@property --grad-angle {
+  syntax: '<angle>';
+  initial-value: 135deg;
+  inherits: false;
+}
+@keyframes spin-gradient {
+  to { --grad-angle: 495deg; }
+}
+.gradient-border-hover {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#050816, #050816) padding-box,
+    linear-gradient(var(--grad-angle), rgba(124,58,237,0.15), rgba(167,139,250,0.08), rgba(124,58,237,0.05)) border-box;
+  transition: background 0.4s;
+}
+.gradient-border-hover:hover {
+  background:
+    linear-gradient(#050816, #050816) padding-box,
+    conic-gradient(from var(--grad-angle), #7C3AED, #A78BFA, #C4B5FD, #7C3AED) border-box;
+  animation: spin-gradient 3s linear infinite;
+}
+
+/* Light mode overrides */
+html.light-mode {
+  --background: #F0EEFF;
+  --foreground: #0A0416;
+}
+html.light-mode body {
+  background: #F0EEFF !important;
+  color: #0A0416;
+}
+html.light-mode .glass {
+  background: rgba(255,255,255,0.55) !important;
+  border-color: rgba(124,58,237,0.12) !important;
+  backdrop-filter: blur(20px);
+}
+html.light-mode .glass-strong {
+  background: rgba(255,255,255,0.75) !important;
+  border-color: rgba(124,58,237,0.18) !important;
+}
+html.light-mode nav {
+  background: rgba(240,238,255,0.85) !important;
+}
+html.light-mode .text-white\/45,
+html.light-mode .text-white\/50 {
+  color: rgba(10,4,22,0.55) !important;
+}
+html.light-mode .text-white\/35,
+html.light-mode .text-white\/30 {
+  color: rgba(10,4,22,0.4) !important;
+}
+html.light-mode .gradient-border-hover {
+  background:
+    linear-gradient(#F0EEFF, #F0EEFF) padding-box,
+    linear-gradient(var(--grad-angle), rgba(124,58,237,0.2), rgba(167,139,250,0.1)) border-box !important;
+}
