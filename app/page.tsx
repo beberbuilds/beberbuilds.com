@@ -1,6 +1,7 @@
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import TrustedBrands from "@/components/trusted-brands";
+import MarqueeStrip from "@/components/marquee-strip";
 import Stats from "@/components/stats";
 import Services from "@/components/services";
 import Projects from "@/components/projects";
@@ -18,6 +19,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <TrustedBrands />
+        <MarqueeStrip />
         <Stats />
         <Services />
         <Projects />

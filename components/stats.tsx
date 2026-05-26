@@ -54,7 +54,7 @@ export default function Stats() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
               whileHover={{ y: -4 }}
-              className="glass rounded-2xl p-5 sm:p-6 text-center group cursor-default transition-all duration-300 hover:border-[#7C3AED]/20 hover:shadow-[0_0_25px_rgba(124,58,237,0.08)]"
+              className="gradient-border-hover rounded-2xl p-5 sm:p-6 text-center group cursor-default transition-all duration-300"
             >
               <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#7C3AED]/15 flex items-center justify-center mx-auto mb-3 group-hover:bg-[#7C3AED]/25 transition-colors">
                 <stat.icon className="w-5 h-5 text-[#A78BFA]" />
