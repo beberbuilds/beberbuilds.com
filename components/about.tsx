@@ -33,14 +33,21 @@ export default function About() {
               Products
             </h2>
             <p className="text-white/45 leading-relaxed mb-5 text-[15px] sm:text-base">
-              BeberBuilds is a premium AI and software development agency. We partner
-              with startups and established brands to design, build and launch powerful
-              digital products that solve real problems.
+              BeberBuilds is a software development studio founded by{" "}
+              <span className="text-white/80 font-medium">Beberg Khan</span> — a
+              full-stack developer and AI engineer based in Toronto, Canada.
+            </p>
+            <p className="text-white/45 leading-relaxed mb-5 text-[15px] sm:text-base">
+              I started BeberBuilds because I saw too many businesses stuck with
+              expensive, bloated software that didn&apos;t fit how they actually work.
+              My focus is building lean, precise tools — from AI automation agents and
+              SaaS platforms to offline desktop ERPs and trading bots — that solve
+              the exact problem, nothing more.
             </p>
             <p className="text-white/45 leading-relaxed mb-8 text-[15px] sm:text-base">
-              Our team of engineers, designers and AI specialists brings deep expertise
-              across machine learning, full-stack development and user experience —
-              all under one roof.
+              Every project I take on gets my full attention. No outsourcing,
+              no juniors handed the keys — you work directly with me from discovery
+              to launch.
             </p>
 
             <div className="space-y-4 mb-8">
