@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Bot, Globe, Code2 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import CalendlyModal from "@/components/calendly-modal";
 
@@ -125,11 +126,12 @@ export default function Hero() {
                     className="relative ring-2 ring-[#050816] rounded-full"
                     style={{ zIndex: avatars.length - i }}
                   >
-                    <img
+                    <Image
                       src={src}
                       alt=""
+                      width={40}
+                      height={40}
                       className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover"
-                      loading="eager"
                     />
                   </div>
                 ))}
@@ -258,9 +260,12 @@ export default function Hero() {
                 />
                 {/* Center image */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <img
+                  <Image
                     src="/hero-cube.png"
-                    alt="AI Cube"
+                    alt="AI-powered software visualization"
+                    width={320}
+                    height={320}
+                    priority
                     className="w-44 h-44 sm:w-56 sm:h-56 lg:w-80 lg:h-80 object-contain drop-shadow-[0_0_30px_rgba(124,58,237,0.3)]"
                   />
                 </div>

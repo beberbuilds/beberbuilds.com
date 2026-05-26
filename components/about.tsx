@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle, Zap, Target, Heart } from "lucide-react";
+import { Zap, Target, Heart } from "lucide-react";
+import Image from "next/image";
 import SectionWrapper from "./section-wrapper";
 import { Button } from "@/components/ui/button";
 
@@ -89,9 +90,11 @@ export default function About() {
               className="relative z-10 mb-6"
             >
               <div className="relative w-60 h-60 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-3xl overflow-hidden border-2 border-[#7C3AED]/30 shadow-[0_0_50px_rgba(124,58,237,0.2)] group">
-                <img
+                <Image
                   src="/about-image.png"
-                  alt="BeberBuilds"
+                  alt="BeberBuilds team"
+                  width={320}
+                  height={320}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-[#7C3AED]/0 group-hover:bg-[#7C3AED]/10 transition-all duration-500" />

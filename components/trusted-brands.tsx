@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import SectionWrapper from "./section-wrapper";
 import { brandLogos } from "@/lib/data";
 
@@ -21,11 +22,12 @@ export default function TrustedBrands() {
               transition={{ delay: i * 0.08 }}
               className="flex items-center justify-center"
             >
-              <img
+              <Image
                 src={brand.src}
                 alt={brand.name}
+                width={120}
+                height={24}
                 className="h-6 sm:h-6 w-auto opacity-30 hover:opacity-70 transition-all duration-300 grayscale brightness-0 invert"
-                loading="lazy"
               />
             </motion.div>
           ))}

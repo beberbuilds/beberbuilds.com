@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import Image from "next/image";
 import SectionWrapper from "./section-wrapper";
 import { projects } from "@/lib/data";
 
@@ -40,9 +41,11 @@ export default function Projects() {
                 className="glass rounded-2xl overflow-hidden group cursor-pointer transition-all duration-300 hover:border-[#7C3AED]/25 hover:shadow-[0_0_30px_rgba(124,58,237,0.1)] h-full"
               >
                 <div className="aspect-video bg-[#0a0d1a] relative overflow-hidden">
-                  <img
+                  <Image
                     src={project.image}
                     alt={project.title}
+                    width={600}
+                    height={338}
                     className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-transparent" />

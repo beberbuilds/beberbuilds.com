@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ArrowLeft, Play } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import CalendlyModal from "@/components/calendly-modal";
 import { projects } from "@/lib/data";
@@ -129,9 +130,12 @@ export default function ProjectDetailContent({ slug }: { slug: string }) {
             className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/[0.06] shadow-[0_0_60px_rgba(124,58,237,0.08)]"
           >
             <div className="aspect-video sm:aspect-[21/9] bg-[#0a0d1a]">
-              <img
+              <Image
                 src={project.image}
                 alt={project.title}
+                width={1200}
+                height={514}
+                priority
                 className="w-full h-full object-cover opacity-70"
               />
             </div>
