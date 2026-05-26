@@ -62,8 +62,22 @@ export default function Testimonials() {
             Proven Results
           </span>
           <h2 className="text-[2rem] sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-            Work That{" "}
-            <span className="text-gradient">Speaks for Itself</span>
+            {["Work That", "Speaks for Itself"].map((line, li) => (
+              <span key={li} className={li > 0 ? "block" : ""}>
+                {line.split(" ").map((word, wi) => (
+                  <motion.span
+                    key={wi}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: li * 0.1 + wi * 0.08, duration: 0.5 }}
+                    className={`inline-block mr-[0.25em] ${li === 1 ? "text-gradient" : ""}`}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </span>
+            ))}
           </h2>
           <p className="text-white/45 max-w-xl mx-auto text-[15px] sm:text-base">
             Real outcomes from real projects — no fluff, just results.
@@ -79,7 +93,7 @@ export default function Testimonials() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.12, duration: 0.5 }}
               whileHover={{ y: -4 }}
-              className="glass rounded-2xl p-6 sm:p-7 flex flex-col group transition-all duration-300 hover:border-[#7C3AED]/20"
+              className="gradient-border-hover rounded-2xl p-6 sm:p-7 flex flex-col group transition-all duration-300"
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
