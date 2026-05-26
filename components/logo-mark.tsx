@@ -1,4 +1,4 @@
-// [B] bracket logo mark — inline SVG, no external image needed
+// (B) logo mark — parentheses + B with proper counter holes
 export default function LogoMark({ className = "w-8 h-8" }: { className?: string }) {
   return (
     <svg
@@ -8,20 +8,43 @@ export default function LogoMark({ className = "w-8 h-8" }: { className?: string
       className={className}
       aria-hidden="true"
     >
-      {/* Left bracket [ — filled bold */}
-      <path d="M4 4 H18 V10 H10 V46 H18 V52 H4 Z" fill="#A855F7" />
+      {/* Left parenthesis ( — thick arc, tapers at top/bottom */}
+      <path
+        d="M 13 4 Q 0 28 13 52 L 13 47 Q 8 28 13 9 Z"
+        fill="#A855F7"
+      />
 
-      {/* Right bracket ] — filled bold */}
-      <path d="M60 4 H46 V10 H54 V46 H46 V52 H60 Z" fill="#A855F7" />
+      {/* Right parenthesis ) — mirror */}
+      <path
+        d="M 51 4 Q 64 28 51 52 L 51 47 Q 56 28 51 9 Z"
+        fill="#A855F7"
+      />
 
-      {/* B — vertical stem */}
-      <rect x="21" y="6" width="6" height="44" rx="1" fill="#A855F7" />
-
-      {/* B — top bowl (D shape) */}
-      <path d="M27 6 H36 C46 6 46 26 36 26 H27 Z" fill="#A855F7" />
-
-      {/* B — bottom bowl (D shape, slightly wider) */}
-      <path d="M27 26 H37 C49 26 49 50 37 50 H27 Z" fill="#A855F7" />
+      {/*
+        B — compound path, evenodd fill rule punches holes in the bowls.
+        Subpaths:
+          1. Stem (thin vertical bar)
+          2. Top bowl outer (D shape)
+          3. Bottom bowl outer (D shape, wider)
+          4. Top bowl counter/hole  ← overlaps #2 → evenodd = transparent
+          5. Bottom bowl counter/hole ← overlaps #3 → evenodd = transparent
+      */}
+      <path
+        fill="#A855F7"
+        fillRule="evenodd"
+        d={[
+          // 1. Stem — 4 px wide, full height
+          "M 18 5 L 22 5 L 22 51 L 18 51 Z",
+          // 2. Top bowl outer — D opening right
+          "M 22 5 L 32 5 Q 43 5 43 16 Q 43 27 32 27 L 22 27 Z",
+          // 3. Bottom bowl outer — D opening right, slightly wider
+          "M 22 27 L 34 27 Q 46 27 46 39 Q 46 51 34 51 L 22 51 Z",
+          // 4. Top bowl hole — 4 px inset on all sides
+          "M 26 9 L 31 9 Q 39 9 39 16 Q 39 23 31 23 L 26 23 Z",
+          // 5. Bottom bowl hole — 4 px inset on all sides
+          "M 26 31 L 33 31 Q 42 31 42 39 Q 42 47 33 47 L 26 47 Z",
+        ].join(" ")}
+      />
     </svg>
   );
 }
