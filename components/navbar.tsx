@@ -45,7 +45,7 @@ export default function Navbar() {
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group shrink-0">
             <LogoMark className="w-7 h-7 sm:w-8 sm:h-8" />
-            <span className="text-lg sm:text-xl font-bold tracking-tight">beber<span className="text-[#A78BFA]">builds</span></span>
+            <span className="text-lg sm:text-xl font-bold tracking-tight">Beber<span className="text-[#A78BFA]">Builds</span></span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">
@@ -103,7 +103,7 @@ export default function Navbar() {
                   className="flex items-center gap-2"
                 >
                   <LogoMark className="w-7 h-7" />
-                  <span className="text-base font-bold tracking-tight">beber<span className="text-[#A78BFA]">builds</span></span>
+                  <span className="text-base font-bold tracking-tight">Beber<span className="text-[#A78BFA]">Builds</span></span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}

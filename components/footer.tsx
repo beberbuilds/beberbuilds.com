@@ -118,7 +118,7 @@ export default function Footer() {
             <Link href="#home" className="flex items-center gap-2.5 group mb-4">
               <LogoMark className="w-9 h-9 sm:w-10 sm:h-10" />
               <span className="text-xl sm:text-2xl font-bold tracking-tight">
-                beber<span className="text-[#A78BFA]">builds</span>
+                Beber<span className="text-[#A78BFA]">Builds</span>
               </span>
             </Link>
 
