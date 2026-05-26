@@ -39,7 +39,8 @@
       "Bash(git check-ignore *)",
       "Bash(echo \"exit: $?\")",
       "Bash(git add *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "mcp__57bc4d41-6050-4788-8f02-af94c9f8d594__list_deployments"
     ]
   }
 }
