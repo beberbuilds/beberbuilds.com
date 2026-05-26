@@ -1,3 +1,4 @@
+// [B] bracket logo mark — inline SVG, no external image needed
 export default function LogoMark({ className = "w-8 h-8" }: { className?: string }) {
   return (
     <svg
