@@ -13,18 +13,30 @@ load_dotenv()
 
 # ─── Trading Mode ────────────────────────────────────────────────────────────
 PAPER_TRADING: bool = True          # Set False to enable live order execution
-MIN_PROFIT_PCT: float = 0.3         # Minimum net profit % to flag as opportunity
+
+# Paper trading threshold: 0.05% — catches near-breakeven signals for simulation.
+# For live trading raise this to 0.30%+ to ensure real profit after all costs.
+MIN_PROFIT_PCT: float = 0.05
+
 SCAN_INTERVAL_SECONDS: float = 2.0  # Seconds between full exchange scans
 TRADE_SIZE_USD: float = 100.0       # Notional trade size for P&L estimation
 TRADE_COOLDOWN_SECONDS: int = 30    # Seconds before the same pair can trade again
 
 # ─── Pairs to Monitor ────────────────────────────────────────────────────────
+# Mix of large-caps (tighter spreads, safer) and mid-caps (wider spreads = more signals)
 TRADING_PAIRS: List[str] = [
+    # Large-cap — low spread, occasional spikes
     "BTC/USDT",
     "ETH/USDT",
-    "BNB/USDT",
     "SOL/USDT",
     "XRP/USDT",
+    # Mid-cap — wider spreads, more arb opportunities
+    "DOGE/USDT",
+    "ADA/USDT",
+    "MATIC/USDT",
+    "LINK/USDT",
+    "AVAX/USDT",
+    "DOT/USDT",
 ]
 
 # ─── Exchange Taker Fees (%) ──────────────────────────────────────────────────
@@ -37,7 +49,9 @@ EXCHANGE_FEES: Dict[str, float] = {
 }
 
 # ─── Slippage Estimate ───────────────────────────────────────────────────────
-SLIPPAGE_PCT: float = 0.10  # Assumed slippage per leg (%)
+# Paper mode: 0.0 — no real slippage occurs in simulation.
+# Live mode:  set to 0.05–0.10% to account for order book depth.
+SLIPPAGE_PCT: float = 0.0 if PAPER_TRADING else 0.10
 
 # ─── Starting Paper Capital Per Exchange (USD) ───────────────────────────────
 PAPER_CAPITAL: float = 1000.0
