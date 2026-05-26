@@ -15,10 +15,16 @@ Environment:
 
 from __future__ import annotations
 
+import os
 import sys
 import threading
 import time
 import uuid
+
+# ─── Python version gate ──────────────────────────────────────────────────────
+if sys.version_info < (3, 8):
+    print("ERROR: Python 3.8 or higher is required. Download at https://www.python.org")
+    sys.exit(1)
 from dataclasses import asdict
 
 import config
@@ -229,4 +235,23 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import logging
+    import traceback
+
+    # Always write errors to bot_error.log alongside the script
+    log_path = os.path.join(os.path.dirname(__file__), "bot_error.log")
+    logging.basicConfig(
+        filename=log_path,
+        level=logging.ERROR,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+    )
+
+    try:
+        main()
+    except Exception:
+        tb = traceback.format_exc()
+        print(tb)
+        logging.error("Unhandled crash:\n%s", tb)
+        print(f"\n  Full error saved to: {log_path}")
+        input("  Press Enter to close...")
+        sys.exit(1)

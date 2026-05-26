@@ -3,7 +3,10 @@ config.py — Central configuration for Crypto Arb Bot
 All tunable parameters live here.
 """
 
+from __future__ import annotations  # Python 3.8 compatibility for type hints
+
 import os
+from typing import Dict, List
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,7 +19,7 @@ TRADE_SIZE_USD: float = 100.0       # Notional trade size for P&L estimation
 TRADE_COOLDOWN_SECONDS: int = 30    # Seconds before the same pair can trade again
 
 # ─── Pairs to Monitor ────────────────────────────────────────────────────────
-TRADING_PAIRS: list[str] = [
+TRADING_PAIRS: List[str] = [
     "BTC/USDT",
     "ETH/USDT",
     "BNB/USDT",
@@ -25,11 +28,12 @@ TRADING_PAIRS: list[str] = [
 ]
 
 # ─── Exchange Taker Fees (%) ──────────────────────────────────────────────────
-EXCHANGE_FEES: dict[str, float] = {
+# Remove or comment out any exchange that causes repeated errors in your region
+EXCHANGE_FEES: Dict[str, float] = {
     "binance": 0.10,
-    "coinbase": 0.60,
     "kucoin":  0.10,
     "gateio":  0.20,
+    # "coinbase": 0.60,  # Uncomment if you have a Coinbase Advanced Trade API key
 }
 
 # ─── Slippage Estimate ───────────────────────────────────────────────────────
@@ -46,7 +50,7 @@ DASHBOARD_PORT: int = 5001
 DB_PATH: str = os.path.join(os.path.dirname(__file__), "arb_bot.db")
 
 # ─── Exchange API Credentials (from .env) ───────────────────────────────────
-EXCHANGE_CONFIGS: dict[str, dict] = {
+EXCHANGE_CONFIGS: Dict[str, Dict] = {
     "binance": {
         "apiKey": os.getenv("BINANCE_API_KEY", ""),
         "secret": os.getenv("BINANCE_SECRET", ""),
