@@ -3,39 +3,39 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CryptoARB Bot v2.0 — Binance-Style Dashboard</title>
+<title>CryptoARB Bot v2.0 — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-/* ═══════════════════════════════════════════════════════════
-   BINANCE DESIGN TOKENS
-═══════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — Binance palette
+════════════════════════════════════════════════════════════════ */
 :root {
-  --bg:      #0B0E11;
-  --surface: #161A1E;
-  --surface2:#1E2329;
-  --surface3:#2B3139;
-  --border:  #2B3139;
-  --green:   #0ECB81;
-  --red:     #F6465D;
-  --yellow:  #FCD535;
-  --blue:    #1E80FF;
-  --text:    #EAECEF;
-  --muted:   #848E9C;
-  --text2:   #B7BDC6;
+  --bg:        #0B0E11;
+  --surface:   #161A1E;
+  --surface2:  #1E2329;
+  --surface3:  #2B3139;
+  --border:    #2B3139;
+  --green:     #0ECB81;
+  --red:       #F6465D;
+  --yellow:    #FCD535;
+  --blue:      #1E80FF;
+  --text:      #EAECEF;
+  --text2:     #B7BDC6;
+  --muted:     #848E9C;
 
-  /* Derived */
-  --green-dim:  rgba(14,203,129,0.10);
-  --red-dim:    rgba(246,70,93,0.10);
-  --yellow-dim: rgba(252,213,53,0.10);
-  --blue-dim:   rgba(30,128,255,0.10);
-  --border-bright: #474D57;
+  --green-dim:   rgba(14,203,129,0.10);
+  --red-dim:     rgba(246,70,93,0.10);
+  --yellow-dim:  rgba(252,213,53,0.10);
+  --blue-dim:    rgba(30,128,255,0.10);
+  --border-hi:   #474D57;
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════
    RESET + BASE
-═══════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -45,81 +45,84 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   font-size: 13px;
+  line-height: 1.4;
 }
 
-/* ── Scrollbar ───────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
+/* custom scrollbars */
+::-webkit-scrollbar            { width: 5px; height: 5px; }
+::-webkit-scrollbar-track      { background: var(--bg); }
+::-webkit-scrollbar-thumb      { background: var(--surface3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--border-hi); }
 
-/* ── Layout shell ────────────────────────────────────────── */
+/* page shell */
 .shell {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 16px 40px;
+  padding: 0 16px 48px;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   NAVBAR
-═══════════════════════════════════════════════════════════ */
-.navbar {
+/* ════════════════════════════════════════════════════════════════
+   TOPBAR
+════════════════════════════════════════════════════════════════ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
   padding: 0 20px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  gap: 16px;
+  gap: 12px;
 }
 
-/* Logo */
-.nav-logo {
+/* logo */
+.logo-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
 }
-.logo-mark {
-  width: 38px; height: 38px;
+.logo-box {
+  width: 36px;
+  height: 36px;
   background: var(--yellow);
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 700;
-  font-size: 11px;
+  font-size: 10px;
   color: #0B0E11;
   letter-spacing: -0.5px;
-}
-.logo-text {
-  display: flex;
-  flex-direction: column;
+  flex-shrink: 0;
 }
 .logo-name {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text);
   letter-spacing: -0.3px;
+  line-height: 1.2;
 }
 .logo-ver {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
   color: var(--muted);
+  line-height: 1;
 }
 
-/* Center badges */
-.nav-center {
+/* topbar center cluster */
+.topbar-center {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
+/* generic badge */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -129,121 +132,115 @@ body {
   font-size: 11px;
   font-weight: 600;
   font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: 0.5px;
-  border: 1px solid;
+  letter-spacing: 0.4px;
+  border: 1px solid transparent;
+  white-space: nowrap;
 }
-.badge-paper {
-  background: var(--yellow-dim);
-  border-color: rgba(252,213,53,0.35);
-  color: var(--yellow);
-}
-.badge-live {
-  background: var(--red-dim);
-  border-color: rgba(246,70,93,0.35);
-  color: var(--red);
-}
-.badge-online {
-  background: var(--green-dim);
-  border-color: rgba(14,203,129,0.35);
-  color: var(--green);
-}
-.badge-offline {
-  background: var(--red-dim);
-  border-color: rgba(246,70,93,0.35);
-  color: var(--red);
-}
+.badge-paper   { background: var(--yellow-dim); border-color: rgba(252,213,53,0.35); color: var(--yellow); }
+.badge-live    { background: var(--red-dim);    border-color: rgba(246,70,93,0.35);  color: var(--red); }
+.badge-online  { background: var(--green-dim);  border-color: rgba(14,203,129,0.35); color: var(--green); }
+.badge-offline { background: var(--red-dim);    border-color: rgba(246,70,93,0.35);  color: var(--red); }
+
 .dot {
-  width: 5px; height: 5px;
+  width: 6px; height: 6px;
   border-radius: 50%;
   background: currentColor;
-  animation: dotpulse 2s infinite;
+  animation: pulse 2s infinite;
 }
-@keyframes dotpulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* Right side */
-.nav-right {
+/* topbar right cluster */
+.topbar-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 20px;
   flex-shrink: 0;
 }
-.nav-funding-countdown {
+.top-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.top-item-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.top-item-value {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
+  font-weight: 600;
   color: var(--green);
   white-space: nowrap;
 }
-.nav-funding-label {
-  font-size: 10px;
-  color: var(--muted);
-  font-family: 'IBM Plex Mono', monospace;
-  white-space: nowrap;
-}
-.nav-scan-counter {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--text2);
-  white-space: nowrap;
-}
+.top-item-value.neutral { color: var(--text2); }
 
-/* ═══════════════════════════════════════════════════════════
-   STATS BAR
-═══════════════════════════════════════════════════════════ */
-.stats-bar {
+/* ════════════════════════════════════════════════════════════════
+   STATS ROW — 4 cards full width
+════════════════════════════════════════════════════════════════ */
+.stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
   background: var(--border);
+  gap: 1px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 20px;
 }
-@media (max-width: 900px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px) { .stats-bar { grid-template-columns: 1fr; } }
+@media (max-width: 900px)  { .stats-row { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 520px)  { .stats-row { grid-template-columns: 1fr; } }
 
 .stat-card {
   background: var(--surface);
-  padding: 18px 20px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 .stat-label {
   font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
   color: var(--muted);
   font-weight: 500;
-  letter-spacing: 0.3px;
 }
 .stat-value {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 22px;
-  font-weight: 600;
-  line-height: 1;
+  font-weight: 700;
+  line-height: 1.1;
   color: var(--text);
 }
-.stat-value.up   { color: var(--green); }
-.stat-value.down { color: var(--red); }
+.stat-value.up     { color: var(--green); }
+.stat-value.down   { color: var(--red); }
 .stat-value.yellow { color: var(--yellow); }
-.stat-value.blue { color: var(--blue); }
+.stat-value.blue   { color: var(--blue); }
 .stat-sub {
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   color: var(--muted);
-  font-family: 'IBM Plex Mono', monospace;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SECTION HEADERS
-═══════════════════════════════════════════════════════════ */
-.section-header {
+/* ════════════════════════════════════════════════════════════════
+   SECTION WRAPPERS / HEADERS
+════════════════════════════════════════════════════════════════ */
+.section { margin-bottom: 20px; }
+
+.sec-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
+  padding: 13px 18px;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-bottom: none;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.section-title {
+.sec-title {
   font-size: 13px;
   font-weight: 600;
   color: var(--text);
@@ -251,12 +248,12 @@ body {
   align-items: center;
   gap: 8px;
 }
-.section-subtitle {
+.sec-sub {
   font-size: 11px;
   color: var(--muted);
-  font-family: 'IBM Plex Mono', monospace;
+  margin-top: 2px;
 }
-.section-badge {
+.sec-badge {
   font-size: 10px;
   font-family: 'IBM Plex Mono', monospace;
   background: var(--surface3);
@@ -264,35 +261,33 @@ body {
   border-radius: 3px;
   padding: 2px 8px;
   color: var(--text2);
+  white-space: nowrap;
 }
-.section-badge.hot {
+.sec-badge.hot {
   background: var(--green-dim);
-  border-color: rgba(14,203,129,0.3);
+  border-color: rgba(14,203,129,0.35);
   color: var(--green);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   CARD
-═══════════════════════════════════════════════════════════ */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 6px 6px;
   overflow: hidden;
 }
-.card-standalone {
+.card-solo {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
 }
-.card-header {
+.card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 11px 16px;
   background: var(--surface2);
+  border-bottom: 1px solid var(--border);
 }
 .card-title {
   font-size: 12px;
@@ -313,24 +308,20 @@ body {
 }
 .chip.hot {
   background: var(--green-dim);
-  border-color: rgba(14,203,129,0.3);
+  border-color: rgba(14,203,129,0.35);
   color: var(--green);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SECTION A: FUNDING RATE TABLE
-═══════════════════════════════════════════════════════════ */
-.funding-section {
-  margin-bottom: 20px;
-}
+/* ════════════════════════════════════════════════════════════════
+   FUNDING RATE TABLE
+════════════════════════════════════════════════════════════════ */
+.tbl-wrap { overflow-x: auto; }
 
-.funding-wrap { overflow-x: auto; }
-
-.funding-table {
+.funding-tbl {
   width: 100%;
   border-collapse: collapse;
 }
-.funding-table th {
+.funding-tbl th {
   padding: 10px 14px;
   font-size: 10px;
   font-weight: 600;
@@ -339,22 +330,22 @@ body {
   color: var(--muted);
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
-  text-align: right;
   white-space: nowrap;
+  text-align: right;
 }
-.funding-table th:first-child { text-align: left; }
-.funding-table td {
+.funding-tbl th:first-child { text-align: left; }
+.funding-tbl td {
   padding: 11px 14px;
-  border-bottom: 1px solid rgba(43,49,57,0.6);
+  border-bottom: 1px solid rgba(43,49,57,0.55);
   text-align: right;
   vertical-align: middle;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
 }
-.funding-table td:first-child { text-align: left; }
-.funding-table tr:last-child td { border-bottom: none; }
-.funding-table tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
-.funding-table tbody tr:hover td { background: rgba(43,49,57,0.4); }
+.funding-tbl td:first-child { text-align: left; }
+.funding-tbl tr:last-child td { border-bottom: none; }
+.funding-tbl tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
+.funding-tbl tbody tr:hover td { background: rgba(43,49,57,0.4); transition: background .15s; }
 
 .pair-name {
   font-family: 'IBM Plex Mono', monospace;
@@ -362,28 +353,30 @@ body {
   font-weight: 600;
   color: var(--text);
 }
-.rate-positive { color: var(--green); }
-.rate-negative { color: var(--red); }
-.rate-neutral  { color: var(--muted); }
+.rp { color: var(--green); }
+.rn { color: var(--red); }
+.rz { color: var(--muted); }
 
-/* Status badges for funding */
-.status-badge {
+/* funding status pills */
+.status-pill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 10px;
+  padding: 3px 9px;
   border-radius: 3px;
   font-size: 10px;
   font-weight: 600;
   font-family: 'IBM Plex Mono', monospace;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
-.status-collect  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(14,203,129,0.3); }
-.status-watch    { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(252,213,53,0.3); }
-.status-flat     { background: var(--surface3);   color: var(--muted);  border: 1px solid var(--border); }
-.status-negative { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(246,70,93,0.3); }
+.sp-collect  { background: var(--green-dim);  color: var(--green);  border-color: rgba(14,203,129,0.3); }
+.sp-watch    { background: var(--yellow-dim); color: var(--yellow); border-color: rgba(252,213,53,0.3); }
+.sp-flat     { background: var(--surface3);   color: var(--muted);  border-color: var(--border); }
+.sp-negative { background: var(--red-dim);    color: var(--red);    border-color: rgba(246,70,93,0.3); }
+.sp-loading  { background: var(--surface3);   color: var(--muted);  border-color: var(--border); }
 
-/* Funding footer bar */
+/* funding section footer bar */
 .funding-footer {
   display: flex;
   align-items: center;
@@ -391,43 +384,40 @@ body {
   padding: 10px 16px;
   background: var(--surface2);
   border-top: 1px solid var(--border);
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 }
-.funding-timer {
+.funding-timer-wrap {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
   color: var(--green);
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
-.funding-explainer {
+.funding-note {
   font-size: 11px;
   color: var(--muted);
+  line-height: 1.5;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SECTION B: SPOT ARB
-═══════════════════════════════════════════════════════════ */
-.spot-section {
-  margin-bottom: 20px;
-}
+/* ════════════════════════════════════════════════════════════════
+   SPOT ARB — 2-column grid
+════════════════════════════════════════════════════════════════ */
 .spot-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
-  gap: 2px;
   background: var(--border);
+  gap: 1px;
 }
 @media (max-width: 1100px) { .spot-grid { grid-template-columns: 1fr; } }
 
-/* Price Table */
-.price-wrap { overflow-x: auto; }
-.price-table {
+.price-tbl {
   width: 100%;
   border-collapse: collapse;
 }
-.price-table th {
+.price-tbl th {
   padding: 10px 14px;
   font-size: 10px;
   font-weight: 600;
@@ -436,43 +426,28 @@ body {
   color: var(--muted);
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
-  text-align: right;
   white-space: nowrap;
+  text-align: right;
 }
-.price-table th:first-child { text-align: left; }
-.price-table td {
+.price-tbl th:first-child { text-align: left; }
+.price-tbl td {
   padding: 11px 14px;
-  border-bottom: 1px solid rgba(43,49,57,0.6);
+  border-bottom: 1px solid rgba(43,49,57,0.55);
   text-align: right;
   vertical-align: middle;
 }
-.price-table td:first-child { text-align: left; }
-.price-table tr:last-child td { border-bottom: none; }
-.price-table tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
-.price-table tbody tr:hover td { background: rgba(43,49,57,0.4); }
+.price-tbl td:first-child { text-align: left; }
+.price-tbl tr:last-child td { border-bottom: none; }
+.price-tbl tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
+.price-tbl tbody tr:hover td { background: rgba(43,49,57,0.4); }
 
-.price-cell { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-.price-bid {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  color: var(--green);
-  font-weight: 500;
-}
-.price-ask {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  color: var(--red);
-  font-weight: 500;
-}
-.price-label {
-  font-size: 8px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.price-err { font-size: 11px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.px-cell  { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.px-bid   { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--green); }
+.px-ask   { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--red); }
+.px-lbl   { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.px-err   { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
 
-.spread-badge {
+.spread-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -481,78 +456,55 @@ body {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   font-weight: 600;
-  min-width: 64px;
+  min-width: 62px;
+  border: 1px solid transparent;
   white-space: nowrap;
 }
-.spread-hot  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(14,203,129,0.3); }
-.spread-warm { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(252,213,53,0.3); }
-.spread-cold { background: var(--surface3);   color: var(--muted);  border: 1px solid var(--border); }
+.sp-hot  { background: var(--green-dim);  color: var(--green);  border-color: rgba(14,203,129,0.3); }
+.sp-warm { background: var(--yellow-dim); color: var(--yellow); border-color: rgba(252,213,53,0.3); }
+.sp-cold { background: var(--surface3);   color: var(--muted);  border-color: var(--border); }
 
-/* Opportunities Feed */
+/* Opp feed */
 .opp-scroll {
   height: 100%;
-  max-height: 480px;
+  max-height: 400px;
   overflow-y: auto;
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  background: var(--surface);
 }
 .opp-scroll::-webkit-scrollbar { width: 4px; }
-.opp-scroll::-webkit-scrollbar-track { background: transparent; }
-.opp-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.opp-scroll::-webkit-scrollbar-track  { background: transparent; }
+.opp-scroll::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 4px; }
 
 .opp-card {
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 12px;
-  cursor: default;
-  transition: border-color 0.2s;
+  transition: border-color .2s;
 }
-.opp-card:hover { border-color: var(--border-bright); }
-.opp-card.profitable {
-  border-left: 3px solid var(--green);
-}
+.opp-card:hover { border-color: var(--border-hi); }
+.opp-card.profitable { border-left: 3px solid var(--green); }
+
 .opp-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 6px;
 }
-.opp-pair {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-.opp-time {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-.opp-profit-block { text-align: right; }
-.opp-pct {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 14px;
-  font-weight: 700;
-}
+.opp-pair { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text); }
+.opp-time { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 2px; }
+.opp-pblock { text-align: right; }
+.opp-pct  { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; }
 .opp-pct.pos { color: var(--green); }
 .opp-pct.neg { color: var(--red); }
-.opp-usd {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 1px;
-}
-.opp-route {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.ex-pill {
+.opp-usd  { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+.opp-route { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ex-pill   {
   display: inline-flex;
   align-items: center;
   padding: 2px 7px;
@@ -562,30 +514,27 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-family: 'IBM Plex Mono', monospace;
+  border: 1px solid transparent;
 }
-.ex-binance  { background: rgba(252,213,53,0.1);  color: #FCD535; border: 1px solid rgba(252,213,53,0.2); }
-.ex-coinbase { background: rgba(30,128,255,0.1);  color: #1E80FF; border: 1px solid rgba(30,128,255,0.2); }
-.ex-kucoin   { background: rgba(9,187,134,0.1);   color: #09BB86; border: 1px solid rgba(9,187,134,0.2); }
-.ex-gateio   { background: rgba(246,70,93,0.1);   color: #F6465D; border: 1px solid rgba(246,70,93,0.2); }
-.route-arrow { color: var(--muted); font-size: 11px; }
-.opp-detail {
-  font-size: 9px;
-  color: var(--muted);
-  font-family: 'IBM Plex Mono', monospace;
-  margin-left: auto;
-}
+.ep-binance  { background: rgba(252,213,53,.10); color: #FCD535; border-color: rgba(252,213,53,.2); }
+.ep-coinbase { background: rgba(30,128,255,.10);  color: #1E80FF; border-color: rgba(30,128,255,.2); }
+.ep-kucoin   { background: rgba(9,187,134,.10);   color: #09BB86; border-color: rgba(9,187,134,.2); }
+.ep-gateio   { background: rgba(246,70,93,.10);   color: #F6465D; border-color: rgba(246,70,93,.2); }
+.rt-arrow    { color: var(--muted); font-size: 11px; }
+.opp-detail  { font-size: 9px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
+
 .empty-feed {
   text-align: center;
-  padding: 30px 20px;
+  padding: 30px 16px;
   color: var(--muted);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   line-height: 1.8;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SECTION C: BOTTOM ROW (equity + balances)
-═══════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════
+   BOTTOM ROW — equity + balances
+════════════════════════════════════════════════════════════════ */
 .bottom-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -594,60 +543,40 @@ body {
 }
 @media (max-width: 768px) { .bottom-row { grid-template-columns: 1fr; } }
 
-.chart-wrap {
-  height: 190px;
+.chart-body {
   padding: 14px 14px 10px;
+  height: 200px;
   position: relative;
 }
 
 .balance-body { padding: 12px 14px; }
-.balance-grid {
+.bal-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
-.balance-item {
+.bal-item {
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 12px 14px;
-  transition: border-color 0.2s;
+  transition: border-color .2s;
 }
-.balance-item:hover { border-color: var(--border-bright); }
-.balance-name {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--muted);
-  margin-bottom: 5px;
-}
-.balance-val {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
-}
-.balance-pnl {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  margin-top: 2px;
-}
-.balance-pnl.up   { color: var(--green); }
-.balance-pnl.down { color: var(--red); }
+.bal-item:hover { border-color: var(--border-hi); }
+.bal-name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 4px; }
+.bal-val  { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: var(--text); }
+.bal-pnl  { font-family: 'IBM Plex Mono', monospace; font-size: 10px; margin-top: 2px; }
+.bal-pnl.up   { color: var(--green); }
+.bal-pnl.down { color: var(--red); }
 
-/* ═══════════════════════════════════════════════════════════
-   SECTION D: TRADE HISTORY
-═══════════════════════════════════════════════════════════ */
-.trade-history {
-  margin-bottom: 20px;
-}
-.trade-body { overflow-x: auto; }
-.trade-table {
+/* ════════════════════════════════════════════════════════════════
+   TRADE HISTORY TABLE
+════════════════════════════════════════════════════════════════ */
+.trade-tbl {
   width: 100%;
   border-collapse: collapse;
 }
-.trade-table th {
+.trade-tbl th {
   padding: 10px 14px;
   font-size: 10px;
   font-weight: 600;
@@ -657,28 +586,30 @@ body {
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
+  text-align: left;
 }
-.trade-table th:not(:first-child) { text-align: right; }
-.trade-table td {
+.trade-tbl th:not(:first-child) { text-align: right; }
+.trade-tbl td {
   padding: 10px 14px;
   border-bottom: 1px solid rgba(43,49,57,0.5);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
-  white-space: nowrap;
   color: var(--text2);
+  white-space: nowrap;
+  text-align: left;
 }
-.trade-table td:not(:first-child) { text-align: right; }
-.trade-table tr:last-child td { border-bottom: none; }
-.trade-table tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
-.trade-table tbody tr:hover td { background: rgba(43,49,57,0.3); }
+.trade-tbl td:not(:first-child) { text-align: right; }
+.trade-tbl tr:last-child td { border-bottom: none; }
+.trade-tbl tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
+.trade-tbl tbody tr:hover td { background: rgba(43,49,57,0.3); }
 .win  { color: var(--green) !important; font-weight: 600; }
 .loss { color: var(--red) !important;   font-weight: 600; }
-.route-txt { color: var(--blue); font-size: 10px; }
-.no-trades td { text-align: center !important; color: var(--muted); padding: 30px !important; }
+.rt-txt { color: var(--blue); font-size: 10px; }
+.no-trades td { text-align: center !important; color: var(--muted); padding: 28px !important; }
 
-/* ═══════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════
    FOOTER
-═══════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════ */
 .footer {
   text-align: center;
   font-family: 'IBM Plex Mono', monospace;
@@ -689,32 +620,38 @@ body {
   justify-content: center;
   gap: 14px;
   flex-wrap: wrap;
-  padding: 10px 0;
+  padding: 10px 0 0;
 }
-.footer-dot {
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--border-bright);
-}
-.footer a { color: var(--blue); text-decoration: none; }
+.footer-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-hi); }
+.footer a   { color: var(--blue); text-decoration: none; }
 .footer a:hover { color: var(--text2); }
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE — hide topbar items on narrow screens
+════════════════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .topbar-right .top-item:not(:first-child) { display: none; }
+  .topbar-center { display: none; }
+}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════
-     NAVBAR
-═══════════════════════════════════════════════════════════ -->
-<nav class="navbar">
-  <div class="nav-logo">
-    <div class="logo-mark">ARB</div>
-    <div class="logo-text">
+<!-- ════════════════════════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-box">ARB</div>
+    <div>
       <div class="logo-name">CryptoARB Bot</div>
       <div class="logo-ver">v2.0</div>
     </div>
   </div>
 
-  <div class="nav-center">
+  <!-- Center badges -->
+  <div class="topbar-center">
     {% if paper_mode %}
     <div class="badge badge-paper"><div class="dot"></div>PAPER MODE</div>
     {% else %}
@@ -723,121 +660,129 @@ body {
     <div class="badge badge-offline" id="conn-badge"><div class="dot"></div>Connecting</div>
   </div>
 
-  <div class="nav-right">
-    <div>
-      <div class="nav-funding-label">NEXT FUNDING</div>
-      <div class="nav-funding-countdown" id="nav-funding-countdown">--:--:--</div>
+  <!-- Right cluster -->
+  <div class="topbar-right">
+    <div class="top-item">
+      <div class="top-item-label">⏱ Next Funding</div>
+      <div class="top-item-value funding-countdown" id="nav-funding-countdown">--:--:--</div>
     </div>
-    <div class="nav-scan-counter" id="nav-scan-count">SCAN #0</div>
+    <div class="top-item">
+      <div class="top-item-label">Scans</div>
+      <div class="top-item-value neutral" id="nav-scan-count">SCAN #0</div>
+    </div>
   </div>
-</nav>
+</header>
 
-<!-- ═══════════════════════════════════════════════════════════
-     STATS BAR
-═══════════════════════════════════════════════════════════ -->
-<div class="stats-bar">
+<!-- ════════════════════════════════════════════════════════════
+     STATS ROW
+════════════════════════════════════════════════════════════ -->
+<div class="stats-row">
   <div class="stat-card">
     <div class="stat-label">All-Time P&amp;L</div>
-    <div class="stat-value up" id="stat-pnl">$0.0000</div>
-    <div class="stat-sub" id="stat-pnl-pct">+0.00%</div>
+    <div class="stat-value up" id="stat-pnl">+$0.0000</div>
+    <div class="stat-sub" id="stat-pnl-pct">+0.0000%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-label">This Session P&amp;L</div>
-    <div class="stat-value up" id="stat-session-pnl">$0.0000</div>
-    <div class="stat-sub" id="stat-session-trades">0 trades this session</div>
+    <div class="stat-label">This Session</div>
+    <div class="stat-value up" id="stat-session-pnl">+$0.0000</div>
+    <div class="stat-sub" id="stat-session-trades">0 trades</div>
   </div>
   <div class="stat-card">
-    <div class="stat-label">Win Rate (All-Time)</div>
+    <div class="stat-label">Win Rate</div>
     <div class="stat-value yellow" id="stat-winrate">—</div>
-    <div class="stat-sub" id="stat-trades">0 trades total</div>
+    <div class="stat-sub" id="stat-trades">0 trades</div>
   </div>
   <div class="stat-card">
-    <div class="stat-label">Best Funding Rate Found</div>
+    <div class="stat-label">Best Funding</div>
     <div class="stat-value blue" id="stat-best-funding">—</div>
-    <div class="stat-sub" id="stat-best-funding-sub">No data yet</div>
+    <div class="stat-sub" id="stat-best-funding-sub">— APY</div>
   </div>
 </div>
 
 <div class="shell">
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION A: FUNDING RATE ARBITRAGE
-═══════════════════════════════════════════════════════════ -->
-<div class="funding-section">
-  <div class="section-header">
+<!-- ════════════════════════════════════════════════════════════
+     SECTION 1 — FUNDING RATE ARBITRAGE
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-header">
     <div>
-      <div class="section-title">
+      <div class="sec-title">
         📊 Funding Rate Arbitrage
-        <span class="section-badge" id="funding-opp-badge">scanning…</span>
+        <span class="sec-badge" id="funding-opp-badge">scanning…</span>
       </div>
-      <div class="section-subtitle">Collect 8-hourly payments delta-neutral — Long spot + Short perpetual</div>
+      <div class="sec-sub">Long spot · Short perp · Collect every 8h</div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);white-space:nowrap;">
+      ⏱ Next settlement: <strong class="funding-countdown" id="sec-funding-countdown">--:--:--</strong>
     </div>
   </div>
+
   <div class="card">
-    <div class="funding-wrap">
-      <table class="funding-table" id="funding-table">
+    <div class="tbl-wrap">
+      <table class="funding-tbl" id="funding-table">
         <thead>
           <tr>
             <th>Pair</th>
-            <th>Binance %/8h</th>
-            <th>Bybit %/8h</th>
-            <th>Gate %/8h</th>
+            <th>Binance Perps</th>
+            <th>Bybit</th>
+            <th>Gate.io</th>
             <th>Best 8h Rate</th>
-            <th>Est. Annual %</th>
+            <th>Est. APY</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody id="funding-tbody">
           <tr>
-            <td colspan="7" style="text-align:center;color:var(--muted);padding:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
-              Fetching funding rates… (updates every 5 scans)
+            <td colspan="7" style="text-align:center;color:var(--muted);padding:24px 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+              Fetching funding rates…
             </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="funding-footer">
-      <div class="funding-timer">
-        ⏱ Next funding settlement: <strong id="funding-countdown">--:--:--</strong>
+      <div class="funding-timer-wrap">
+        ⏱ Next funding settlement:&nbsp;<strong class="funding-countdown" id="funding-countdown">--:--:--</strong>
       </div>
-      <div class="funding-explainer">
-        Strategy: Long spot + Short perpetual → collect funding rate every 8h when positive.
-        Settlements at 00:00, 08:00, 16:00 UTC.
+      <div class="funding-note">
+        💡 Positive funding = longs pay shorts. Delta-neutral: hold equal spot long + perp short to collect without price risk.
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION B: SPOT ARBITRAGE
-═══════════════════════════════════════════════════════════ -->
-<div class="spot-section">
-  <div class="section-header">
+<!-- ════════════════════════════════════════════════════════════
+     SECTION 2 — SPOT ARBITRAGE
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-header">
     <div>
-      <div class="section-title">
+      <div class="sec-title">
         💱 Spot Arbitrage
-        <span class="section-badge" id="opp-count">scanning…</span>
+        <span class="sec-badge" id="opp-count">scanning…</span>
       </div>
-      <div class="section-subtitle">Cross-exchange price spreads — Buy low, sell high simultaneously</div>
+      <div class="sec-sub">Cross-exchange price spreads — buy low, sell high simultaneously</div>
     </div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);" id="price-age">—</div>
   </div>
-  <div class="card" style="border-radius:0;">
+
+  <div class="card" style="border-radius:0 0 6px 6px;overflow:hidden;">
     <div class="spot-grid">
-      <!-- Price Table -->
+      <!-- Live Price Comparison -->
       <div style="background:var(--surface);">
-        <div class="card-header">
+        <div class="card-head">
           <div class="card-title">Live Price Comparison</div>
         </div>
-        <div class="price-wrap">
-          <table class="price-table">
+        <div class="tbl-wrap">
+          <table class="price-tbl">
             <thead>
               <tr>
                 <th>Pair</th>
                 {% for ex in exchanges %}
                 <th>{{ ex | upper }}</th>
                 {% endfor %}
-                <th>Best Net Spread</th>
+                <th>Best Spread</th>
               </tr>
             </thead>
             <tbody id="price-tbody">
@@ -846,11 +791,11 @@ body {
                 <td><span class="pair-name">{{ pair }}</span></td>
                 {% for ex in exchanges %}
                 <td id="cell-{{ ex }}-{{ pair | replace('/', '-') }}">
-                  <span class="price-err">…</span>
+                  <span class="px-err">…</span>
                 </td>
                 {% endfor %}
                 <td id="spread-{{ pair | replace('/', '-') }}">
-                  <span class="spread-badge spread-cold">—</span>
+                  <span class="spread-pill sp-cold">—</span>
                 </td>
               </tr>
               {% endfor %}
@@ -861,7 +806,7 @@ body {
 
       <!-- Opportunities Feed -->
       <div style="background:var(--surface);border-left:1px solid var(--border);">
-        <div class="card-header">
+        <div class="card-head">
           <div class="card-title">Opportunities Feed</div>
         </div>
         <div class="opp-scroll" id="opp-feed">
@@ -875,55 +820,56 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION C: EQUITY + BALANCES
-═══════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════════
+     SECTION 3 — EQUITY CURVE + BALANCES
+════════════════════════════════════════════════════════════ -->
 <div class="bottom-row">
 
   <!-- Equity Curve -->
-  <div class="card-standalone">
-    <div class="card-header">
-      <div class="card-title">Equity Curve</div>
+  <div class="card-solo">
+    <div class="card-head">
+      <div class="card-title">📈 Equity Curve</div>
       <div class="chip" id="equity-chip">$0.00</div>
     </div>
-    <div class="chart-wrap">
+    <div class="chart-body">
       <canvas id="equity-chart"></canvas>
     </div>
   </div>
 
   <!-- Virtual Balances -->
-  <div class="card-standalone">
-    <div class="card-header">
-      <div class="card-title">Virtual Balances</div>
+  <div class="card-solo">
+    <div class="card-head">
+      <div class="card-title">💼 Virtual Balances</div>
       <div class="chip">Per Exchange · $1,000 Initial</div>
     </div>
     <div class="balance-body">
-      <div class="balance-grid" id="balance-grid">
+      <div class="bal-grid" id="balance-grid">
         {% for ex in exchanges %}
-        <div class="balance-item">
-          <div class="balance-name">{{ ex }}</div>
-          <div class="balance-val" id="bal-{{ ex }}">$1,000.00</div>
-          <div class="balance-pnl" id="balpnl-{{ ex }}">—</div>
+        <div class="bal-item">
+          <div class="bal-name">{{ ex }}</div>
+          <div class="bal-val" id="bal-{{ ex }}">$1,000.00</div>
+          <div class="bal-pnl" id="balpnl-{{ ex }}">—</div>
         </div>
         {% endfor %}
       </div>
     </div>
   </div>
+
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION D: TRADE HISTORY
-═══════════════════════════════════════════════════════════ -->
-<div class="trade-history">
-  <div class="section-header">
-    <div class="section-title">
+<!-- ════════════════════════════════════════════════════════════
+     SECTION 4 — TRADE HISTORY
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-title">
       📋 Trade History
-      <span class="section-badge" id="trade-chip">0 trades</span>
+      <span class="sec-badge" id="trade-chip">0 trades</span>
     </div>
   </div>
   <div class="card">
-    <div class="trade-body">
-      <table class="trade-table">
+    <div class="tbl-wrap">
+      <table class="trade-tbl">
         <thead>
           <tr>
             <th>Time</th>
@@ -937,16 +883,18 @@ body {
           </tr>
         </thead>
         <tbody id="trade-tbody">
-          <tr class="no-trades"><td colspan="8">No trades yet — waiting for a profitable spread…</td></tr>
+          <tr class="no-trades">
+            <td colspan="8">No trades yet — waiting for a profitable spread…</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ════════════════════════════════════════════════════════════
      FOOTER
-═══════════════════════════════════════════════════════════ -->
+════════════════════════════════════════════════════════════ -->
 <div class="footer">
   <span>CryptoARB Bot v2.0</span>
   <div class="footer-dot"></div>
@@ -959,10 +907,13 @@ body {
 
 </div><!-- /shell -->
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ════════════════════════════════════════════════════════════
      JAVASCRIPT
-═══════════════════════════════════════════════════════════ -->
+════════════════════════════════════════════════════════════ -->
 <script>
+'use strict';
+
+/* ── Constants ───────────────────────────────────────────────── */
 const PAIRS      = {{ pairs | tojson }};
 const EXCHANGES  = {{ exchanges | tojson }};
 const PAPER_MODE = {{ 'true' if paper_mode else 'false' }};
@@ -970,21 +921,22 @@ const SESSION_ID = {{ session_id | tojson }};
 const INIT_CAP   = 1000.0;
 const REFRESH_MS = 2500;
 
-/* ── Helpers ────────────────────────────────────────────────── */
+/* ── DOM helper ──────────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
 
+/* ── Formatting helpers ──────────────────────────────────────── */
 function fmtUsd(v, d) {
-  d = d === undefined ? 4 : d;
+  d = (d === undefined) ? 4 : d;
   if (v == null) return '—';
-  return (v >= 0 ? '+' : '') + '$' + Math.abs(v).toFixed(d);
+  return (v >= 0 ? '+' : '-') + '$' + Math.abs(v).toFixed(d);
 }
 function fmtPct(v, d) {
-  d = d === undefined ? 3 : d;
+  d = (d === undefined) ? 3 : d;
   if (v == null) return '—';
   return (v >= 0 ? '+' : '') + v.toFixed(d) + '%';
 }
 function fmtPrice(v) {
-  if (!v || v === 0) return '—';
+  if (!v && v !== 0) return '—';
   if (v >= 10000) return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   if (v >= 1)     return v.toFixed(4);
   return v.toFixed(6);
@@ -1000,43 +952,31 @@ function timeAgo(ts) {
   if (diff < 60) return Math.round(diff) + 's ago';
   return (diff / 60).toFixed(1) + 'm ago';
 }
-function exClass(name) {
-  const m = { binance:'ex-binance', coinbase:'ex-coinbase', kucoin:'ex-kucoin', gateio:'ex-gateio' };
-  return m[name] || '';
-}
 function exPill(name) {
-  return '<span class="ex-pill ' + exClass(name) + '">' + name + '</span>';
+  const cls = { binance:'ep-binance', coinbase:'ep-coinbase', kucoin:'ep-kucoin', gateio:'ep-gateio' };
+  return '<span class="ex-pill ' + (cls[name] || '') + '">' + name + '</span>';
 }
 
 /* ── Funding Rate Countdown ──────────────────────────────────── */
-function nextFundingCountdown() {
+function nextFundingIn() {
   const now = new Date();
-  const h = now.getUTCHours();
-  const nextH = [0, 8, 16].find(x => x > h);
-  const useNextH = (nextH !== undefined) ? nextH : 24;
-  const next = new Date(Date.UTC(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    now.getUTCDate(),
-    useNextH % 24
-  ));
-  if (useNextH === 24) next.setUTCDate(next.getUTCDate() + 1);
-  const diff = Math.max(0, next - now);
-  const hh = String(Math.floor(diff / 3600000)).padStart(2, '0');
-  const mm = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-  const ss = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+  const h = now.getUTCHours(), m = now.getUTCMinutes(), s = now.getUTCSeconds();
+  const totalSecs = h * 3600 + m * 60 + s;
+  const nextSettlement = [0, 8, 16, 24].map(x => x * 3600).find(x => x > totalSecs) ?? 86400;
+  const diff = nextSettlement - totalSecs;
+  const hh = String(Math.floor(diff / 3600)).padStart(2, '0');
+  const mm = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+  const ss = String(diff % 60).padStart(2, '0');
   return hh + ':' + mm + ':' + ss;
 }
+setInterval(() => {
+  const t = nextFundingIn();
+  document.querySelectorAll('.funding-countdown').forEach(el => { el.textContent = t; });
+}, 1000);
+// initial tick
+document.querySelectorAll('.funding-countdown').forEach(el => { el.textContent = nextFundingIn(); });
 
-function tickFundingCountdowns() {
-  const t = nextFundingCountdown();
-  if ($('funding-countdown'))     $('funding-countdown').textContent = t;
-  if ($('nav-funding-countdown')) $('nav-funding-countdown').textContent = t;
-}
-tickFundingCountdowns();
-setInterval(tickFundingCountdowns, 1000);
-
-/* ── Chart ──────────────────────────────────────────────────── */
+/* ── Chart.js Equity Curve ───────────────────────────────────── */
 const equityChart = new Chart(
   document.getElementById('equity-chart').getContext('2d'),
   {
@@ -1054,11 +994,11 @@ const equityChart = new Chart(
         fill: true,
         tension: 0.4,
         backgroundColor: function(ctx) {
-          const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 190);
-          gradient.addColorStop(0,   'rgba(14,203,129,0.18)');
-          gradient.addColorStop(0.6, 'rgba(14,203,129,0.04)');
-          gradient.addColorStop(1,   'rgba(14,203,129,0.00)');
-          return gradient;
+          const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
+          g.addColorStop(0,   'rgba(14,203,129,0.15)');
+          g.addColorStop(0.65,'rgba(14,203,129,0.04)');
+          g.addColorStop(1,   'rgba(14,203,129,0.00)');
+          return g;
         },
       }],
     },
@@ -1075,18 +1015,18 @@ const equityChart = new Chart(
           titleColor: '#848E9C',
           bodyColor: '#EAECEF',
           padding: 10,
-          callbacks: { label: function(c) { return ' $' + c.parsed.y.toFixed(4); } },
+          callbacks: { label: ctx => ' $' + ctx.parsed.y.toFixed(4) },
         },
       },
       scales: {
         x: { display: false },
         y: {
-          grid:   { color: 'rgba(43,49,57,0.6)' },
+          grid:   { color: 'rgba(43,49,57,0.55)' },
           border: { display: false },
           ticks:  {
             color: '#848E9C',
             font:  { family: "'IBM Plex Mono', monospace", size: 10 },
-            callback: function(v) { return '$' + v.toFixed(0); },
+            callback: v => '$' + v.toFixed(0),
           },
         },
       },
@@ -1096,142 +1036,126 @@ const equityChart = new Chart(
 );
 
 /* ── Funding Rate Table ──────────────────────────────────────── */
-// Group funding rates by pair → { pair: { exchange: snapshot } }
-function groupFundingByPair(rates) {
+const FUNDING_EX_LIST   = ['binanceusdm', 'bybit', 'gate'];
+const FUNDING_EX_LABELS = { binanceusdm: 'Binance', bybit: 'Bybit', gate: 'Gate.io' };
+const PAIR_ORDER = ['BTC/USDT:USDT','ETH/USDT:USDT','SOL/USDT:USDT','XRP/USDT:USDT','DOGE/USDT:USDT'];
+
+function groupFunding(rates) {
   const map = {};
-  const pairOrder = ['BTC/USDT:USDT','ETH/USDT:USDT','SOL/USDT:USDT','XRP/USDT:USDT','DOGE/USDT:USDT'];
   for (const r of (rates || [])) {
     if (!map[r.pair]) map[r.pair] = {};
     map[r.pair][r.exchange] = r;
   }
-  // Return in consistent order
-  const ordered = {};
-  for (const p of pairOrder) { if (map[p]) ordered[p] = map[p]; }
-  // Any extra pairs
-  for (const p of Object.keys(map)) { if (!ordered[p]) ordered[p] = map[p]; }
-  return ordered;
+  const out = {};
+  for (const p of PAIR_ORDER) { if (map[p]) out[p] = map[p]; }
+  for (const p of Object.keys(map)) { if (!out[p]) out[p] = map[p]; }
+  return out;
 }
 
-function fundingStatusBadge(rate8h) {
-  if (rate8h === undefined || rate8h === null) {
-    return '<span class="status-badge status-flat">⚪ N/A</span>';
-  }
-  if (rate8h > 0.01)  return '<span class="status-badge status-collect">🟢 COLLECT</span>';
-  if (rate8h > 0.005) return '<span class="status-badge status-watch">🟡 WATCH</span>';
-  if (rate8h >= 0)    return '<span class="status-badge status-flat">⚪ FLAT</span>';
-  return '<span class="status-badge status-negative">🔴 NEGATIVE</span>';
+function statusPill(rate8h) {
+  if (rate8h === undefined || rate8h === null)
+    return '<span class="status-pill sp-loading">LOADING…</span>';
+  if (rate8h > 0.01)  return '<span class="status-pill sp-collect">● COLLECT</span>';
+  if (rate8h > 0.005) return '<span class="status-pill sp-watch">● WATCH</span>';
+  if (rate8h >= 0)    return '<span class="status-pill sp-flat">● FLAT</span>';
+  return '<span class="status-pill sp-negative">● NEGATIVE</span>';
 }
 
-function fmtRate(r) {
-  if (r === undefined || r === null) return '<span class="rate-neutral">—</span>';
-  if (r.error) return '<span class="rate-neutral" title="' + r.error.replace(/"/g,"'") + '">err</span>';
-  const cls = r.rate_8h > 0 ? 'rate-positive' : (r.rate_8h < 0 ? 'rate-negative' : 'rate-neutral');
-  const sign = r.rate_8h >= 0 ? '+' : '';
-  return '<span class="' + cls + '">' + sign + r.rate_8h.toFixed(4) + '%</span>';
+function fmtRate(snap) {
+  if (!snap) return '<span class="rz">—</span>';
+  if (snap.error) return '<span class="rz" title="' + snap.error.replace(/"/g,"'") + '">err</span>';
+  const v = snap.rate_8h;
+  const cls = v > 0 ? 'rp' : (v < 0 ? 'rn' : 'rz');
+  const sign = v >= 0 ? '+' : '';
+  return '<span class="' + cls + '">' + sign + v.toFixed(4) + '%</span>';
 }
 
 function renderFunding(rates) {
   const tbody = $('funding-tbody');
   const badge = $('funding-opp-badge');
-  const bestFundingEl = $('stat-best-funding');
-  const bestFundingSubEl = $('stat-best-funding-sub');
+  const bestEl    = $('stat-best-funding');
+  const bestSubEl = $('stat-best-funding-sub');
 
   if (!rates || rates.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;font-family:\'IBM Plex Mono\',monospace;font-size:11px;">No funding rate data yet — fetches every 5 scans</td></tr>';
-    if (badge) { badge.textContent = 'no data'; badge.className = 'section-badge'; }
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px 14px;font-family:\'IBM Plex Mono\',monospace;font-size:11px;">Fetching funding rates…</td></tr>';
+    if (badge) { badge.textContent = 'no data'; badge.className = 'sec-badge'; }
     return;
   }
 
-  const grouped = groupFundingByPair(rates);
-  const exList = ['binanceusdm', 'bybit', 'gate'];
-  const exLabels = { 'binanceusdm': 'Binance', 'bybit': 'Bybit', 'gate': 'Gate' };
-
+  const grouped = groupFunding(rates);
   let oppCount = 0;
-  let globalBestRate = -Infinity;
-  let globalBestLabel = '—';
+  let globalBest = -Infinity, globalBestAnnual = 0, globalBestPair = '';
 
-  const rows = Object.entries(grouped).map(function(entry) {
-    const pair = entry[0];
-    const exMap = entry[1];
-    // Display label: strip ":USDT" suffix for brevity
+  const rowsHtml = Object.entries(grouped).map(([pair, exMap]) => {
     const pairDisplay = pair.replace(':USDT', '');
-    const baseSymbol = pair.split('/')[0];
-
-    // Find best rate across exchanges for this pair
-    let bestRate = -Infinity;
-    let bestAnnual = 0;
-    for (const ex of exList) {
-      const snap = exMap[ex];
-      if (snap && !snap.error && snap.rate_8h > bestRate) {
-        bestRate = snap.rate_8h;
-        bestAnnual = snap.annual_pct;
+    let bestRate = -Infinity, bestAnnual = 0;
+    for (const ex of FUNDING_EX_LIST) {
+      const s = exMap[ex];
+      if (s && !s.error && s.rate_8h > bestRate) {
+        bestRate = s.rate_8h;
+        bestAnnual = s.annual_pct !== undefined ? s.annual_pct : s.rate_8h * 3 * 365;
       }
     }
-
-    // Track global best
-    if (bestRate > globalBestRate) {
-      globalBestRate = bestRate;
-      globalBestLabel = baseSymbol + ' +' + bestRate.toFixed(4) + '%/8h · ' + bestAnnual.toFixed(1) + '% APY';
+    if (bestRate > globalBest) {
+      globalBest = bestRate;
+      globalBestAnnual = bestAnnual;
+      globalBestPair = pair.split('/')[0];
     }
+    if (bestRate > 0.01) oppCount++;
 
-    const isOpp = bestRate > 0.01;
-    if (isOpp) oppCount++;
-
-    const bestRateStr = bestRate > -Infinity
+    const bestStr = bestRate > -Infinity
       ? (bestRate >= 0 ? '+' : '') + bestRate.toFixed(4) + '%'
       : '—';
-    const bestRateCls = bestRate > 0 ? 'rate-positive' : (bestRate < 0 ? 'rate-negative' : 'rate-neutral');
-    const bestAnnualStr = bestRate > -Infinity
+    const bestCls = bestRate > 0 ? 'rp' : (bestRate < 0 ? 'rn' : 'rz');
+    const annualStr = bestRate > -Infinity
       ? (bestAnnual >= 0 ? '+' : '') + bestAnnual.toFixed(1) + '%'
       : '—';
-    const bestAnnualCls = bestAnnual > 0 ? 'rate-positive' : (bestAnnual < 0 ? 'rate-negative' : 'rate-neutral');
+    const annualCls = bestAnnual > 0 ? 'rp' : (bestAnnual < 0 ? 'rn' : 'rz');
 
     return '<tr>' +
       '<td><span class="pair-name">' + pairDisplay + '</span></td>' +
-      exList.map(function(ex) {
-        return '<td>' + fmtRate(exMap[ex]) + '</td>';
-      }).join('') +
-      '<td><strong class="' + bestRateCls + '">' + bestRateStr + '</strong></td>' +
-      '<td><strong class="' + bestAnnualCls + '">' + bestAnnualStr + '</strong></td>' +
-      '<td>' + fundingStatusBadge(bestRate > -Infinity ? bestRate : null) + '</td>' +
+      FUNDING_EX_LIST.map(ex => '<td>' + fmtRate(exMap[ex]) + '</td>').join('') +
+      '<td><strong class="' + bestCls + '">' + bestStr + '</strong></td>' +
+      '<td><strong class="' + annualCls + '">' + annualStr + '</strong></td>' +
+      '<td>' + statusPill(bestRate > -Infinity ? bestRate : null) + '</td>' +
       '</tr>';
   });
 
-  tbody.innerHTML = rows.join('');
+  tbody.innerHTML = rowsHtml.join('');
 
   if (badge) {
     if (oppCount > 0) {
-      badge.textContent = oppCount + ' opportunity' + (oppCount > 1 ? 'ies' : '');
-      badge.className = 'section-badge hot';
+      badge.textContent = oppCount + (oppCount === 1 ? ' opportunity' : ' opportunities');
+      badge.className = 'sec-badge hot';
     } else {
       badge.textContent = 'no opportunities';
-      badge.className = 'section-badge';
+      badge.className = 'sec-badge';
     }
   }
 
   // Update best funding stat card
-  if (bestFundingEl && globalBestRate > -Infinity && globalBestRate > 0) {
-    const sign = globalBestRate >= 0 ? '+' : '';
-    bestFundingEl.textContent = sign + globalBestRate.toFixed(4) + '%/8h';
-    bestFundingEl.className = 'stat-value blue';
-    if (bestFundingSubEl) {
-      const annual = globalBestRate * 3 * 365;
-      bestFundingSubEl.textContent = '≈ ' + annual.toFixed(1) + '% APY · ' + globalBestLabel.split('·')[0].trim();
+  if (bestEl) {
+    if (globalBest > -Infinity && globalBest > 0) {
+      bestEl.textContent = (globalBest >= 0 ? '+' : '') + globalBest.toFixed(4) + '%/8h';
+      bestEl.className = 'stat-value blue';
+      if (bestSubEl) bestSubEl.textContent = '≈ ' + globalBestAnnual.toFixed(1) + '% APY · ' + globalBestPair;
+    } else if (globalBest <= 0 && globalBest > -Infinity) {
+      bestEl.textContent = 'All Negative';
+      bestEl.className = 'stat-value';
+      if (bestSubEl) bestSubEl.textContent = 'No positive rates';
     }
-  } else if (bestFundingEl && globalBestRate <= 0) {
-    bestFundingEl.textContent = 'All Negative';
-    bestFundingEl.className = 'stat-value';
-    if (bestFundingSubEl) bestFundingSubEl.textContent = 'No positive rates';
   }
 }
 
-/* ── Prices ──────────────────────────────────────────────────── */
+/* ── Spot Price Table ────────────────────────────────────────── */
 function renderPrices(prices, opps) {
-  const best = {};
+  // Build best-opp map per pair
+  const bestOpp = {};
   for (const o of (opps || [])) {
-    if (!best[o.pair] || o.net_profit_pct > best[o.pair].net_profit_pct) best[o.pair] = o;
+    if (!bestOpp[o.pair] || o.net_profit_pct > bestOpp[o.pair].net_profit_pct) bestOpp[o.pair] = o;
   }
 
+  // Latest timestamp
   let latestTs = 0;
   for (const ex of Object.values(prices || {}))
     for (const p of Object.values(ex))
@@ -1245,59 +1169,62 @@ function renderPrices(prices, opps) {
       if (!cell) continue;
       const pd = prices && prices[ex] && prices[ex][pair];
       if (!pd || pd.error) {
-        cell.innerHTML = '<span class="price-err">' + (pd && pd.error ? 'err' : '—') + '</span>';
+        cell.innerHTML = '<span class="px-err">' + (pd && pd.error ? 'err' : '—') + '</span>';
       } else {
         cell.innerHTML =
-          '<div class="price-cell">' +
-          '<span class="price-bid">' + fmtPrice(pd.bid) + '</span>' +
-          '<span class="price-label">bid</span>' +
-          '<span class="price-ask">' + fmtPrice(pd.ask) + '</span>' +
-          '<span class="price-label">ask</span>' +
+          '<div class="px-cell">' +
+          '<span class="px-bid">' + fmtPrice(pd.bid) + '</span>' +
+          '<span class="px-lbl">bid</span>' +
+          '<span class="px-ask">' + fmtPrice(pd.ask) + '</span>' +
+          '<span class="px-lbl">ask</span>' +
           '</div>';
       }
     }
 
     const spreadEl = $('spread-' + rid);
     if (spreadEl) {
-      const b = best[pair];
+      const b = bestOpp[pair];
       if (b && b.net_profit_pct > 0) {
-        const cls = b.is_profitable ? 'spread-hot' : (b.net_profit_pct > 0.1 ? 'spread-warm' : 'spread-cold');
-        spreadEl.innerHTML = '<span class="spread-badge ' + cls + '">' + fmtPct(b.net_profit_pct, 3) + '</span>';
+        const cls = b.is_profitable ? 'sp-hot' : (b.net_profit_pct > 0.1 ? 'sp-warm' : 'sp-cold');
+        spreadEl.innerHTML = '<span class="spread-pill ' + cls + '">' + fmtPct(b.net_profit_pct, 3) + '</span>';
       } else {
-        spreadEl.innerHTML = '<span class="spread-badge spread-cold">—</span>';
+        spreadEl.innerHTML = '<span class="spread-pill sp-cold">—</span>';
       }
     }
   }
 }
 
-/* ── Opportunities ───────────────────────────────────────────── */
+/* ── Opportunities Feed ──────────────────────────────────────── */
 function renderOpps(opps) {
-  const feed = $('opp-feed');
+  const feed    = $('opp-feed');
   const countEl = $('opp-count');
+
   if (!opps || opps.length === 0) {
     feed.innerHTML = '<div class="empty-feed">No opportunities detected…<br/><span style="font-size:10px;">Monitoring ' + EXCHANGES.length + ' exchanges · ' + PAIRS.length + ' pairs</span></div>';
-    if (countEl) { countEl.textContent = '0 found'; countEl.className = 'section-badge'; }
+    if (countEl) { countEl.textContent = '0 found'; countEl.className = 'sec-badge'; }
     return;
   }
-  const profitable = opps.filter(function(o) { return o.is_profitable; }).length;
+
+  const profitable = opps.filter(o => o.is_profitable).length;
   if (countEl) {
     countEl.textContent = profitable + ' profitable';
-    countEl.className = 'section-badge' + (profitable > 0 ? ' hot' : '');
+    countEl.className   = 'sec-badge' + (profitable > 0 ? ' hot' : '');
   }
-  feed.innerHTML = opps.slice(0, 20).map(function(o) {
-    const cls    = o.is_profitable ? 'profitable' : '';
-    const pctCls = o.net_profit_pct > 0 ? 'pos' : 'neg';
-    return '<div class="opp-card ' + cls + '">' +
+
+  feed.innerHTML = opps.slice(0, 20).map(o => {
+    const isProfit = o.is_profitable;
+    const pctCls   = o.net_profit_pct > 0 ? 'pos' : 'neg';
+    return '<div class="opp-card' + (isProfit ? ' profitable' : '') + '">' +
       '<div class="opp-head">' +
-      '<div><div class="opp-pair">' + o.pair + '</div><div class="opp-time">' + fmtTime(o.detected_at) + '</div></div>' +
-      '<div class="opp-profit-block"><div class="opp-pct ' + pctCls + '">' + fmtPct(o.net_profit_pct, 3) + '</div>' +
-      '<div class="opp-usd">' + fmtUsd(o.estimated_profit_usd, 4) + '</div></div>' +
+        '<div><div class="opp-pair">' + o.pair + '</div><div class="opp-time">' + fmtTime(o.detected_at) + '</div></div>' +
+        '<div class="opp-pblock"><div class="opp-pct ' + pctCls + '">' + fmtPct(o.net_profit_pct, 3) + '</div>' +
+        '<div class="opp-usd">' + fmtUsd(o.estimated_profit_usd, 4) + '</div></div>' +
       '</div>' +
       '<div class="opp-route">' +
-      exPill(o.buy_exchange) +
-      '<span class="route-arrow">→</span>' +
-      exPill(o.sell_exchange) +
-      '<span class="opp-detail">gross ' + fmtPct(o.gross_spread_pct, 3) + '</span>' +
+        exPill(o.buy_exchange) +
+        '<span class="rt-arrow">→</span>' +
+        exPill(o.sell_exchange) +
+        '<span class="opp-detail">gross ' + fmtPct(o.gross_spread_pct, 3) + '</span>' +
       '</div></div>';
   }).join('');
 }
@@ -1305,74 +1232,75 @@ function renderOpps(opps) {
 /* ── Stats ───────────────────────────────────────────────────── */
 function renderStats(s) {
   if (!s) return;
-  const pnl    = s.pnl_usd    !== undefined ? s.pnl_usd    : (s.total_profit_usd || 0);
-  const pnlPct = s.pnl_pct    !== undefined ? s.pnl_pct    : 0;
+
+  const pnl    = s.pnl_usd !== undefined ? s.pnl_usd : (s.total_profit_usd || 0);
+  const pnlPct = s.pnl_pct !== undefined ? s.pnl_pct : 0;
 
   const pnlEl = $('stat-pnl');
   if (pnlEl) {
-    pnlEl.textContent = '$' + Math.abs(pnl).toFixed(4);
-    pnlEl.className = 'stat-value ' + (pnl >= 0 ? 'up' : 'down');
+    pnlEl.textContent = (pnl >= 0 ? '+' : '-') + '$' + Math.abs(pnl).toFixed(4);
+    pnlEl.className   = 'stat-value ' + (pnl >= 0 ? 'up' : 'down');
   }
-  if ($('stat-pnl-pct'))     $('stat-pnl-pct').textContent     = fmtPct(pnlPct, 4);
-  if ($('stat-winrate'))     $('stat-winrate').textContent      = s.win_rate_pct != null ? s.win_rate_pct.toFixed(1) + '%' : '—';
-  if ($('stat-trades'))      $('stat-trades').textContent       = (s.total_trades || 0) + ' trades total · best: ' + (s.best_pair || '—');
+  if ($('stat-pnl-pct'))   $('stat-pnl-pct').textContent   = fmtPct(pnlPct, 4);
+  if ($('stat-winrate'))   $('stat-winrate').textContent    = s.win_rate_pct != null ? s.win_rate_pct.toFixed(1) + '%' : '—';
+  if ($('stat-trades'))    $('stat-trades').textContent     = (s.total_trades || 0) + ' trades total';
 
   // Session P&L
-  const sessionPnl = s.session_profit || 0;
-  const sessionPnlEl = $('stat-session-pnl');
-  if (sessionPnlEl) {
-    sessionPnlEl.textContent = '$' + Math.abs(sessionPnl).toFixed(4);
-    sessionPnlEl.className = 'stat-value ' + (sessionPnl >= 0 ? 'up' : 'down');
+  const sp    = s.session_profit || 0;
+  const spEl  = $('stat-session-pnl');
+  if (spEl) {
+    spEl.textContent = (sp >= 0 ? '+' : '-') + '$' + Math.abs(sp).toFixed(4);
+    spEl.className   = 'stat-value ' + (sp >= 0 ? 'up' : 'down');
   }
-  if ($('stat-session-trades')) {
-    $('stat-session-trades').textContent = (s.session_trades || 0) + ' trades this session';
-  }
+  if ($('stat-session-trades'))
+    $('stat-session-trades').textContent = (s.session_trades || 0) + ' trades';
 
   // Connection badge
   const connEl = $('conn-badge');
   if (connEl) {
-    connEl.innerHTML = '<div class="dot"></div>Online';
-    connEl.className = 'badge badge-online';
+    connEl.innerHTML  = '<div class="dot"></div>ONLINE';
+    connEl.className  = 'badge badge-online';
   }
 
   // Scan counter
-  if ($('nav-scan-count') && s.scan_count) {
+  if ($('nav-scan-count') && s.scan_count)
     $('nav-scan-count').textContent = 'SCAN #' + s.scan_count.toLocaleString();
-  }
 
   // Balances
   if (s.balances) {
     for (const ex of Object.keys(s.balances)) {
-      const bal     = s.balances[ex];
-      const balEl   = $('bal-' + ex);
-      const pnlEl2  = $('balpnl-' + ex);
+      const bal   = s.balances[ex];
+      const balEl = $('bal-' + ex);
+      const pnlEl2 = $('balpnl-' + ex);
       if (balEl) balEl.textContent = '$' + bal.toFixed(2);
       if (pnlEl2) {
         const diff = bal - INIT_CAP;
         pnlEl2.textContent = fmtPct((diff / INIT_CAP) * 100, 2);
-        pnlEl2.className = 'balance-pnl ' + (diff >= 0 ? 'up' : 'down');
+        pnlEl2.className   = 'bal-pnl ' + (diff >= 0 ? 'up' : 'down');
       }
     }
     if (s.total_usd && $('equity-chip')) $('equity-chip').textContent = '$' + s.total_usd.toFixed(2);
   }
 }
 
-/* ── Trades ──────────────────────────────────────────────────── */
+/* ── Trade History ───────────────────────────────────────────── */
 function renderTrades(trades) {
   const tbody = $('trade-tbody');
   const chip  = $('trade-chip');
+
   if (!trades || trades.length === 0) {
     tbody.innerHTML = '<tr class="no-trades"><td colspan="8">No trades yet — waiting for a profitable spread…</td></tr>';
     if (chip) chip.textContent = '0 trades';
     return;
   }
+
   if (chip) chip.textContent = trades.length + ' trades';
-  tbody.innerHTML = trades.slice(0, 50).map(function(t) {
+  tbody.innerHTML = trades.slice(0, 50).map(t => {
     const cls = t.profit_usd >= 0 ? 'win' : 'loss';
     return '<tr>' +
       '<td>' + fmtTime(t.executed_at) + '</td>' +
       '<td>' + t.pair + '</td>' +
-      '<td><span class="route-txt">' + t.buy_exchange + ' → ' + t.sell_exchange + '</span></td>' +
+      '<td><span class="rt-txt">' + t.buy_exchange + ' → ' + t.sell_exchange + '</span></td>' +
       '<td>' + fmtPrice(t.buy_price) + '</td>' +
       '<td>' + fmtPrice(t.sell_price) + '</td>' +
       '<td>' + fmtPct(t.gross_spread_pct, 3) + '</td>' +
@@ -1385,13 +1313,13 @@ function renderTrades(trades) {
 /* ── Equity Chart ────────────────────────────────────────────── */
 function renderEquity(series) {
   if (!series || series.length < 2) return;
-  equityChart.data.labels = series.map(function(p) { return fmtTime(p.ts); });
-  equityChart.data.datasets[0].data = series.map(function(p) { return p.equity_usd; });
+  equityChart.data.labels               = series.map(p => fmtTime(p.ts));
+  equityChart.data.datasets[0].data     = series.map(p => p.equity_usd);
   equityChart.update('none');
 }
 
-/* ── Fetch all API endpoints ──────────────────────────────────── */
-let cachedOpps = [], cachedPrices = {}, cachedFunding = [];
+/* ── Data fetching ───────────────────────────────────────────── */
+let cachedPrices = {}, cachedOpps = [], cachedFunding = [];
 
 async function fetchAll() {
   try {
@@ -1411,7 +1339,7 @@ async function fetchAll() {
     if (eR.ok) renderEquity(await eR.json());
   } catch (e) {
     const c = $('conn-badge');
-    if (c) { c.innerHTML = '<div class="dot"></div>Offline'; c.className = 'badge badge-offline'; }
+    if (c) { c.innerHTML = '<div class="dot"></div>OFFLINE'; c.className = 'badge badge-offline'; }
   }
 }
 
@@ -1422,28 +1350,28 @@ async function fetchFunding() {
       cachedFunding = await r.json();
       renderFunding(cachedFunding);
     }
-  } catch (e) {
-    // silently ignore funding fetch errors
+  } catch (_) {
+    // silently ignore
   }
 }
 
 /* ── SSE real-time push ──────────────────────────────────────── */
 function connectSSE() {
   const es = new EventSource('/api/stream');
-  es.addEventListener('scan', function() { fetchAll(); });
-  es.addEventListener('heartbeat', function() {});
-  es.onopen = function() {
+  es.addEventListener('scan', () => fetchAll());
+  es.addEventListener('heartbeat', () => {});
+  es.onopen = () => {
     const c = $('conn-badge');
-    if (c) { c.innerHTML = '<div class="dot"></div>Online'; c.className = 'badge badge-online'; }
+    if (c) { c.innerHTML = '<div class="dot"></div>ONLINE'; c.className = 'badge badge-online'; }
   };
-  es.onerror = function() { es.close(); setTimeout(connectSSE, 4000); };
+  es.onerror = () => { es.close(); setTimeout(connectSSE, 4000); };
 }
 
-/* ── Init ────────────────────────────────────────────────────── */
+/* ── Bootstrap ───────────────────────────────────────────────── */
 fetchAll();
 fetchFunding();
 setInterval(fetchAll, REFRESH_MS);
-setInterval(fetchFunding, 10000);   // Funding rates every 10s
+setInterval(fetchFunding, 10000);
 connectSSE();
 </script>
 </body>
