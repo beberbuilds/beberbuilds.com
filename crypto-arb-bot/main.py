@@ -30,6 +30,7 @@ from dataclasses import asdict
 import config
 from bot.calculator import ArbitrageCalculator
 from bot.database import Database
+from bot.funding_scanner import FundingScanner
 from bot.paper_trader import PaperTrader
 from bot.scanner import PriceScanner
 from dashboard.app import bot_state, create_app
@@ -90,9 +91,10 @@ def scanner_loop(db: Database, paper_trader: PaperTrader, session_id: str) -> No
       4. Paper-trade profitable ones
       5. Push updated state to the dashboard via bot_state
     """
-    scanner    = PriceScanner()
-    calculator = ArbitrageCalculator()
-    scan_num   = 0
+    scanner         = PriceScanner()
+    calculator      = ArbitrageCalculator()
+    funding_scanner = FundingScanner()
+    scan_num        = 0
 
     bot_state.is_running = True
     bot_state.session_id = session_id
@@ -156,6 +158,14 @@ def scanner_loop(db: Database, paper_trader: PaperTrader, session_id: str) -> No
                             f"P&L={_g(f'${pnl_usd:+.4f}')}  "
                             f"({_g(f'{pnl_pct:+.3f}%')})"
                         )
+
+            # 5b. Fetch funding rates every 5th scan to avoid rate limits
+            if scan_num % 5 == 0:
+                try:
+                    funding_rates = funding_scanner.scan()
+                    bot_state.update_funding_rates([r.__dict__ for r in funding_rates])
+                except Exception as exc:  # noqa: BLE001
+                    print(_r(f"  [ERROR] Funding scanner: {exc}"))
 
             # 6. Broadcast SSE update (dashboard JS listens for "scan" event)
             bot_state.broadcast("scan", {

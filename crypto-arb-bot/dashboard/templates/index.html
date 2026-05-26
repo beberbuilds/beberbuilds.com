@@ -3,219 +3,118 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CryptoARB — Command Center</title>
+<title>CryptoARB Bot v2.0 — Binance-Style Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 /* ═══════════════════════════════════════════════════════════
-   DESIGN TOKENS
+   BINANCE DESIGN TOKENS
 ═══════════════════════════════════════════════════════════ */
 :root {
-  /* Core palette */
-  --bg:            #08060F;
-  --bg2:           #0D0A18;
-  --surface:       #120E1F;
-  --surface2:      #1A1528;
-  --surface3:      #221B34;
-  --border:        #2A1F44;
-  --border-bright: #4A3570;
+  --bg:      #0B0E11;
+  --surface: #161A1E;
+  --surface2:#1E2329;
+  --surface3:#2B3139;
+  --border:  #2B3139;
+  --green:   #0ECB81;
+  --red:     #F6465D;
+  --yellow:  #FCD535;
+  --blue:    #1E80FF;
+  --text:    #EAECEF;
+  --muted:   #848E9C;
+  --text2:   #B7BDC6;
 
-  /* Brand – Purple ↔ Crimson */
-  --purple:        #8B5CF6;
-  --purple-light:  #A78BFA;
-  --purple-dim:    #4C1D95;
-  --purple-glow:   rgba(139,92,246,0.18);
-  --crimson:       #E11D48;
-  --crimson-light: #F43F5E;
-  --crimson-dim:   #881337;
-  --crimson-glow:  rgba(225,29,72,0.18);
-  --magenta:       #C026D3;
-  --magenta-light: #D946EF;
-
-  /* Status */
-  --green:         #34D399;
-  --green-dim:     rgba(52,211,153,0.12);
-  --green-glow:    rgba(52,211,153,0.25);
-  --red:           #F43F5E;
-  --red-dim:       rgba(244,63,94,0.12);
-  --yellow:        #FBBF24;
-  --yellow-dim:    rgba(251,191,36,0.12);
-
-  /* Text */
-  --text:          #EDE9FE;
-  --text-dim:      #A89CC8;
-  --muted:         #5B4F7A;
-
-  /* Gradients */
-  --grad-brand:    linear-gradient(135deg, var(--purple) 0%, var(--crimson) 100%);
-  --grad-card-top: linear-gradient(180deg, rgba(139,92,246,0.08) 0%, transparent 60%);
-  --grad-green:    linear-gradient(135deg, #34D399, #059669);
-  --grad-crimson:  linear-gradient(135deg, var(--crimson), var(--magenta));
+  /* Derived */
+  --green-dim:  rgba(14,203,129,0.10);
+  --red-dim:    rgba(246,70,93,0.10);
+  --yellow-dim: rgba(252,213,53,0.10);
+  --blue-dim:   rgba(30,128,255,0.10);
+  --border-bright: #474D57;
 }
 
 /* ═══════════════════════════════════════════════════════════
    RESET + BASE
 ═══════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
-
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
+  font-size: 13px;
 }
 
-/* ── Subtle grid background ─────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(139,92,246,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139,92,246,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
-}
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
 
-/* ── Ambient glow blobs ─────────────────────────────────── */
-body::after {
-  content: '';
-  position: fixed;
-  top: -20%;
-  left: -10%;
-  width: 60vw;
-  height: 60vh;
-  background: radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.ambient-right {
-  position: fixed;
-  bottom: -20%;
-  right: -10%;
-  width: 50vw;
-  height: 50vh;
-  background: radial-gradient(ellipse, rgba(225,29,72,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
+/* ── Layout shell ────────────────────────────────────────── */
 .shell {
-  position: relative;
-  z-index: 1;
-  max-width: 1380px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 18px 24px 40px;
+  padding: 0 16px 40px;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   TOP BAR
+   NAVBAR
 ═══════════════════════════════════════════════════════════ */
-.topbar {
+.navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  height: 64px;
-  background: linear-gradient(180deg, rgba(18,14,31,0.98) 0%, rgba(13,10,24,0.95) 100%);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  margin-bottom: 20px;
-  backdrop-filter: blur(20px);
-  position: relative;
-  overflow: hidden;
+  height: 60px;
+  padding: 0 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 16px;
 }
 
-/* Top accent line on the topbar */
-.topbar::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: var(--grad-brand);
-  opacity: 0.7;
-}
-
-.logo {
+/* Logo */
+.nav-logo {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
+  flex-shrink: 0;
 }
-
 .logo-mark {
-  width: 42px; height: 42px;
-  background: var(--grad-brand);
-  border-radius: 10px;
+  width: 38px; height: 38px;
+  background: var(--yellow);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 700;
-  font-size: 10px;
+  font-size: 11px;
+  color: #0B0E11;
   letter-spacing: -0.5px;
-  color: #fff;
-  box-shadow: 0 0 16px rgba(139,92,246,0.4), 0 0 32px rgba(225,29,72,0.15);
-  flex-shrink: 0;
 }
-
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
 .logo-name {
-  font-size: 17px;
-  font-weight: 800;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
   letter-spacing: -0.3px;
-  background: var(--grad-brand);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
-
-.logo-sub {
-  font-size: 11px;
-  color: var(--muted);
+.logo-ver {
   font-family: 'IBM Plex Mono', monospace;
-  margin-top: 1px;
-}
-
-.topbar-center {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: var(--muted);
 }
 
-.scan-ring {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border-bright);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.scan-ring::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border-radius: 50%;
-  background: var(--purple);
-  box-shadow: 0 0 8px var(--purple);
-  animation: scanpulse 2s infinite;
-}
-
-@keyframes scanpulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.3; transform: scale(0.7); }
-}
-
-.topbar-right {
+/* Center badges */
+.nav-center {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -224,318 +123,381 @@ body::after {
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 10px;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 600;
   font-family: 'IBM Plex Mono', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
   border: 1px solid;
 }
-
 .badge-paper {
   background: var(--yellow-dim);
-  border-color: rgba(251,191,36,0.3);
+  border-color: rgba(252,213,53,0.35);
   color: var(--yellow);
 }
-
 .badge-live {
   background: var(--red-dim);
-  border-color: rgba(244,63,94,0.3);
+  border-color: rgba(246,70,93,0.35);
   color: var(--red);
 }
-
 .badge-online {
   background: var(--green-dim);
-  border-color: rgba(52,211,153,0.3);
+  border-color: rgba(14,203,129,0.35);
   color: var(--green);
 }
-
 .badge-offline {
   background: var(--red-dim);
-  border-color: rgba(244,63,94,0.3);
+  border-color: rgba(246,70,93,0.35);
   color: var(--red);
 }
-
 .dot {
   width: 5px; height: 5px;
   border-radius: 50%;
   background: currentColor;
   animation: dotpulse 2s infinite;
 }
+@keyframes dotpulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
 
-@keyframes dotpulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-.scan-ts {
+/* Right side */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.nav-funding-countdown {
   font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  white-space: nowrap;
+}
+.nav-funding-label {
   font-size: 10px;
   color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  white-space: nowrap;
+}
+.nav-scan-counter {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
   white-space: nowrap;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   METRIC CARDS
+   STATS BAR
 ═══════════════════════════════════════════════════════════ */
-.metrics {
+.stats-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 18px;
+  gap: 2px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
 }
+@media (max-width: 900px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .stats-bar { grid-template-columns: 1fr; } }
 
-@media (max-width: 960px)  { .metrics { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px)  { .metrics { grid-template-columns: 1fr; } }
-
-.metric {
+.stat-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px 22px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s, transform 0.2s;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-
-.metric:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-bright);
-}
-
-/* Gradient top stripe per card */
-.metric:nth-child(1)::before { background: var(--grad-brand); }
-.metric:nth-child(2)::before { background: linear-gradient(90deg, var(--purple-light), var(--magenta)); }
-.metric:nth-child(3)::before { background: linear-gradient(90deg, var(--crimson), var(--yellow)); }
-.metric:nth-child(4)::before { background: linear-gradient(90deg, var(--magenta-light), var(--purple)); }
-
-.metric::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-}
-
-/* Faint corner glow */
-.metric::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 60px; height: 60px;
-  background: radial-gradient(circle, var(--purple-glow), transparent 70%);
-  pointer-events: none;
-}
-
-.metric-icon {
-  font-size: 18px;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.metric-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-
-.metric-val {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -1px;
-}
-
-.metric-val.up     { color: var(--green); text-shadow: 0 0 20px rgba(52,211,153,0.3); }
-.metric-val.down   { color: var(--red);   text-shadow: 0 0 20px rgba(244,63,94,0.3); }
-.metric-val.purple { color: var(--purple-light); text-shadow: 0 0 20px var(--purple-glow); }
-.metric-val.crimson{ color: var(--crimson-light);text-shadow: 0 0 20px var(--crimson-glow); }
-.metric-val.plain  { color: var(--text); }
-
-.metric-sub {
+.stat-label {
   font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 6px;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.stat-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text);
+}
+.stat-value.up   { color: var(--green); }
+.stat-value.down { color: var(--red); }
+.stat-value.yellow { color: var(--yellow); }
+.stat-value.blue { color: var(--blue); }
+.stat-sub {
+  font-size: 11px;
+  color: var(--muted);
   font-family: 'IBM Plex Mono', monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAIN GRID (price table + opportunities)
+   SECTION HEADERS
 ═══════════════════════════════════════════════════════════ */
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-@media (max-width: 1100px) { .main-grid { grid-template-columns: 1fr; } }
-
-/* ─── Card ──────────────────────────────────────────────── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  position: relative;
-}
-
-.card-inner-glow {
-  background: var(--grad-card-top);
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-.card-header {
+.section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(18,14,31,0.6);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
 }
-
-.card-title {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--text-dim);
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
+}
+.section-subtitle {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.section-badge {
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 2px 8px;
+  color: var(--text2);
+}
+.section-badge.hot {
+  background: var(--green-dim);
+  border-color: rgba(14,203,129,0.3);
+  color: var(--green);
 }
 
-.card-title-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--grad-brand);
-  box-shadow: 0 0 6px var(--purple);
+/* ═══════════════════════════════════════════════════════════
+   CARD
+═══════════════════════════════════════════════════════════ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
 }
-
+.card-standalone {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 .chip {
   font-size: 10px;
   font-family: 'IBM Plex Mono', monospace;
   background: var(--surface3);
   border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 3px 10px;
-  color: var(--text-dim);
+  border-radius: 3px;
+  padding: 2px 8px;
+  color: var(--muted);
 }
-
 .chip.hot {
   background: var(--green-dim);
-  border-color: rgba(52,211,153,0.3);
+  border-color: rgba(14,203,129,0.3);
   color: var(--green);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PRICE TABLE
+   SECTION A: FUNDING RATE TABLE
 ═══════════════════════════════════════════════════════════ */
-.price-wrap { overflow-x: auto; }
+.funding-section {
+  margin-bottom: 20px;
+}
 
+.funding-wrap { overflow-x: auto; }
+
+.funding-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.funding-table th {
+  padding: 10px 14px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  white-space: nowrap;
+}
+.funding-table th:first-child { text-align: left; }
+.funding-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(43,49,57,0.6);
+  text-align: right;
+  vertical-align: middle;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+}
+.funding-table td:first-child { text-align: left; }
+.funding-table tr:last-child td { border-bottom: none; }
+.funding-table tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
+.funding-table tbody tr:hover td { background: rgba(43,49,57,0.4); }
+
+.pair-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.rate-positive { color: var(--green); }
+.rate-negative { color: var(--red); }
+.rate-neutral  { color: var(--muted); }
+
+/* Status badges for funding */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'IBM Plex Mono', monospace;
+  white-space: nowrap;
+}
+.status-collect  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(14,203,129,0.3); }
+.status-watch    { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(252,213,53,0.3); }
+.status-flat     { background: var(--surface3);   color: var(--muted);  border: 1px solid var(--border); }
+.status-negative { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(246,70,93,0.3); }
+
+/* Funding footer bar */
+.funding-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.funding-timer {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.funding-explainer {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION B: SPOT ARB
+═══════════════════════════════════════════════════════════ */
+.spot-section {
+  margin-bottom: 20px;
+}
+.spot-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2px;
+  background: var(--border);
+}
+@media (max-width: 1100px) { .spot-grid { grid-template-columns: 1fr; } }
+
+/* Price Table */
+.price-wrap { overflow-x: auto; }
 .price-table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .price-table th {
   padding: 10px 14px;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.8px;
   color: var(--muted);
-  text-align: right;
-  background: rgba(13,10,24,0.5);
+  background: var(--surface2);
   border-bottom: 1px solid var(--border);
+  text-align: right;
   white-space: nowrap;
 }
-
 .price-table th:first-child { text-align: left; }
-
 .price-table td {
   padding: 11px 14px;
-  border-bottom: 1px solid rgba(42,31,68,0.4);
+  border-bottom: 1px solid rgba(43,49,57,0.6);
   text-align: right;
   vertical-align: middle;
 }
-
 .price-table td:first-child { text-align: left; }
-
 .price-table tr:last-child td { border-bottom: none; }
-
-.price-table tr:hover td {
-  background: rgba(139,92,246,0.04);
-}
-
-.pair-name {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: 0.5px;
-}
+.price-table tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
+.price-table tbody tr:hover td { background: rgba(43,49,57,0.4); }
 
 .price-cell { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-
 .price-bid {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--green);
   font-weight: 500;
 }
-
 .price-ask {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--crimson-light);
+  font-size: 12px;
+  color: var(--red);
   font-weight: 500;
 }
-
 .price-label {
   font-size: 8px;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
-.price-err { font-size: 10px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.price-err { font-size: 11px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
 
 .spread-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: 3px;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   min-width: 64px;
   white-space: nowrap;
 }
+.spread-hot  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(14,203,129,0.3); }
+.spread-warm { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(252,213,53,0.3); }
+.spread-cold { background: var(--surface3);   color: var(--muted);  border: 1px solid var(--border); }
 
-.spread-hot  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(52,211,153,0.35); box-shadow: 0 0 8px rgba(52,211,153,0.15); }
-.spread-warm { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(251,191,36,0.35); }
-.spread-cold { background: rgba(42,31,68,0.4); color: var(--muted); border: 1px solid var(--border); }
-
-/* ═══════════════════════════════════════════════════════════
-   OPPORTUNITIES FEED
-═══════════════════════════════════════════════════════════ */
+/* Opportunities Feed */
 .opp-scroll {
-  max-height: 520px;
+  height: 100%;
+  max-height: 480px;
   overflow-y: auto;
-  padding: 10px 12px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
-
 .opp-scroll::-webkit-scrollbar { width: 4px; }
 .opp-scroll::-webkit-scrollbar-track { background: transparent; }
 .opp-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -543,232 +505,181 @@ body::after {
 .opp-card {
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 11px 13px;
+  border-radius: 6px;
+  padding: 10px 12px;
   cursor: default;
-  transition: border-color 0.2s, background 0.2s;
-  position: relative;
-  overflow: hidden;
+  transition: border-color 0.2s;
 }
-
-.opp-card:hover {
-  background: var(--surface3);
-  border-color: var(--border-bright);
-}
-
+.opp-card:hover { border-color: var(--border-bright); }
 .opp-card.profitable {
   border-left: 3px solid var(--green);
-  background: linear-gradient(135deg, rgba(52,211,153,0.05) 0%, var(--surface2) 60%);
 }
-
-.opp-card.profitable::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--green), rgba(52,211,153,0.3));
-}
-
 .opp-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
 }
-
 .opp-pair {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 13px;
   font-weight: 600;
   color: var(--text);
 }
-
 .opp-time {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
   color: var(--muted);
   margin-top: 2px;
 }
-
 .opp-profit-block { text-align: right; }
-
 .opp-pct {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 14px;
   font-weight: 700;
 }
-
 .opp-pct.pos { color: var(--green); }
-.opp-pct.neg { color: var(--crimson-light); }
-
+.opp-pct.neg { color: var(--red); }
 .opp-usd {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
-  color: var(--text-dim);
+  color: var(--muted);
   margin-top: 1px;
 }
-
 .opp-route {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
-
 .ex-pill {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 5px;
+  padding: 2px 7px;
+  border-radius: 3px;
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-family: 'IBM Plex Mono', monospace;
 }
-
-.ex-binance  { background: rgba(243,186,47,0.1);  color: #F3BA2F; border: 1px solid rgba(243,186,47,0.2); }
-.ex-coinbase { background: rgba(67,138,255,0.1);  color: #5BA4FF; border: 1px solid rgba(67,138,255,0.2); }
+.ex-binance  { background: rgba(252,213,53,0.1);  color: #FCD535; border: 1px solid rgba(252,213,53,0.2); }
+.ex-coinbase { background: rgba(30,128,255,0.1);  color: #1E80FF; border: 1px solid rgba(30,128,255,0.2); }
 .ex-kucoin   { background: rgba(9,187,134,0.1);   color: #09BB86; border: 1px solid rgba(9,187,134,0.2); }
-.ex-gateio   { background: rgba(220,80,20,0.1);   color: #EF6820; border: 1px solid rgba(220,80,20,0.2); }
-
-.route-arrow {
-  color: var(--purple-light);
-  font-size: 11px;
-  font-weight: 700;
-}
-
+.ex-gateio   { background: rgba(246,70,93,0.1);   color: #F6465D; border: 1px solid rgba(246,70,93,0.2); }
+.route-arrow { color: var(--muted); font-size: 11px; }
 .opp-detail {
   font-size: 9px;
   color: var(--muted);
   font-family: 'IBM Plex Mono', monospace;
   margin-left: auto;
 }
-
 .empty-feed {
   text-align: center;
-  padding: 40px 20px;
+  padding: 30px 20px;
   color: var(--muted);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.8;
 }
 
-.empty-feed .empty-icon { font-size: 28px; display: block; margin-bottom: 8px; }
-
 /* ═══════════════════════════════════════════════════════════
-   BOTTOM ROW (equity + balances)
+   SECTION C: BOTTOM ROW (equity + balances)
 ═══════════════════════════════════════════════════════════ */
 .bottom-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
-
 @media (max-width: 768px) { .bottom-row { grid-template-columns: 1fr; } }
 
-/* ── Equity Chart ───────────────────────────────────────── */
 .chart-wrap {
   height: 190px;
-  padding: 16px 16px 12px;
+  padding: 14px 14px 10px;
   position: relative;
 }
 
-/* ── Exchange Balances ──────────────────────────────────── */
-.balance-body { padding: 14px 16px; }
-
+.balance-body { padding: 12px 14px; }
 .balance-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
-
 .balance-item {
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 13px 15px;
-  position: relative;
-  overflow: hidden;
+  border-radius: 6px;
+  padding: 12px 14px;
   transition: border-color 0.2s;
 }
-
 .balance-item:hover { border-color: var(--border-bright); }
-
-.balance-item::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: var(--grad-brand);
-  opacity: 0.4;
-}
-
 .balance-name {
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
-
 .balance-val {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text);
 }
-
 .balance-pnl {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
-  margin-top: 3px;
+  margin-top: 2px;
 }
-
 .balance-pnl.up   { color: var(--green); }
-.balance-pnl.down { color: var(--crimson-light); }
+.balance-pnl.down { color: var(--red); }
 
 /* ═══════════════════════════════════════════════════════════
-   TRADE HISTORY
+   SECTION D: TRADE HISTORY
 ═══════════════════════════════════════════════════════════ */
+.trade-history {
+  margin-bottom: 20px;
+}
 .trade-body { overflow-x: auto; }
-
 .trade-table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .trade-table th {
   padding: 10px 14px;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.8px;
   color: var(--muted);
-  background: rgba(13,10,24,0.5);
+  background: var(--surface2);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
-
 .trade-table th:not(:first-child) { text-align: right; }
-.trade-table td { padding: 10px 14px; border-bottom: 1px solid rgba(42,31,68,0.35); font-family: 'IBM Plex Mono', monospace; font-size: 11px; white-space: nowrap; }
+.trade-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(43,49,57,0.5);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--text2);
+}
 .trade-table td:not(:first-child) { text-align: right; }
 .trade-table tr:last-child td { border-bottom: none; }
-.trade-table tr:hover td { background: rgba(139,92,246,0.04); }
-
-.win  { color: var(--green);  font-weight: 600; }
-.loss { color: var(--crimson-light); font-weight: 600; }
-.route-txt { color: var(--purple-light); font-size: 10px; }
-.no-trades td { text-align: center !important; color: var(--muted); padding: 30px !important; font-size: 11px; }
+.trade-table tbody tr:nth-child(even) td { background: rgba(22,26,30,0.5); }
+.trade-table tbody tr:hover td { background: rgba(43,49,57,0.3); }
+.win  { color: var(--green) !important; font-weight: 600; }
+.loss { color: var(--red) !important;   font-weight: 600; }
+.route-txt { color: var(--blue); font-size: 10px; }
+.no-trades td { text-align: center !important; color: var(--muted); padding: 30px !important; }
 
 /* ═══════════════════════════════════════════════════════════
    FOOTER
 ═══════════════════════════════════════════════════════════ */
 .footer {
-  margin-top: 20px;
   text-align: center;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
@@ -776,228 +687,241 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
+  padding: 10px 0;
 }
-
-.footer span { display: flex; align-items: center; gap: 5px; }
-
 .footer-dot {
   width: 3px; height: 3px;
   border-radius: 50%;
   background: var(--border-bright);
 }
-
-.footer a { color: var(--purple-light); text-decoration: none; }
-.footer a:hover { color: var(--crimson-light); }
-
-/* ═══════════════════════════════════════════════════════════
-   SCROLLBAR
-═══════════════════════════════════════════════════════════ */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
-
-/* ═══════════════════════════════════════════════════════════
-   SCAN LINE ANIMATION (across the topbar)
-═══════════════════════════════════════════════════════════ */
-@keyframes scanline {
-  0%   { transform: translateX(-100%); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateX(200%); opacity: 0; }
-}
-
-.scan-beam {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 60px;
-  background: linear-gradient(90deg, transparent, rgba(139,92,246,0.12), rgba(225,29,72,0.08), transparent);
-  animation: scanline 4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-/* ── Shine on cards on hover ─────────────────────────────── */
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
-}
+.footer a { color: var(--blue); text-decoration: none; }
+.footer a:hover { color: var(--text2); }
 </style>
 </head>
 <body>
-<div class="ambient-right"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="nav-logo">
+    <div class="logo-mark">ARB</div>
+    <div class="logo-text">
+      <div class="logo-name">CryptoARB Bot</div>
+      <div class="logo-ver">v2.0</div>
+    </div>
+  </div>
+
+  <div class="nav-center">
+    {% if paper_mode %}
+    <div class="badge badge-paper"><div class="dot"></div>PAPER MODE</div>
+    {% else %}
+    <div class="badge badge-live"><div class="dot"></div>LIVE TRADING</div>
+    {% endif %}
+    <div class="badge badge-offline" id="conn-badge"><div class="dot"></div>Connecting</div>
+  </div>
+
+  <div class="nav-right">
+    <div>
+      <div class="nav-funding-label">NEXT FUNDING</div>
+      <div class="nav-funding-countdown" id="nav-funding-countdown">--:--:--</div>
+    </div>
+    <div class="nav-scan-counter" id="nav-scan-count">SCAN #0</div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATS BAR
+═══════════════════════════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-label">All-Time P&amp;L</div>
+    <div class="stat-value up" id="stat-pnl">$0.0000</div>
+    <div class="stat-sub" id="stat-pnl-pct">+0.00%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">This Session P&amp;L</div>
+    <div class="stat-value up" id="stat-session-pnl">$0.0000</div>
+    <div class="stat-sub" id="stat-session-trades">0 trades this session</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Win Rate (All-Time)</div>
+    <div class="stat-value yellow" id="stat-winrate">—</div>
+    <div class="stat-sub" id="stat-trades">0 trades total</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Best Funding Rate Found</div>
+    <div class="stat-value blue" id="stat-best-funding">—</div>
+    <div class="stat-sub" id="stat-best-funding-sub">No data yet</div>
+  </div>
+</div>
+
 <div class="shell">
 
-  <!-- ═══ TOP BAR ═══════════════════════════════════════════ -->
-  <div class="topbar">
-    <div class="scan-beam"></div>
-    <div class="logo">
-      <div class="logo-mark">ARB</div>
-      <div>
-        <div class="logo-name">CryptoARB</div>
-        <div class="logo-sub">Command Center v1.0</div>
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION A: FUNDING RATE ARBITRAGE
+═══════════════════════════════════════════════════════════ -->
+<div class="funding-section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">
+        📊 Funding Rate Arbitrage
+        <span class="section-badge" id="funding-opp-badge">scanning…</span>
       </div>
-    </div>
-
-    <div class="topbar-center">
-      <div class="scan-ring"></div>
-      <span id="last-scan">initialising…</span>
-    </div>
-
-    <div class="topbar-right">
-      {% if paper_mode %}
-      <div class="badge badge-paper"><div class="dot"></div>Paper Mode</div>
-      {% else %}
-      <div class="badge badge-live"><div class="dot"></div>Live Trading</div>
-      {% endif %}
-      <div class="badge badge-offline" id="conn-badge"><div class="dot"></div>Connecting</div>
+      <div class="section-subtitle">Collect 8-hourly payments delta-neutral — Long spot + Short perpetual</div>
     </div>
   </div>
-
-  <!-- ═══ METRIC CARDS ══════════════════════════════════════ -->
-  <div class="metrics">
-    <div class="metric">
-      <span class="metric-icon">💰</span>
-      <div class="metric-label">Total P&amp;L</div>
-      <div class="metric-val up" id="stat-pnl">$0.0000</div>
-      <div class="metric-sub" id="stat-pnl-pct">+0.00%</div>
-    </div>
-    <div class="metric">
-      <span class="metric-icon">🎯</span>
-      <div class="metric-label">Win Rate</div>
-      <div class="metric-val purple" id="stat-winrate">—</div>
-      <div class="metric-sub" id="stat-trades">0 trades · best: —</div>
-    </div>
-    <div class="metric">
-      <span class="metric-icon">⚡</span>
-      <div class="metric-label">Best Opportunity</div>
-      <div class="metric-val crimson" id="stat-bestopp">—</div>
-      <div class="metric-sub" id="stat-bestopp-label">—</div>
-    </div>
-    <div class="metric">
-      <span class="metric-icon">🔭</span>
-      <div class="metric-label">Total Scans</div>
-      <div class="metric-val plain" id="stat-scans">0</div>
-      <div class="metric-sub">{% if paper_mode %}Paper · 4 Exchanges{% else %}Live · 4 Exchanges{% endif %}</div>
-    </div>
-  </div>
-
-  <!-- ═══ MAIN GRID ═════════════════════════════════════════ -->
-  <div class="main-grid">
-
-    <!-- Price Comparison Table -->
-    <div class="card">
-      <div class="card-inner-glow"></div>
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot"></div>
-          Live Price Comparison
-        </div>
-        <div class="chip" id="price-age">—</div>
-      </div>
-      <div class="price-wrap">
-        <table class="price-table">
-          <thead>
-            <tr>
-              <th>Pair</th>
-              {% for ex in exchanges %}
-              <th>{{ ex | upper }}</th>
-              {% endfor %}
-              <th>Best Net Spread</th>
-            </tr>
-          </thead>
-          <tbody id="price-tbody">
-            {% for pair in pairs %}
-            <tr id="row-{{ pair | replace('/', '-') }}">
-              <td><span class="pair-name">{{ pair }}</span></td>
-              {% for ex in exchanges %}
-              <td id="cell-{{ ex }}-{{ pair | replace('/', '-') }}">
-                <span class="price-err">…</span>
-              </td>
-              {% endfor %}
-              <td id="spread-{{ pair | replace('/', '-') }}">
-                <span class="spread-badge spread-cold">—</span>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Opportunities Feed -->
-    <div class="card">
-      <div class="card-inner-glow"></div>
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot"></div>
-          Opportunities
-        </div>
-        <div class="chip" id="opp-count">scanning…</div>
-      </div>
-      <div class="opp-scroll" id="opp-feed">
-        <div class="empty-feed">
-          <span class="empty-icon">🔭</span>
-          Waiting for first scan…<br/>
-          <span style="font-size:10px;color:var(--muted)">Checking 4 exchanges · 5 pairs</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ BOTTOM ROW ════════════════════════════════════════ -->
-  <div class="bottom-row">
-
-    <!-- Equity Curve -->
-    <div class="card">
-      <div class="card-inner-glow"></div>
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot"></div>
-          Equity Curve
-        </div>
-        <div class="chip" id="equity-chip">$0.00</div>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="equity-chart"></canvas>
-      </div>
-    </div>
-
-    <!-- Paper Balances -->
-    <div class="card">
-      <div class="card-inner-glow"></div>
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot"></div>
-          Virtual Balances
-        </div>
-        <div class="chip">Per Exchange</div>
-      </div>
-      <div class="balance-body">
-        <div class="balance-grid" id="balance-grid">
-          {% for ex in exchanges %}
-          <div class="balance-item">
-            <div class="balance-name">{{ ex }}</div>
-            <div class="balance-val" id="bal-{{ ex }}">$1,000.00</div>
-            <div class="balance-pnl" id="balpnl-{{ ex }}">—</div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ TRADE HISTORY ═════════════════════════════════════ -->
   <div class="card">
-    <div class="card-inner-glow"></div>
-    <div class="card-header">
-      <div class="card-title">
-        <div class="card-title-dot"></div>
-        Trade History
-      </div>
-      <div class="chip" id="trade-chip">0 trades</div>
+    <div class="funding-wrap">
+      <table class="funding-table" id="funding-table">
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Binance %/8h</th>
+            <th>Bybit %/8h</th>
+            <th>Gate %/8h</th>
+            <th>Best 8h Rate</th>
+            <th>Est. Annual %</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="funding-tbody">
+          <tr>
+            <td colspan="7" style="text-align:center;color:var(--muted);padding:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+              Fetching funding rates… (updates every 5 scans)
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <div class="funding-footer">
+      <div class="funding-timer">
+        ⏱ Next funding settlement: <strong id="funding-countdown">--:--:--</strong>
+      </div>
+      <div class="funding-explainer">
+        Strategy: Long spot + Short perpetual → collect funding rate every 8h when positive.
+        Settlements at 00:00, 08:00, 16:00 UTC.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION B: SPOT ARBITRAGE
+═══════════════════════════════════════════════════════════ -->
+<div class="spot-section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">
+        💱 Spot Arbitrage
+        <span class="section-badge" id="opp-count">scanning…</span>
+      </div>
+      <div class="section-subtitle">Cross-exchange price spreads — Buy low, sell high simultaneously</div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);" id="price-age">—</div>
+  </div>
+  <div class="card" style="border-radius:0;">
+    <div class="spot-grid">
+      <!-- Price Table -->
+      <div style="background:var(--surface);">
+        <div class="card-header">
+          <div class="card-title">Live Price Comparison</div>
+        </div>
+        <div class="price-wrap">
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Pair</th>
+                {% for ex in exchanges %}
+                <th>{{ ex | upper }}</th>
+                {% endfor %}
+                <th>Best Net Spread</th>
+              </tr>
+            </thead>
+            <tbody id="price-tbody">
+              {% for pair in pairs %}
+              <tr id="row-{{ pair | replace('/', '-') }}">
+                <td><span class="pair-name">{{ pair }}</span></td>
+                {% for ex in exchanges %}
+                <td id="cell-{{ ex }}-{{ pair | replace('/', '-') }}">
+                  <span class="price-err">…</span>
+                </td>
+                {% endfor %}
+                <td id="spread-{{ pair | replace('/', '-') }}">
+                  <span class="spread-badge spread-cold">—</span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Opportunities Feed -->
+      <div style="background:var(--surface);border-left:1px solid var(--border);">
+        <div class="card-header">
+          <div class="card-title">Opportunities Feed</div>
+        </div>
+        <div class="opp-scroll" id="opp-feed">
+          <div class="empty-feed">
+            Waiting for first scan…<br/>
+            <span style="font-size:10px;">Checking {{ exchanges|length }} exchanges · {{ pairs|length }} pairs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION C: EQUITY + BALANCES
+═══════════════════════════════════════════════════════════ -->
+<div class="bottom-row">
+
+  <!-- Equity Curve -->
+  <div class="card-standalone">
+    <div class="card-header">
+      <div class="card-title">Equity Curve</div>
+      <div class="chip" id="equity-chip">$0.00</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="equity-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Virtual Balances -->
+  <div class="card-standalone">
+    <div class="card-header">
+      <div class="card-title">Virtual Balances</div>
+      <div class="chip">Per Exchange · $1,000 Initial</div>
+    </div>
+    <div class="balance-body">
+      <div class="balance-grid" id="balance-grid">
+        {% for ex in exchanges %}
+        <div class="balance-item">
+          <div class="balance-name">{{ ex }}</div>
+          <div class="balance-val" id="bal-{{ ex }}">$1,000.00</div>
+          <div class="balance-pnl" id="balpnl-{{ ex }}">—</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION D: TRADE HISTORY
+═══════════════════════════════════════════════════════════ -->
+<div class="trade-history">
+  <div class="section-header">
+    <div class="section-title">
+      📋 Trade History
+      <span class="section-badge" id="trade-chip">0 trades</span>
+    </div>
+  </div>
+  <div class="card">
     <div class="trade-body">
       <table class="trade-table">
         <thead>
@@ -1018,17 +942,20 @@ body::after {
       </table>
     </div>
   </div>
+</div>
 
-  <!-- ═══ FOOTER ════════════════════════════════════════════ -->
-  <div class="footer">
-    <span>🤖 CryptoARB Bot v1.0</span>
-    <div class="footer-dot"></div>
-    <span>{% if paper_mode %}📄 Paper Trading{% else %}💸 Live Trading{% endif %}</span>
-    <div class="footer-dot"></div>
-    <span>Session: <code style="color:var(--purple-light)">{{ session_id[:12] }}…</code></span>
-    <div class="footer-dot"></div>
-    <span><a href="/health">health check</a></span>
-  </div>
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════ -->
+<div class="footer">
+  <span>CryptoARB Bot v2.0</span>
+  <div class="footer-dot"></div>
+  <span>{% if paper_mode %}Paper Trading{% else %}Live Trading{% endif %}</span>
+  <div class="footer-dot"></div>
+  <span>Session: <code style="color:var(--blue)">{{ session_id[:12] }}…</code></span>
+  <div class="footer-dot"></div>
+  <span><a href="/health">health check</a></span>
+</div>
 
 </div><!-- /shell -->
 
@@ -1039,8 +966,75 @@ body::after {
 const PAIRS      = {{ pairs | tojson }};
 const EXCHANGES  = {{ exchanges | tojson }};
 const PAPER_MODE = {{ 'true' if paper_mode else 'false' }};
+const SESSION_ID = {{ session_id | tojson }};
 const INIT_CAP   = 1000.0;
 const REFRESH_MS = 2500;
+
+/* ── Helpers ────────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+
+function fmtUsd(v, d) {
+  d = d === undefined ? 4 : d;
+  if (v == null) return '—';
+  return (v >= 0 ? '+' : '') + '$' + Math.abs(v).toFixed(d);
+}
+function fmtPct(v, d) {
+  d = d === undefined ? 3 : d;
+  if (v == null) return '—';
+  return (v >= 0 ? '+' : '') + v.toFixed(d) + '%';
+}
+function fmtPrice(v) {
+  if (!v || v === 0) return '—';
+  if (v >= 10000) return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (v >= 1)     return v.toFixed(4);
+  return v.toFixed(6);
+}
+function fmtTime(ts) {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleTimeString('en-US', { hour12: false });
+}
+function timeAgo(ts) {
+  if (!ts) return '—';
+  const diff = Date.now() / 1000 - ts;
+  if (diff < 5)  return 'just now';
+  if (diff < 60) return Math.round(diff) + 's ago';
+  return (diff / 60).toFixed(1) + 'm ago';
+}
+function exClass(name) {
+  const m = { binance:'ex-binance', coinbase:'ex-coinbase', kucoin:'ex-kucoin', gateio:'ex-gateio' };
+  return m[name] || '';
+}
+function exPill(name) {
+  return '<span class="ex-pill ' + exClass(name) + '">' + name + '</span>';
+}
+
+/* ── Funding Rate Countdown ──────────────────────────────────── */
+function nextFundingCountdown() {
+  const now = new Date();
+  const h = now.getUTCHours();
+  const nextH = [0, 8, 16].find(x => x > h);
+  const useNextH = (nextH !== undefined) ? nextH : 24;
+  const next = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    useNextH % 24
+  ));
+  if (useNextH === 24) next.setUTCDate(next.getUTCDate() + 1);
+  const diff = Math.max(0, next - now);
+  const hh = String(Math.floor(diff / 3600000)).padStart(2, '0');
+  const mm = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+  const ss = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+  return hh + ':' + mm + ':' + ss;
+}
+
+function tickFundingCountdowns() {
+  const t = nextFundingCountdown();
+  if ($('funding-countdown'))     $('funding-countdown').textContent = t;
+  if ($('nav-funding-countdown')) $('nav-funding-countdown').textContent = t;
+}
+tickFundingCountdowns();
+setInterval(tickFundingCountdowns, 1000);
 
 /* ── Chart ──────────────────────────────────────────────────── */
 const equityChart = new Chart(
@@ -1052,18 +1046,18 @@ const equityChart = new Chart(
       datasets: [{
         label: 'Equity',
         data: [],
-        borderColor: '#8B5CF6',
+        borderColor: '#0ECB81',
         borderWidth: 2,
         pointRadius: 0,
         pointHoverRadius: 4,
-        pointHoverBackgroundColor: '#8B5CF6',
+        pointHoverBackgroundColor: '#0ECB81',
         fill: true,
         tension: 0.4,
-        backgroundColor: (ctx) => {
+        backgroundColor: function(ctx) {
           const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 190);
-          gradient.addColorStop(0,   'rgba(139,92,246,0.20)');
-          gradient.addColorStop(0.5, 'rgba(225,29,72,0.06)');
-          gradient.addColorStop(1,   'rgba(139,92,246,0.00)');
+          gradient.addColorStop(0,   'rgba(14,203,129,0.18)');
+          gradient.addColorStop(0.6, 'rgba(14,203,129,0.04)');
+          gradient.addColorStop(1,   'rgba(14,203,129,0.00)');
           return gradient;
         },
       }],
@@ -1075,24 +1069,24 @@ const equityChart = new Chart(
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#1A1528',
-          borderColor: '#4A3570',
+          backgroundColor: '#1E2329',
+          borderColor: '#2B3139',
           borderWidth: 1,
-          titleColor: '#5B4F7A',
-          bodyColor: '#EDE9FE',
+          titleColor: '#848E9C',
+          bodyColor: '#EAECEF',
           padding: 10,
-          callbacks: { label: c => ` $${c.parsed.y.toFixed(4)}` },
+          callbacks: { label: function(c) { return ' $' + c.parsed.y.toFixed(4); } },
         },
       },
       scales: {
         x: { display: false },
         y: {
-          grid:   { color: 'rgba(42,31,68,0.5)' },
+          grid:   { color: 'rgba(43,49,57,0.6)' },
           border: { display: false },
           ticks:  {
-            color: '#5B4F7A',
+            color: '#848E9C',
             font:  { family: "'IBM Plex Mono', monospace", size: 10 },
-            callback: v => `$${v.toFixed(0)}`,
+            callback: function(v) { return '$' + v.toFixed(0); },
           },
         },
       },
@@ -1101,153 +1095,238 @@ const equityChart = new Chart(
   }
 );
 
-/* ── Helpers ────────────────────────────────────────────────── */
-const $ = id => document.getElementById(id);
-
-function fmtUsd(v, d = 4) {
-  if (v == null) return '—';
-  return (v >= 0 ? '+' : '') + '$' + Math.abs(v).toFixed(d);
+/* ── Funding Rate Table ──────────────────────────────────────── */
+// Group funding rates by pair → { pair: { exchange: snapshot } }
+function groupFundingByPair(rates) {
+  const map = {};
+  const pairOrder = ['BTC/USDT:USDT','ETH/USDT:USDT','SOL/USDT:USDT','XRP/USDT:USDT','DOGE/USDT:USDT'];
+  for (const r of (rates || [])) {
+    if (!map[r.pair]) map[r.pair] = {};
+    map[r.pair][r.exchange] = r;
+  }
+  // Return in consistent order
+  const ordered = {};
+  for (const p of pairOrder) { if (map[p]) ordered[p] = map[p]; }
+  // Any extra pairs
+  for (const p of Object.keys(map)) { if (!ordered[p]) ordered[p] = map[p]; }
+  return ordered;
 }
 
-function fmtPct(v, d = 3) {
-  if (v == null) return '—';
-  return (v >= 0 ? '+' : '') + v.toFixed(d) + '%';
+function fundingStatusBadge(rate8h) {
+  if (rate8h === undefined || rate8h === null) {
+    return '<span class="status-badge status-flat">⚪ N/A</span>';
+  }
+  if (rate8h > 0.01)  return '<span class="status-badge status-collect">🟢 COLLECT</span>';
+  if (rate8h > 0.005) return '<span class="status-badge status-watch">🟡 WATCH</span>';
+  if (rate8h >= 0)    return '<span class="status-badge status-flat">⚪ FLAT</span>';
+  return '<span class="status-badge status-negative">🔴 NEGATIVE</span>';
 }
 
-function fmtPrice(v) {
-  if (!v || v === 0) return '—';
-  if (v >= 10000) return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  if (v >= 1)     return v.toFixed(4);
-  return v.toFixed(6);
+function fmtRate(r) {
+  if (r === undefined || r === null) return '<span class="rate-neutral">—</span>';
+  if (r.error) return '<span class="rate-neutral" title="' + r.error.replace(/"/g,"'") + '">err</span>';
+  const cls = r.rate_8h > 0 ? 'rate-positive' : (r.rate_8h < 0 ? 'rate-negative' : 'rate-neutral');
+  const sign = r.rate_8h >= 0 ? '+' : '';
+  return '<span class="' + cls + '">' + sign + r.rate_8h.toFixed(4) + '%</span>';
 }
 
-function fmtTime(ts) {
-  if (!ts) return '—';
-  return new Date(ts * 1000).toLocaleTimeString('en-US', { hour12: false });
+function renderFunding(rates) {
+  const tbody = $('funding-tbody');
+  const badge = $('funding-opp-badge');
+  const bestFundingEl = $('stat-best-funding');
+  const bestFundingSubEl = $('stat-best-funding-sub');
+
+  if (!rates || rates.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;font-family:\'IBM Plex Mono\',monospace;font-size:11px;">No funding rate data yet — fetches every 5 scans</td></tr>';
+    if (badge) { badge.textContent = 'no data'; badge.className = 'section-badge'; }
+    return;
+  }
+
+  const grouped = groupFundingByPair(rates);
+  const exList = ['binanceusdm', 'bybit', 'gate'];
+  const exLabels = { 'binanceusdm': 'Binance', 'bybit': 'Bybit', 'gate': 'Gate' };
+
+  let oppCount = 0;
+  let globalBestRate = -Infinity;
+  let globalBestLabel = '—';
+
+  const rows = Object.entries(grouped).map(function(entry) {
+    const pair = entry[0];
+    const exMap = entry[1];
+    // Display label: strip ":USDT" suffix for brevity
+    const pairDisplay = pair.replace(':USDT', '');
+    const baseSymbol = pair.split('/')[0];
+
+    // Find best rate across exchanges for this pair
+    let bestRate = -Infinity;
+    let bestAnnual = 0;
+    for (const ex of exList) {
+      const snap = exMap[ex];
+      if (snap && !snap.error && snap.rate_8h > bestRate) {
+        bestRate = snap.rate_8h;
+        bestAnnual = snap.annual_pct;
+      }
+    }
+
+    // Track global best
+    if (bestRate > globalBestRate) {
+      globalBestRate = bestRate;
+      globalBestLabel = baseSymbol + ' +' + bestRate.toFixed(4) + '%/8h · ' + bestAnnual.toFixed(1) + '% APY';
+    }
+
+    const isOpp = bestRate > 0.01;
+    if (isOpp) oppCount++;
+
+    const bestRateStr = bestRate > -Infinity
+      ? (bestRate >= 0 ? '+' : '') + bestRate.toFixed(4) + '%'
+      : '—';
+    const bestRateCls = bestRate > 0 ? 'rate-positive' : (bestRate < 0 ? 'rate-negative' : 'rate-neutral');
+    const bestAnnualStr = bestRate > -Infinity
+      ? (bestAnnual >= 0 ? '+' : '') + bestAnnual.toFixed(1) + '%'
+      : '—';
+    const bestAnnualCls = bestAnnual > 0 ? 'rate-positive' : (bestAnnual < 0 ? 'rate-negative' : 'rate-neutral');
+
+    return '<tr>' +
+      '<td><span class="pair-name">' + pairDisplay + '</span></td>' +
+      exList.map(function(ex) {
+        return '<td>' + fmtRate(exMap[ex]) + '</td>';
+      }).join('') +
+      '<td><strong class="' + bestRateCls + '">' + bestRateStr + '</strong></td>' +
+      '<td><strong class="' + bestAnnualCls + '">' + bestAnnualStr + '</strong></td>' +
+      '<td>' + fundingStatusBadge(bestRate > -Infinity ? bestRate : null) + '</td>' +
+      '</tr>';
+  });
+
+  tbody.innerHTML = rows.join('');
+
+  if (badge) {
+    if (oppCount > 0) {
+      badge.textContent = oppCount + ' opportunity' + (oppCount > 1 ? 'ies' : '');
+      badge.className = 'section-badge hot';
+    } else {
+      badge.textContent = 'no opportunities';
+      badge.className = 'section-badge';
+    }
+  }
+
+  // Update best funding stat card
+  if (bestFundingEl && globalBestRate > -Infinity && globalBestRate > 0) {
+    const sign = globalBestRate >= 0 ? '+' : '';
+    bestFundingEl.textContent = sign + globalBestRate.toFixed(4) + '%/8h';
+    bestFundingEl.className = 'stat-value blue';
+    if (bestFundingSubEl) {
+      const annual = globalBestRate * 3 * 365;
+      bestFundingSubEl.textContent = '≈ ' + annual.toFixed(1) + '% APY · ' + globalBestLabel.split('·')[0].trim();
+    }
+  } else if (bestFundingEl && globalBestRate <= 0) {
+    bestFundingEl.textContent = 'All Negative';
+    bestFundingEl.className = 'stat-value';
+    if (bestFundingSubEl) bestFundingSubEl.textContent = 'No positive rates';
+  }
 }
 
-function timeAgo(ts) {
-  if (!ts) return '—';
-  const diff = Date.now() / 1000 - ts;
-  if (diff < 5)  return 'just now';
-  if (diff < 60) return `${Math.round(diff)}s ago`;
-  return `${(diff / 60).toFixed(1)}m ago`;
-}
-
-function exClass(name) {
-  const m = { binance: 'ex-binance', coinbase: 'ex-coinbase', kucoin: 'ex-kucoin', gateio: 'ex-gateio' };
-  return m[name] || '';
-}
-
-function exPill(name) {
-  return `<span class="ex-pill ${exClass(name)}">${name}</span>`;
-}
-
-/* ── Update: Prices ─────────────────────────────────────────── */
+/* ── Prices ──────────────────────────────────────────────────── */
 function renderPrices(prices, opps) {
-  // Best spread per pair
   const best = {};
   for (const o of (opps || [])) {
     if (!best[o.pair] || o.net_profit_pct > best[o.pair].net_profit_pct) best[o.pair] = o;
   }
 
-  // Age stamp
   let latestTs = 0;
   for (const ex of Object.values(prices || {}))
     for (const p of Object.values(ex))
-      if (p?.timestamp > latestTs) latestTs = p.timestamp;
+      if (p && p.timestamp > latestTs) latestTs = p.timestamp;
   if ($('price-age')) $('price-age').textContent = latestTs ? timeAgo(latestTs) : '—';
 
   for (const pair of PAIRS) {
     const rid = pair.replace('/', '-');
     for (const ex of EXCHANGES) {
-      const cell = $(`cell-${ex}-${rid}`);
+      const cell = $('cell-' + ex + '-' + rid);
       if (!cell) continue;
-      const pd = prices?.[ex]?.[pair];
+      const pd = prices && prices[ex] && prices[ex][pair];
       if (!pd || pd.error) {
-        cell.innerHTML = `<span class="price-err">${pd?.error ? 'err' : '—'}</span>`;
+        cell.innerHTML = '<span class="price-err">' + (pd && pd.error ? 'err' : '—') + '</span>';
       } else {
-        cell.innerHTML = `
-          <div class="price-cell">
-            <span class="price-bid">${fmtPrice(pd.bid)}</span>
-            <span class="price-label">bid</span>
-            <span class="price-ask">${fmtPrice(pd.ask)}</span>
-            <span class="price-label">ask</span>
-          </div>`;
+        cell.innerHTML =
+          '<div class="price-cell">' +
+          '<span class="price-bid">' + fmtPrice(pd.bid) + '</span>' +
+          '<span class="price-label">bid</span>' +
+          '<span class="price-ask">' + fmtPrice(pd.ask) + '</span>' +
+          '<span class="price-label">ask</span>' +
+          '</div>';
       }
     }
 
-    const spreadEl = $(`spread-${rid}`);
+    const spreadEl = $('spread-' + rid);
     if (spreadEl) {
       const b = best[pair];
       if (b && b.net_profit_pct > 0) {
         const cls = b.is_profitable ? 'spread-hot' : (b.net_profit_pct > 0.1 ? 'spread-warm' : 'spread-cold');
-        spreadEl.innerHTML = `<span class="spread-badge ${cls}">${fmtPct(b.net_profit_pct, 3)}</span>`;
+        spreadEl.innerHTML = '<span class="spread-badge ' + cls + '">' + fmtPct(b.net_profit_pct, 3) + '</span>';
       } else {
-        spreadEl.innerHTML = `<span class="spread-badge spread-cold">—</span>`;
+        spreadEl.innerHTML = '<span class="spread-badge spread-cold">—</span>';
       }
     }
   }
 }
 
-/* ── Update: Opportunities ──────────────────────────────────── */
+/* ── Opportunities ───────────────────────────────────────────── */
 function renderOpps(opps) {
-  const feed   = $('opp-feed');
+  const feed = $('opp-feed');
   const countEl = $('opp-count');
   if (!opps || opps.length === 0) {
-    feed.innerHTML = `<div class="empty-feed"><span class="empty-icon">🔭</span>No opportunities yet…<br/><span style="font-size:10px;color:var(--muted)">Prices loading from 4 exchanges</span></div>`;
-    if (countEl) countEl.textContent = '0 found';
+    feed.innerHTML = '<div class="empty-feed">No opportunities detected…<br/><span style="font-size:10px;">Monitoring ' + EXCHANGES.length + ' exchanges · ' + PAIRS.length + ' pairs</span></div>';
+    if (countEl) { countEl.textContent = '0 found'; countEl.className = 'section-badge'; }
     return;
   }
-
-  const profitable = opps.filter(o => o.is_profitable).length;
+  const profitable = opps.filter(function(o) { return o.is_profitable; }).length;
   if (countEl) {
-    countEl.textContent = `${profitable} profitable`;
-    countEl.className = `chip ${profitable > 0 ? 'hot' : ''}`;
+    countEl.textContent = profitable + ' profitable';
+    countEl.className = 'section-badge' + (profitable > 0 ? ' hot' : '');
   }
-
-  feed.innerHTML = opps.slice(0, 20).map(o => {
-    const cls     = o.is_profitable ? 'profitable' : '';
-    const pctCls  = o.net_profit_pct > 0 ? 'pos' : 'neg';
-    return `
-      <div class="opp-card ${cls}">
-        <div class="opp-head">
-          <div>
-            <div class="opp-pair">${o.pair}</div>
-            <div class="opp-time">${fmtTime(o.detected_at)}</div>
-          </div>
-          <div class="opp-profit-block">
-            <div class="opp-pct ${pctCls}">${fmtPct(o.net_profit_pct, 3)}</div>
-            <div class="opp-usd">${fmtUsd(o.estimated_profit_usd, 4)}</div>
-          </div>
-        </div>
-        <div class="opp-route">
-          ${exPill(o.buy_exchange)}
-          <span class="route-arrow">→</span>
-          ${exPill(o.sell_exchange)}
-          <span class="opp-detail">gross ${fmtPct(o.gross_spread_pct, 3)}</span>
-        </div>
-      </div>`;
+  feed.innerHTML = opps.slice(0, 20).map(function(o) {
+    const cls    = o.is_profitable ? 'profitable' : '';
+    const pctCls = o.net_profit_pct > 0 ? 'pos' : 'neg';
+    return '<div class="opp-card ' + cls + '">' +
+      '<div class="opp-head">' +
+      '<div><div class="opp-pair">' + o.pair + '</div><div class="opp-time">' + fmtTime(o.detected_at) + '</div></div>' +
+      '<div class="opp-profit-block"><div class="opp-pct ' + pctCls + '">' + fmtPct(o.net_profit_pct, 3) + '</div>' +
+      '<div class="opp-usd">' + fmtUsd(o.estimated_profit_usd, 4) + '</div></div>' +
+      '</div>' +
+      '<div class="opp-route">' +
+      exPill(o.buy_exchange) +
+      '<span class="route-arrow">→</span>' +
+      exPill(o.sell_exchange) +
+      '<span class="opp-detail">gross ' + fmtPct(o.gross_spread_pct, 3) + '</span>' +
+      '</div></div>';
   }).join('');
 }
 
-/* ── Update: Stats ──────────────────────────────────────────── */
+/* ── Stats ───────────────────────────────────────────────────── */
 function renderStats(s) {
   if (!s) return;
-  const pnl    = s.pnl_usd ?? s.total_profit_usd ?? 0;
-  const pnlPct = s.pnl_pct ?? 0;
+  const pnl    = s.pnl_usd    !== undefined ? s.pnl_usd    : (s.total_profit_usd || 0);
+  const pnlPct = s.pnl_pct    !== undefined ? s.pnl_pct    : 0;
 
   const pnlEl = $('stat-pnl');
   if (pnlEl) {
     pnlEl.textContent = '$' + Math.abs(pnl).toFixed(4);
-    pnlEl.className = `metric-val ${pnl >= 0 ? 'up' : 'down'}`;
+    pnlEl.className = 'stat-value ' + (pnl >= 0 ? 'up' : 'down');
   }
-  if ($('stat-pnl-pct')) $('stat-pnl-pct').textContent = fmtPct(pnlPct, 4);
-  if ($('stat-winrate'))  $('stat-winrate').textContent  = s.win_rate_pct != null ? `${s.win_rate_pct.toFixed(1)}%` : '—';
-  if ($('stat-trades'))   $('stat-trades').textContent   = `${s.total_trades || 0} trades · best: ${s.best_pair || '—'}`;
-  if ($('stat-bestopp'))  $('stat-bestopp').textContent  = s.best_opp_pct != null ? fmtPct(s.best_opp_pct, 3) : '—';
-  if ($('stat-bestopp-label')) $('stat-bestopp-label').textContent = s.best_opp_label || '—';
-  if ($('stat-scans'))    $('stat-scans').textContent    = (s.scan_count || 0).toLocaleString();
+  if ($('stat-pnl-pct'))     $('stat-pnl-pct').textContent     = fmtPct(pnlPct, 4);
+  if ($('stat-winrate'))     $('stat-winrate').textContent      = s.win_rate_pct != null ? s.win_rate_pct.toFixed(1) + '%' : '—';
+  if ($('stat-trades'))      $('stat-trades').textContent       = (s.total_trades || 0) + ' trades total · best: ' + (s.best_pair || '—');
+
+  // Session P&L
+  const sessionPnl = s.session_profit || 0;
+  const sessionPnlEl = $('stat-session-pnl');
+  if (sessionPnlEl) {
+    sessionPnlEl.textContent = '$' + Math.abs(sessionPnl).toFixed(4);
+    sessionPnlEl.className = 'stat-value ' + (sessionPnl >= 0 ? 'up' : 'down');
+  }
+  if ($('stat-session-trades')) {
+    $('stat-session-trades').textContent = (s.session_trades || 0) + ' trades this session';
+  }
 
   // Connection badge
   const connEl = $('conn-badge');
@@ -1256,28 +1335,29 @@ function renderStats(s) {
     connEl.className = 'badge badge-online';
   }
 
-  if (s.last_scan_ts && $('last-scan')) {
-    $('last-scan').textContent = `last scan ${timeAgo(s.last_scan_ts)}`;
+  // Scan counter
+  if ($('nav-scan-count') && s.scan_count) {
+    $('nav-scan-count').textContent = 'SCAN #' + s.scan_count.toLocaleString();
   }
 
   // Balances
   if (s.balances) {
-    for (const [ex, bal] of Object.entries(s.balances)) {
-      const balEl  = $(`bal-${ex}`);
-      const pnlEl2 = $(`balpnl-${ex}`);
-      if (balEl) balEl.textContent = `$${bal.toFixed(2)}`;
+    for (const ex of Object.keys(s.balances)) {
+      const bal     = s.balances[ex];
+      const balEl   = $('bal-' + ex);
+      const pnlEl2  = $('balpnl-' + ex);
+      if (balEl) balEl.textContent = '$' + bal.toFixed(2);
       if (pnlEl2) {
         const diff = bal - INIT_CAP;
-        pnlEl2.textContent  = fmtPct((diff / INIT_CAP) * 100, 2);
-        pnlEl2.className = `balance-pnl ${diff >= 0 ? 'up' : 'down'}`;
+        pnlEl2.textContent = fmtPct((diff / INIT_CAP) * 100, 2);
+        pnlEl2.className = 'balance-pnl ' + (diff >= 0 ? 'up' : 'down');
       }
     }
-    if (s.total_usd && $('equity-chip'))
-      $('equity-chip').textContent = `$${s.total_usd.toFixed(2)}`;
+    if (s.total_usd && $('equity-chip')) $('equity-chip').textContent = '$' + s.total_usd.toFixed(2);
   }
 }
 
-/* ── Update: Trades ─────────────────────────────────────────── */
+/* ── Trades ──────────────────────────────────────────────────── */
 function renderTrades(trades) {
   const tbody = $('trade-tbody');
   const chip  = $('trade-chip');
@@ -1286,32 +1366,32 @@ function renderTrades(trades) {
     if (chip) chip.textContent = '0 trades';
     return;
   }
-  if (chip) chip.textContent = `${trades.length} trades`;
-  tbody.innerHTML = trades.slice(0, 50).map(t => {
+  if (chip) chip.textContent = trades.length + ' trades';
+  tbody.innerHTML = trades.slice(0, 50).map(function(t) {
     const cls = t.profit_usd >= 0 ? 'win' : 'loss';
-    return `<tr>
-      <td>${fmtTime(t.executed_at)}</td>
-      <td>${t.pair}</td>
-      <td><span class="route-txt">${t.buy_exchange} → ${t.sell_exchange}</span></td>
-      <td>${fmtPrice(t.buy_price)}</td>
-      <td>${fmtPrice(t.sell_price)}</td>
-      <td>${fmtPct(t.gross_spread_pct, 3)}</td>
-      <td>${fmtPct(t.net_profit_pct, 3)}</td>
-      <td class="${cls}">${fmtUsd(t.profit_usd, 4)}</td>
-    </tr>`;
+    return '<tr>' +
+      '<td>' + fmtTime(t.executed_at) + '</td>' +
+      '<td>' + t.pair + '</td>' +
+      '<td><span class="route-txt">' + t.buy_exchange + ' → ' + t.sell_exchange + '</span></td>' +
+      '<td>' + fmtPrice(t.buy_price) + '</td>' +
+      '<td>' + fmtPrice(t.sell_price) + '</td>' +
+      '<td>' + fmtPct(t.gross_spread_pct, 3) + '</td>' +
+      '<td>' + fmtPct(t.net_profit_pct, 3) + '</td>' +
+      '<td class="' + cls + '">' + fmtUsd(t.profit_usd, 4) + '</td>' +
+      '</tr>';
   }).join('');
 }
 
-/* ── Update: Equity Chart ───────────────────────────────────── */
+/* ── Equity Chart ────────────────────────────────────────────── */
 function renderEquity(series) {
   if (!series || series.length < 2) return;
-  equityChart.data.labels = series.map(p => fmtTime(p.ts));
-  equityChart.data.datasets[0].data = series.map(p => p.equity_usd);
+  equityChart.data.labels = series.map(function(p) { return fmtTime(p.ts); });
+  equityChart.data.datasets[0].data = series.map(function(p) { return p.equity_usd; });
   equityChart.update('none');
 }
 
-/* ── Fetch All ──────────────────────────────────────────────── */
-let cachedOpps = [], cachedPrices = {};
+/* ── Fetch all API endpoints ──────────────────────────────────── */
+let cachedOpps = [], cachedPrices = {}, cachedFunding = [];
 
 async function fetchAll() {
   try {
@@ -1322,41 +1402,49 @@ async function fetchAll() {
       fetch('/api/trades'),
       fetch('/api/equity'),
     ]);
-
     if (pR.ok) { const d = await pR.json(); cachedPrices = d.prices || {}; }
     if (oR.ok) { cachedOpps = await oR.json(); }
-
     renderPrices(cachedPrices, cachedOpps);
     renderOpps(cachedOpps);
     if (sR.ok) renderStats(await sR.json());
     if (tR.ok) renderTrades(await tR.json());
     if (eR.ok) renderEquity(await eR.json());
-
   } catch (e) {
     const c = $('conn-badge');
     if (c) { c.innerHTML = '<div class="dot"></div>Offline'; c.className = 'badge badge-offline'; }
-    if ($('last-scan')) $('last-scan').textContent = 'connection lost…';
   }
 }
 
-/* ── SSE ────────────────────────────────────────────────────── */
-function connectSSE() {
-  const es = new EventSource('/api/stream');
-  es.addEventListener('scan', () => fetchAll());
-  es.addEventListener('heartbeat', () => {});
-  es.onopen  = () => { const c = $('conn-badge'); if (c) { c.innerHTML = '<div class="dot"></div>Online'; c.className = 'badge badge-online'; } };
-  es.onerror = () => { es.close(); setTimeout(connectSSE, 4000); };
+async function fetchFunding() {
+  try {
+    const r = await fetch('/api/funding');
+    if (r.ok) {
+      cachedFunding = await r.json();
+      renderFunding(cachedFunding);
+    }
+  } catch (e) {
+    // silently ignore funding fetch errors
+  }
 }
 
-/* ── Init ───────────────────────────────────────────────────── */
-fetchAll();
-setInterval(fetchAll, REFRESH_MS);
-connectSSE();
+/* ── SSE real-time push ──────────────────────────────────────── */
+function connectSSE() {
+  const es = new EventSource('/api/stream');
+  es.addEventListener('scan', function() { fetchAll(); });
+  es.addEventListener('heartbeat', function() {});
+  es.onopen = function() {
+    const c = $('conn-badge');
+    if (c) { c.innerHTML = '<div class="dot"></div>Online'; c.className = 'badge badge-online'; }
+  };
+  es.onerror = function() { es.close(); setTimeout(connectSSE, 4000); };
+}
 
-// Tick the "last scan" label every second
-setInterval(() => {
-  /* kept empty — refreshed via fetchAll stats */
-}, 1000);
+/* ── Init ────────────────────────────────────────────────────── */
+fetchAll();
+fetchFunding();
+setInterval(fetchAll, REFRESH_MS);
+setInterval(fetchFunding, 10000);   // Funding rates every 10s
+connectSSE();
 </script>
 </body>
 </html>

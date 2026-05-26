@@ -84,6 +84,22 @@ EXCHANGE_CONFIGS: Dict[str, Dict] = {
     },
 }
 
+# ─── Funding Rate Strategy ────────────────────────────────────────────────────
+FUNDING_RATE_PAIRS: List[str] = [
+    "BTC/USDT:USDT",
+    "ETH/USDT:USDT",
+    "SOL/USDT:USDT",
+    "XRP/USDT:USDT",
+    "DOGE/USDT:USDT",
+]
+FUNDING_EXCHANGES: List[str] = ["binanceusdm", "bybit", "gate"]
+MIN_FUNDING_RATE_8H: float = 0.01  # % per 8h — flag as opportunity (= ~11% APY)
+
+EXCHANGE_CONFIGS["bybit"] = {
+    "apiKey": os.getenv("BYBIT_API_KEY", ""),
+    "secret": os.getenv("BYBIT_SECRET", ""),
+}
+
 # ─── Logging ─────────────────────────────────────────────────────────────────
 LOG_OPPORTUNITIES: bool = True   # Print every opportunity to console
 LOG_ALL_SCANS: bool = False      # Print every scan even with no opportunity

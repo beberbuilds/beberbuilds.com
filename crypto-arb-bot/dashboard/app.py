@@ -41,6 +41,7 @@ class BotState:
 
     prices: Dict[str, Any] = field(default_factory=dict)
     opportunities: List[Dict] = field(default_factory=list)
+    funding_rates: List[Dict] = field(default_factory=list)
     session_id: str = ""
     is_running: bool = False
     paper_mode: bool = config.PAPER_TRADING
@@ -60,6 +61,10 @@ class BotState:
         with self._lock:
             self.opportunities = opportunities
 
+    def update_funding_rates(self, rates: List[Dict]) -> None:
+        with self._lock:
+            self.funding_rates = rates
+
     def get_prices(self) -> Dict[str, Any]:
         with self._lock:
             return dict(self.prices)
@@ -67,6 +72,10 @@ class BotState:
     def get_opportunities(self) -> List[Dict]:
         with self._lock:
             return list(self.opportunities)
+
+    def get_funding_rates(self) -> List[Dict]:
+        with self._lock:
+            return list(self.funding_rates)
 
     def subscribe(self) -> queue.Queue:
         """Register a new SSE client and return their queue."""
@@ -181,6 +190,12 @@ def create_app(db, paper_trader=None) -> Flask:
         """Return all-time equity curve data for Chart.js."""
         series = db.get_all_time_equity_series(limit=500)
         return jsonify(series)
+
+    @app.route("/api/funding")
+    def api_funding():
+        """Return latest funding rates from perp exchanges."""
+        rates = bot_state.get_funding_rates()
+        return jsonify(rates)
 
     # ── Server-Sent Events ────────────────────────────────────────────────────
 
