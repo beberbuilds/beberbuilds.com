@@ -93,7 +93,7 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-60" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A78BFA]" />
               </span>
-              {torontoTime && `${torontoTime} EST · `}Available for new projects
+              {torontoTime && `${torontoTime} EST · `}2 spots open — June 2026
             </motion.div>
 
             {/* Main headline */}

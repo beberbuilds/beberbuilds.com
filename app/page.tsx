@@ -9,6 +9,7 @@ import About from "@/components/about";
 import Process from "@/components/process";
 import Testimonials from "@/components/testimonials";
 import LiveStats from "@/components/live-stats";
+import FAQ from "@/components/faq";
 import CTABanner from "@/components/cta-banner";
 import Contact from "@/components/contact";
 import Footer from "@/components/footer";
@@ -28,6 +29,7 @@ export default function Home() {
         <Process />
         <Testimonials />
         <LiveStats />
+        <FAQ />
         <CTABanner />
         <Contact />
       </main>

@@ -4,6 +4,8 @@ import "./globals.css";
 import CookieBanner from "@/components/cookie-banner";
 import AuroraBackground from "@/components/aurora-background";
 import ScrollProgress from "@/components/scroll-progress";
+import WhatsAppButton from "@/components/whatsapp-button";
+import { Analytics } from "@vercel/analytics/react";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -28,15 +30,29 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "BeberBuilds — AI-Powered Software That Grows Businesses",
-  description:
-    "We help startups and brands automate, scale and succeed with custom AI solutions, web applications and intelligent systems.",
-  keywords: ["AI", "automation", "SaaS", "web development", "chatbots", "software"],
+  description: "Custom AI solutions, SaaS platforms, automation agents and web apps. Based in Toronto, serving clients globally. Book a free discovery call.",
+  keywords: ["AI", "automation", "SaaS", "web development", "chatbots", "software", "Toronto", "Canada", "BeberBuilds"],
+  authors: [{ name: "Beberg Khan" }],
+  creator: "Beberg Khan",
   openGraph: {
-    title: "BeberBuilds — AI-Powered Software",
-    description: "Custom AI solutions, web applications and intelligent systems.",
+    title: "BeberBuilds — AI-Powered Software That Grows Businesses",
+    description: "Custom AI solutions, SaaS platforms, automation agents and web apps. Based in Toronto, serving clients globally.",
     siteName: "BeberBuilds",
     type: "website",
+    url: "https://beberbuilds.com",
+    locale: "en_CA",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "BeberBuilds — AI-Powered Software That Grows Businesses",
+    description: "Custom AI solutions, SaaS, automation agents and web apps — Toronto-based, serving clients globally.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  metadataBase: new URL("https://beberbuilds.com"),
 };
 
 export default function RootLayout({
@@ -52,9 +68,35 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-[#050816] text-white flex flex-col noise-bg" suppressHydrationWarning>
         <AuroraBackground />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              name: "BeberBuilds",
+              description: "AI-powered software development studio — custom AI solutions, SaaS platforms, automation agents and web applications.",
+              url: "https://beberbuilds.com",
+              telephone: "+16476165995",
+              email: "hello@beberbuilds.com",
+              founder: { "@type": "Person", name: "Beberg Khan" },
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Toronto",
+                addressRegion: "Ontario",
+                addressCountry: "CA",
+              },
+              areaServed: "Worldwide",
+              serviceType: ["AI Development", "SaaS Development", "Web Development", "AI Chatbots", "Automation"],
+              priceRange: "$$",
+            }),
+          }}
+        />
         <ScrollProgress />
         {children}
         <CookieBanner />
+        <WhatsAppButton />
+        <Analytics />
       </body>
     </html>
   );
