@@ -90,16 +90,31 @@ export default function Services() {
                       </p>
 
                       {isFeatured && (
-                        <div className="flex flex-wrap gap-2 mb-5">
-                          {["Python", "OpenAI", "LangChain", "n8n", "Zapier"].map((tech) => (
-                            <span
-                              key={tech}
-                              className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
+                        <>
+                          <div className="flex flex-wrap gap-2 mb-5">
+                            {["Python", "OpenAI", "LangChain", "n8n", "Zapier"].map((tech) => (
+                              <span
+                                key={tech}
+                                className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                          {/* Mini stats row */}
+                          <div className="grid grid-cols-3 gap-3 mb-5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                            {[
+                              { value: "24/7", label: "Always on" },
+                              { value: "60%", label: "Cost saved" },
+                              { value: "0", label: "Human errors" },
+                            ].map((s) => (
+                              <div key={s.label} className="text-center">
+                                <div className="text-base font-bold text-gradient">{s.value}</div>
+                                <div className="text-[10px] text-white/30 mt-0.5">{s.label}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
                       )}
 
                       <span className="inline-flex items-center gap-1.5 text-sm text-[#A78BFA] font-medium group-hover:gap-2 transition-all duration-200">

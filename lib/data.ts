@@ -56,6 +56,7 @@ export const navLinks: NavLink[] = [
   { label: "Projects", href: "#projects" },
   { label: "Process", href: "#process" },
   { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export type Service = {
@@ -407,6 +408,8 @@ export const footerLinks = {
 export const socialLinks = [
   { icon: ExternalLink, href: "https://www.instagram.com/beberbuilds", label: "Instagram" },
   { icon: ExternalLink, href: "https://www.facebook.com/beberbuilds", label: "Facebook" },
+  { icon: ExternalLink, href: "https://www.linkedin.com/in/beberbuilds", label: "LinkedIn" },
+  { icon: ExternalLink, href: "https://github.com/beberbuilds", label: "GitHub" },
 ];
 
 export const brandLogos = [
