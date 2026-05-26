@@ -156,14 +156,14 @@ def create_app(db, paper_trader=None) -> Flask:
         )
 
         return jsonify({
-            **stats,
             **portfolio,
-            "best_opp_pct": round(best_opp_pct, 4),
+            "best_opp_pct":   round(best_opp_pct, 4),
             "best_opp_label": best_opp_pair,
-            "paper_mode": config.PAPER_TRADING,
-            "scan_count": bot_state.scan_count,
-            "last_scan_ts": bot_state.last_scan_ts,
-            "is_running": bot_state.is_running,
+            "paper_mode":     config.PAPER_TRADING,
+            "scan_count":     bot_state.scan_count,
+            "last_scan_ts":   bot_state.last_scan_ts,
+            "is_running":     bot_state.is_running,
+            "session_count":  db.get_session_count(),
         })
 
     @app.route("/api/prices")
@@ -178,8 +178,8 @@ def create_app(db, paper_trader=None) -> Flask:
 
     @app.route("/api/equity")
     def api_equity():
-        """Return equity curve data for Chart.js."""
-        series = db.get_equity_series(bot_state.session_id, limit=200)
+        """Return all-time equity curve data for Chart.js."""
+        series = db.get_all_time_equity_series(limit=500)
         return jsonify(series)
 
     # ── Server-Sent Events ────────────────────────────────────────────────────

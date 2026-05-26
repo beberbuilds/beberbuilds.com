@@ -246,6 +246,32 @@ class Database:
                 ),
             )
 
+    def get_all_time_pnl(self) -> float:
+        """Return total profit across ALL sessions ever."""
+        with self._conn() as conn:
+            row = conn.execute(
+                "SELECT COALESCE(SUM(profit_usd), 0) AS total FROM trades"
+            ).fetchone()
+        return float(row["total"])
+
+    def get_all_time_equity_series(self, limit: int = 500) -> List[Dict]:
+        """Return equity curve across ALL sessions, ordered by time."""
+        with self._conn() as conn:
+            rows = conn.execute(
+                """
+                SELECT ts, equity_usd FROM equity_snapshots
+                ORDER BY ts ASC LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    def get_session_count(self) -> int:
+        """Return how many sessions have been run."""
+        with self._conn() as conn:
+            row = conn.execute("SELECT COUNT(*) AS n FROM sessions").fetchone()
+        return int(row["n"])
+
     def get_recent_opportunities(self, limit: int = 20) -> List[Dict]:
         """Return the most recent opportunities as a list of dicts."""
         with self._conn() as conn:

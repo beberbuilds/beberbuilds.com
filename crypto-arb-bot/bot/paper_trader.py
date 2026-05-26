@@ -25,6 +25,7 @@ class Portfolio:
     balances: Dict[str, float] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        # Only set defaults if no balances were passed in
         if not self.balances:
             self.balances = {
                 ex: config.PAPER_CAPITAL
@@ -61,10 +62,23 @@ class PaperTrader:
     def __init__(self, session_id: str, db: Database) -> None:
         self.session_id = session_id
         self.db = db
-        self.portfolio = Portfolio()
-        self._last_trade_time: Dict[str, float] = {}  # pair -> last trade unix ts
         self._trade_size = config.TRADE_SIZE_USD
         self._cooldown = config.TRADE_COOLDOWN_SECONDS
+        self._last_trade_time: Dict[str, float] = {}  # pair -> last trade unix ts
+
+        # ── Restore previous P&L ──────────────────────────────────────────────
+        # Load total profit from all past sessions so the portfolio correctly
+        # reflects accumulated earnings across restarts.
+        prev_pnl = db.get_all_time_pnl()
+        num_exchanges = len(config.EXCHANGE_FEES)
+        pnl_per_exchange = prev_pnl / num_exchanges if num_exchanges > 0 else 0
+
+        self.portfolio = Portfolio(
+            balances={
+                ex: config.PAPER_CAPITAL + pnl_per_exchange
+                for ex in config.EXCHANGE_FEES
+            }
+        )
 
     # ── Cooldown helpers ──────────────────────────────────────────────────────
 
@@ -151,18 +165,28 @@ class PaperTrader:
     # ── Portfolio Summary ─────────────────────────────────────────────────────
 
     def get_portfolio_snapshot(self) -> Dict:
-        """Return current portfolio state for the dashboard."""
-        stats = self.db.get_trade_stats(self.session_id)
+        """Return current portfolio state for the dashboard (all-time P&L)."""
+        # All-time stats across every session
+        all_time_stats = self.db.get_trade_stats()
+        session_stats = self.db.get_trade_stats(self.session_id)
+
         initial_total = config.PAPER_CAPITAL * len(config.EXCHANGE_FEES)
         current_total = self.portfolio.total_usd
         pnl_usd = current_total - initial_total
         pnl_pct = (pnl_usd / initial_total) * 100 if initial_total > 0 else 0
 
         return {
-            "balances": {k: round(v, 2) for k, v in self.portfolio.balances.items()},
-            "total_usd": round(current_total, 2),
-            "initial_usd": round(initial_total, 2),
-            "pnl_usd": round(pnl_usd, 4),
-            "pnl_pct": round(pnl_pct, 4),
-            **stats,
+            "balances":        {k: round(v, 2) for k, v in self.portfolio.balances.items()},
+            "total_usd":       round(current_total, 2),
+            "initial_usd":     round(initial_total, 2),
+            "pnl_usd":         round(pnl_usd, 4),
+            "pnl_pct":         round(pnl_pct, 4),
+            # All-time aggregates
+            "total_trades":    all_time_stats["total_trades"],
+            "total_profit_usd": all_time_stats["total_profit_usd"],
+            "win_rate_pct":    all_time_stats["win_rate_pct"],
+            "best_pair":       all_time_stats["best_pair"],
+            # This-session breakdown
+            "session_trades":  session_stats["total_trades"],
+            "session_profit":  session_stats["total_profit_usd"],
         }
