@@ -107,8 +107,9 @@ function scrollToTop() {
 export default function Footer() {
   return (
     <footer className="relative border-t border-white/[0.05] bg-[#030612]">
-      {/* Subtle top gradient line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7C3AED]/40 to-transparent" />
+      {/* Top glow — aurora edge */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7C3AED]/60 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[120px] bg-[#7C3AED]/[0.07] rounded-full blur-[60px] pointer-events-none -translate-y-1/2" />
 
       {/* ── Main grid ── */}
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 pt-14 pb-10 sm:pt-16 sm:pb-12">

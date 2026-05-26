@@ -8,6 +8,7 @@ import Projects from "@/components/projects";
 import About from "@/components/about";
 import Process from "@/components/process";
 import Testimonials from "@/components/testimonials";
+import LiveStats from "@/components/live-stats";
 import CTABanner from "@/components/cta-banner";
 import Contact from "@/components/contact";
 import Footer from "@/components/footer";
@@ -26,6 +27,7 @@ export default function Home() {
         <About />
         <Process />
         <Testimonials />
+        <LiveStats />
         <CTABanner />
         <Contact />
       </main>
