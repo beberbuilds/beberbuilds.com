@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Bot, MessageSquare, LayoutDashboard, Layers, Globe, TrendingUp } from "lucide-react";
-import CodeTypewriter from "./code-typewriter";
+import LogoMark from "./logo-mark";
 
 const A = 185;
 const B = 63;
@@ -99,9 +99,16 @@ export default function AtomOrbit() {
         ))}
       </svg>
 
-      {/* ── Center: CodeTypewriter (z-10 sits between front z-20 and back z-4) ── */}
-      <div className="relative z-10">
-        <CodeTypewriter />
+      {/* ── Nucleus ── */}
+      <div className="relative z-10 flex items-center justify-center">
+        {/* Outer pulse rings */}
+        <div className="absolute w-28 h-28 rounded-full bg-[#7C3AED]/[0.06] blur-[20px] animate-pulse" />
+        <div className="absolute w-20 h-20 rounded-full border border-[#7C3AED]/20" />
+        <div className="absolute w-14 h-14 rounded-full border border-[#A78BFA]/15" />
+        {/* Core */}
+        <div className="relative w-16 h-16 rounded-full bg-[#7C3AED]/15 border border-[#7C3AED]/30 shadow-[0_0_30px_rgba(124,58,237,0.35)] flex items-center justify-center">
+          <LogoMark className="w-8 h-8" />
+        </div>
       </div>
 
       {/* ── Orbiting cards ── */}
