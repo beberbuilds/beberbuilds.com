@@ -7,7 +7,7 @@ type Segment = { text: string; color: string };
 type CodeLine = { segments: Segment[]; delay: number };
 
 const LINES: CodeLine[] = [
-  { segments: [{ text: "// automate.ts", color: "text-white/30" }], delay: 180 },
+  { segments: [{ text: "// workflow.js", color: "text-white/30" }], delay: 180 },
   { segments: [], delay: 80 },
   {
     segments: [
@@ -159,7 +159,7 @@ export default function CodeTypewriter() {
           <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
           <span className="ml-auto text-[10px] text-white/20 font-mono tracking-wide">
-            automate.ts
+            workflow.js
           </span>
         </div>
 
@@ -202,7 +202,7 @@ export default function CodeTypewriter() {
         <div className="flex items-center gap-3 px-5 py-2.5 border-t border-white/[0.04] bg-white/[0.01]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
           <span className="text-[10px] text-white/20 font-mono">
-            TypeScript · UTF-8 · BeberBuilds AI
+            ● live · prod · beberbuilds.com
           </span>
         </div>
       </div>

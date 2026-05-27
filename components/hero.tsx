@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Bot, Globe, Code2, Star } from "lucide-react";
+import { ArrowRight, Play, Bot, MessageSquare, LayoutDashboard, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CalendlyModal from "@/components/calendly-modal";
 import { useTextScramble } from "@/hooks/use-text-scramble";
-import TerminalWidget from "@/components/terminal-widget";
 import CodeTypewriter from "@/components/code-typewriter";
 
 const floatingCards = [
-  { icon: Bot, label: "AI Automations", delay: 0 },
-  { icon: Globe, label: "Web Applications", delay: 0.12 },
-  { icon: Code2, label: "SaaS Solutions", delay: 0.24 },
+  { icon: Bot, label: "AI Automation", delay: 0 },
+  { icon: MessageSquare, label: "AI Chatbots", delay: 0.12 },
+  { icon: LayoutDashboard, label: "Dashboards & Tools", delay: 0.24 },
 ];
 
 function handleMagneticMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -165,8 +164,6 @@ export default function Hero() {
               </p>
             </motion.div>
 
-            {/* Terminal Widget */}
-            <TerminalWidget />
           </motion.div>
 
           {/* ═══════ RIGHT — 3D CUBE + FLOATING CARDS ═══════ */}
@@ -181,7 +178,7 @@ export default function Hero() {
             <div className="absolute w-80 h-80 sm:w-96 sm:h-96 lg:w-[560px] lg:h-[560px] rounded-full border border-[#7C3AED]/4 pointer-events-none" />
             <div className="absolute w-[350px] h-[350px] sm:w-[420px] sm:h-[420px] lg:w-[620px] lg:h-[620px] rounded-full bg-[#7C3AED]/[0.03] blur-[80px] pointer-events-none" />
 
-            {/* Card 1 — AI Automations (top-left) */}
+            {/* Card 1 — AI Automation (top-left) */}
             <motion.div
               initial={{ opacity: 0, y: 16, x: -10 }}
               animate={{ opacity: 1, y: [0, -6, 0], x: 0 }}
@@ -199,11 +196,11 @@ export default function Hero() {
                 <Bot className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
               </div>
               <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                AI Automations
+                AI Automation
               </span>
             </motion.div>
 
-            {/* Card 2 — SaaS Solutions (top-right) */}
+            {/* Card 2 — AI Chatbots (top-right) */}
             <motion.div
               initial={{ opacity: 0, y: 16, x: 10 }}
               animate={{ opacity: 1, y: [0, -8, 0], x: 0 }}
@@ -218,14 +215,14 @@ export default function Hero() {
                 border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <Code2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
+                <MessageSquare className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
               </div>
               <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                SaaS Solutions
+                AI Chatbots
               </span>
             </motion.div>
 
-            {/* Card 3 — Web Applications (bottom-center) */}
+            {/* Card 3 — Dashboards & Tools (bottom-center) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: [0, -5, 0] }}
@@ -240,10 +237,10 @@ export default function Hero() {
                 border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <Globe className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
+                <LayoutDashboard className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
               </div>
               <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                Web Applications
+                Dashboards & Tools
               </span>
             </motion.div>
 
