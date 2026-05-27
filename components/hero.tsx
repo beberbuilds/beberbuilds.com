@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Bot, Globe, Code2, Star } from "lucide-react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import CalendlyModal from "@/components/calendly-modal";
 import { useTextScramble } from "@/hooks/use-text-scramble";
 import TerminalWidget from "@/components/terminal-widget";
+import CodeTypewriter from "@/components/code-typewriter";
 
 const floatingCards = [
   { icon: Bot, label: "AI Automations", delay: 0 },
@@ -247,38 +247,10 @@ export default function Hero() {
               </span>
             </motion.div>
 
-            {/* ── 3D Cube — centerpiece ── */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-10"
-            >
-              <div className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-[340px] lg:h-[340px] animate-rotate-cube [transform-style:preserve-3d]">
-                {/* Outer face */}
-                <div className="absolute inset-0 rounded-2xl sm:rounded-3xl border border-[#7C3AED]/35 bg-[#7C3AED]/[0.08] backdrop-blur-sm shadow-[0_0_50px_rgba(124,58,237,0.2)] sm:shadow-[0_0_80px_rgba(124,58,237,0.25)]" />
-                {/* Mid face — rotated 15deg */}
-                <div
-                  className="absolute inset-3 sm:inset-5 rounded-2xl border border-[#7C3AED]/25 bg-[#7C3AED]/[0.05] backdrop-blur-[2px]"
-                  style={{ transform: "rotate(15deg)" }}
-                />
-                {/* Inner face — rotated 30deg */}
-                <div
-                  className="absolute inset-6 sm:inset-10 rounded-2xl border border-[#A78BFA]/15 bg-[#7C3AED]/[0.04]"
-                  style={{ transform: "rotate(30deg)" }}
-                />
-                {/* Center image */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Image
-                    src="/hero-cube.png"
-                    alt="AI-powered software visualization"
-                    width={320}
-                    height={320}
-                    priority
-                    className="w-44 h-44 sm:w-56 sm:h-56 lg:w-80 lg:h-80 object-contain drop-shadow-[0_0_30px_rgba(124,58,237,0.3)]"
-                  />
-                </div>
-              </div>
-            </motion.div>
+            {/* ── Code Typewriter — centerpiece ── */}
+            <div className="relative z-10">
+              <CodeTypewriter />
+            </div>
 
             {/* ── Small decorative dots ── */}
             <div className="absolute top-[25%] left-[15%] w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#A78BFA]/40 hidden sm:block" />
