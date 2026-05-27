@@ -60,14 +60,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="hidden lg:flex items-center gap-3">
-            <Link href={resolveHref("#contact", pathname)}>
-              <Button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-300 hover:shadow-[0_0_30px_rgba(124,58,237,0.4)]">
-                Contact Us
-              </Button>
-            </Link>
-          </div>
-
           <button
             className="lg:hidden p-2.5 -mr-2 text-white/80 hover:text-white tap-area"
             onClick={() => setMobileOpen(true)}
