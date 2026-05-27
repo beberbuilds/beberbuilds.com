@@ -2,17 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Bot, MessageSquare, LayoutDashboard, Star } from "lucide-react";
+import { ArrowRight, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CalendlyModal from "@/components/calendly-modal";
 import { useTextScramble } from "@/hooks/use-text-scramble";
-import CodeTypewriter from "@/components/code-typewriter";
+import AtomOrbit from "@/components/atom-orbit";
 
-const floatingCards = [
-  { icon: Bot, label: "AI Automation", delay: 0 },
-  { icon: MessageSquare, label: "AI Chatbots", delay: 0.12 },
-  { icon: LayoutDashboard, label: "Dashboards & Tools", delay: 0.24 },
-];
 
 function handleMagneticMove(e: React.MouseEvent<HTMLDivElement>) {
   const rect = e.currentTarget.getBoundingClientRect();
@@ -173,86 +168,11 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="relative flex items-center justify-center h-[360px] sm:h-[400px] lg:h-[520px] mt-2 sm:mt-0"
           >
-            {/* ── Glow rings behind cube ── */}
-            <div className="absolute w-64 h-64 sm:w-80 sm:h-80 lg:w-[460px] lg:h-[460px] rounded-full border border-[#7C3AED]/8 animate-pulse-glow pointer-events-none" />
-            <div className="absolute w-80 h-80 sm:w-96 sm:h-96 lg:w-[560px] lg:h-[560px] rounded-full border border-[#7C3AED]/4 pointer-events-none" />
-            <div className="absolute w-[350px] h-[350px] sm:w-[420px] sm:h-[420px] lg:w-[620px] lg:h-[620px] rounded-full bg-[#7C3AED]/[0.03] blur-[80px] pointer-events-none" />
+            {/* Ambient glow */}
+            <div className="absolute w-[320px] h-[320px] rounded-full bg-[#7C3AED]/[0.06] blur-[80px] pointer-events-none" />
 
-            {/* Card 1 — AI Automation (top-left) */}
-            <motion.div
-              initial={{ opacity: 0, y: 16, x: -10 }}
-              animate={{ opacity: 1, y: [0, -6, 0], x: 0 }}
-              transition={{
-                opacity: { duration: 0.5, delay: 0.6 + floatingCards[0].delay },
-                y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.6 + floatingCards[0].delay },
-              }}
-              className="absolute z-20 glass-strong rounded-2xl
-                top-[8%] left-[2%] sm:top-[8%] sm:left-[5%] lg:top-[8%] lg:left-[4%]
-                px-3 py-2.5 sm:px-4 sm:py-3
-                flex items-center gap-2 sm:gap-3
-                border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <Bot className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
-              </div>
-              <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                AI Automation
-              </span>
-            </motion.div>
-
-            {/* Card 2 — AI Chatbots (top-right) */}
-            <motion.div
-              initial={{ opacity: 0, y: 16, x: 10 }}
-              animate={{ opacity: 1, y: [0, -8, 0], x: 0 }}
-              transition={{
-                opacity: { duration: 0.5, delay: 0.6 + floatingCards[1].delay },
-                y: { duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 + floatingCards[1].delay },
-              }}
-              className="absolute z-20 glass-strong rounded-2xl
-                top-[12%] right-[0%] sm:top-[10%] sm:right-[3%] lg:top-[10%] lg:right-[5%]
-                px-3 py-2.5 sm:px-4 sm:py-3
-                flex items-center gap-2 sm:gap-3
-                border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <MessageSquare className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
-              </div>
-              <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                AI Chatbots
-              </span>
-            </motion.div>
-
-            {/* Card 3 — Dashboards & Tools (bottom-center) */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: [0, -5, 0] }}
-              transition={{
-                opacity: { duration: 0.5, delay: 0.6 + floatingCards[2].delay },
-                y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 + floatingCards[2].delay },
-              }}
-              className="absolute z-20 glass-strong rounded-2xl
-                bottom-[12%] left-1/2 -translate-x-1/2 sm:bottom-[12%] sm:left-[60%] lg:bottom-[18%] lg:left-[55%]
-                px-3 py-2.5 sm:px-4 sm:py-3
-                flex items-center gap-2 sm:gap-3
-                border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <LayoutDashboard className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
-              </div>
-              <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                Dashboards & Tools
-              </span>
-            </motion.div>
-
-            {/* ── Code Typewriter — centerpiece ── */}
-            <div className="relative z-10">
-              <CodeTypewriter />
-            </div>
-
-            {/* ── Small decorative dots ── */}
-            <div className="absolute top-[25%] left-[15%] w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#A78BFA]/40 hidden sm:block" />
-            <div className="absolute top-[60%] right-[18%] w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#7C3AED]/50 hidden sm:block" />
-            <div className="absolute bottom-[25%] left-[22%] w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#A78BFA]/30 hidden sm:block" />
+            {/* Atom orbit — cards orbit the code typewriter */}
+            <AtomOrbit />
           </motion.div>
         </div>
       </div>
