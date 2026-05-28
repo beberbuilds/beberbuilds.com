@@ -2,18 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Bot, Globe, Code2, Star } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CalendlyModal from "@/components/calendly-modal";
 import { useTextScramble } from "@/hooks/use-text-scramble";
-import TerminalWidget from "@/components/terminal-widget";
+import AtomOrbit from "@/components/atom-orbit";
 
-const floatingCards = [
-  { icon: Bot, label: "AI Automations", delay: 0 },
-  { icon: Globe, label: "Web Applications", delay: 0.12 },
-  { icon: Code2, label: "SaaS Solutions", delay: 0.24 },
-];
 
 function handleMagneticMove(e: React.MouseEvent<HTMLDivElement>) {
   const rect = e.currentTarget.getBoundingClientRect();
@@ -93,7 +87,7 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-60" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A78BFA]" />
               </span>
-              {torontoTime && `${torontoTime} EST · `}Available for new projects
+              {torontoTime && `${torontoTime} EST · `}2 spots open — June 2026
             </motion.div>
 
             {/* Main headline */}
@@ -165,8 +159,6 @@ export default function Hero() {
               </p>
             </motion.div>
 
-            {/* Terminal Widget */}
-            <TerminalWidget />
           </motion.div>
 
           {/* ═══════ RIGHT — 3D CUBE + FLOATING CARDS ═══════ */}
@@ -176,114 +168,11 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="relative flex items-center justify-center h-[360px] sm:h-[400px] lg:h-[520px] mt-2 sm:mt-0"
           >
-            {/* ── Glow rings behind cube ── */}
-            <div className="absolute w-64 h-64 sm:w-80 sm:h-80 lg:w-[460px] lg:h-[460px] rounded-full border border-[#7C3AED]/8 animate-pulse-glow pointer-events-none" />
-            <div className="absolute w-80 h-80 sm:w-96 sm:h-96 lg:w-[560px] lg:h-[560px] rounded-full border border-[#7C3AED]/4 pointer-events-none" />
-            <div className="absolute w-[350px] h-[350px] sm:w-[420px] sm:h-[420px] lg:w-[620px] lg:h-[620px] rounded-full bg-[#7C3AED]/[0.03] blur-[80px] pointer-events-none" />
+            {/* Ambient glow */}
+            <div className="absolute w-[320px] h-[320px] rounded-full bg-[#7C3AED]/[0.06] blur-[80px] pointer-events-none" />
 
-            {/* Card 1 — AI Automations (top-left) */}
-            <motion.div
-              initial={{ opacity: 0, y: 16, x: -10 }}
-              animate={{ opacity: 1, y: [0, -6, 0], x: 0 }}
-              transition={{
-                opacity: { duration: 0.5, delay: 0.6 + floatingCards[0].delay },
-                y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.6 + floatingCards[0].delay },
-              }}
-              className="absolute z-20 glass-strong rounded-2xl
-                top-[8%] left-[2%] sm:top-[8%] sm:left-[5%] lg:top-[8%] lg:left-[4%]
-                px-3 py-2.5 sm:px-4 sm:py-3
-                flex items-center gap-2 sm:gap-3
-                border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <Bot className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
-              </div>
-              <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                AI Automations
-              </span>
-            </motion.div>
-
-            {/* Card 2 — SaaS Solutions (top-right) */}
-            <motion.div
-              initial={{ opacity: 0, y: 16, x: 10 }}
-              animate={{ opacity: 1, y: [0, -8, 0], x: 0 }}
-              transition={{
-                opacity: { duration: 0.5, delay: 0.6 + floatingCards[1].delay },
-                y: { duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 + floatingCards[1].delay },
-              }}
-              className="absolute z-20 glass-strong rounded-2xl
-                top-[12%] right-[0%] sm:top-[10%] sm:right-[3%] lg:top-[10%] lg:right-[5%]
-                px-3 py-2.5 sm:px-4 sm:py-3
-                flex items-center gap-2 sm:gap-3
-                border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <Code2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
-              </div>
-              <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                SaaS Solutions
-              </span>
-            </motion.div>
-
-            {/* Card 3 — Web Applications (bottom-center) */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: [0, -5, 0] }}
-              transition={{
-                opacity: { duration: 0.5, delay: 0.6 + floatingCards[2].delay },
-                y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 + floatingCards[2].delay },
-              }}
-              className="absolute z-20 glass-strong rounded-2xl
-                bottom-[12%] left-1/2 -translate-x-1/2 sm:bottom-[12%] sm:left-[60%] lg:bottom-[18%] lg:left-[55%]
-                px-3 py-2.5 sm:px-4 sm:py-3
-                flex items-center gap-2 sm:gap-3
-                border-white/[0.08] hover:border-[#7C3AED]/25 transition-colors duration-300"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                <Globe className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#A78BFA]" />
-              </div>
-              <span className="text-[12px] sm:text-sm font-semibold whitespace-nowrap text-white/85">
-                Web Applications
-              </span>
-            </motion.div>
-
-            {/* ── 3D Cube — centerpiece ── */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-10"
-            >
-              <div className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-[340px] lg:h-[340px] animate-rotate-cube [transform-style:preserve-3d]">
-                {/* Outer face */}
-                <div className="absolute inset-0 rounded-2xl sm:rounded-3xl border border-[#7C3AED]/35 bg-[#7C3AED]/[0.08] backdrop-blur-sm shadow-[0_0_50px_rgba(124,58,237,0.2)] sm:shadow-[0_0_80px_rgba(124,58,237,0.25)]" />
-                {/* Mid face — rotated 15deg */}
-                <div
-                  className="absolute inset-3 sm:inset-5 rounded-2xl border border-[#7C3AED]/25 bg-[#7C3AED]/[0.05] backdrop-blur-[2px]"
-                  style={{ transform: "rotate(15deg)" }}
-                />
-                {/* Inner face — rotated 30deg */}
-                <div
-                  className="absolute inset-6 sm:inset-10 rounded-2xl border border-[#A78BFA]/15 bg-[#7C3AED]/[0.04]"
-                  style={{ transform: "rotate(30deg)" }}
-                />
-                {/* Center image */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Image
-                    src="/hero-cube.png"
-                    alt="AI-powered software visualization"
-                    width={320}
-                    height={320}
-                    priority
-                    className="w-44 h-44 sm:w-56 sm:h-56 lg:w-80 lg:h-80 object-contain drop-shadow-[0_0_30px_rgba(124,58,237,0.3)]"
-                  />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* ── Small decorative dots ── */}
-            <div className="absolute top-[25%] left-[15%] w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#A78BFA]/40 hidden sm:block" />
-            <div className="absolute top-[60%] right-[18%] w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#7C3AED]/50 hidden sm:block" />
-            <div className="absolute bottom-[25%] left-[22%] w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#A78BFA]/30 hidden sm:block" />
+            {/* Atom orbit — cards orbit the code typewriter */}
+            <AtomOrbit />
           </motion.div>
         </div>
       </div>

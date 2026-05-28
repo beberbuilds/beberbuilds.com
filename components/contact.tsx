@@ -65,9 +65,20 @@ export default function Contact() {
               Start Your{" "}
               <span className="text-gradient">Project Today</span>
             </h2>
-            <p className="text-white/45 text-[15px] sm:text-base mb-8 max-w-md">
+            <p className="text-white/45 text-[15px] sm:text-base mb-6 max-w-md">
               Have a project in mind? Let&apos;s build something amazing together.
             </p>
+
+            {/* Trust signals */}
+            <div className="flex flex-wrap gap-2.5 mb-8">
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#7C3AED]/10 border border-[#7C3AED]/20 text-[12px] text-[#A78BFA]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
+                Response within 24 hours
+              </div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] border border-white/[0.07] text-[12px] text-white/40">
+                🇨🇦 Based in Toronto, serving clients globally
+              </div>
+            </div>
 
             <div className="space-y-3.5">
               {contactInfo.map((info) => (
