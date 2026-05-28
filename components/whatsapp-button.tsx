@@ -50,7 +50,7 @@ export default function WhatsAppButton() {
             <p className="text-[12px] text-white/70 leading-snug">
               💬 Chat with Beberg on WhatsApp
             </p>
-            <p className="text-[11px] text-white/35 mt-0.5">Usually replies in minutes</p>
+            <p className="text-[11px] text-white/60 mt-0.5">Usually replies in minutes</p>
           </motion.div>
         )}
       </AnimatePresence>

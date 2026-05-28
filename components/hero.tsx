@@ -68,7 +68,7 @@ export default function Hero() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-[15px] sm:text-lg text-white/50 leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8 sm:mb-9">
+            <p className="text-[15px] sm:text-lg text-white/70 leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8 sm:mb-9">
               We help startups and brands automate, scale and succeed with
               custom AI solutions, web applications and intelligent systems.
             </p>
@@ -122,7 +122,7 @@ export default function Hero() {
                   <Star key={i} className="w-4 h-4 fill-[#7C3AED] text-[#7C3AED]" />
                 ))}
               </div>
-              <p className="text-[13px] sm:text-sm text-white/50">
+              <p className="text-[13px] sm:text-sm text-white/70">
                 <span className="text-white font-semibold">5.0</span>
                 {" "}— rated by every client we&apos;ve worked with
               </p>

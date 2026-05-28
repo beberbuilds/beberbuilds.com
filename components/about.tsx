@@ -32,19 +32,19 @@ export default function About() {
               <span className="text-gradient">Ideas Into Intelligent</span>{" "}
               Products
             </h2>
-            <p className="text-white/45 leading-relaxed mb-5 text-[15px] sm:text-base">
+            <p className="text-white/70 leading-relaxed mb-5 text-[15px] sm:text-base">
               BeberBuilds is a software development studio founded by{" "}
               <span className="text-white/80 font-medium">Beberg Khan</span> — a
               full-stack developer and AI engineer based in Toronto, Canada.
             </p>
-            <p className="text-white/45 leading-relaxed mb-5 text-[15px] sm:text-base">
+            <p className="text-white/70 leading-relaxed mb-5 text-[15px] sm:text-base">
               I started BeberBuilds because I saw too many businesses stuck with
               expensive, bloated software that didn&apos;t fit how they actually work.
               My focus is building lean, precise tools — from AI automation agents and
               SaaS platforms to offline desktop ERPs and trading bots — that solve
               the exact problem, nothing more.
             </p>
-            <p className="text-white/45 leading-relaxed mb-8 text-[15px] sm:text-base">
+            <p className="text-white/70 leading-relaxed mb-8 text-[15px] sm:text-base">
               Every project I take on gets my full attention. No outsourcing,
               no juniors handed the keys — you work directly with me from discovery
               to launch.
@@ -58,7 +58,7 @@ export default function About() {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold">{item.title}</h4>
-                    <p className="text-[13px] sm:text-xs text-white/35">{item.desc}</p>
+                    <p className="text-[13px] sm:text-xs text-white/55">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -135,7 +135,7 @@ export default function About() {
                   className="glass rounded-xl px-3.5 py-2.5 text-center z-20"
                 >
                   <div className="text-base sm:text-sm font-bold text-gradient">{s.n}</div>
-                  <div className="text-[10px] sm:text-[9px] text-white/30">{s.t}</div>
+                  <div className="text-[10px] sm:text-[9px] text-white/50">{s.t}</div>
                 </motion.div>
               ))}
             </div>

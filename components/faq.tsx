@@ -68,7 +68,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="px-5 sm:px-6 pb-5 text-[14px] sm:text-[15px] text-white/50 leading-relaxed">
+            <p className="px-5 sm:px-6 pb-5 text-[14px] sm:text-[15px] text-white/70 leading-relaxed">
               {a}
             </p>
           </motion.div>
@@ -96,7 +96,7 @@ export default function FAQ() {
             Frequently Asked{" "}
             <span className="text-gradient">Questions</span>
           </h2>
-          <p className="text-white/45 max-w-xl mx-auto text-[15px] sm:text-base">
+          <p className="text-white/65 max-w-xl mx-auto text-[15px] sm:text-base">
             Everything you need to know before booking a call.
           </p>
         </motion.div>
@@ -112,7 +112,7 @@ export default function FAQ() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
-          className="text-center text-white/30 text-sm mt-10"
+          className="text-center text-white/50 text-sm mt-10"
         >
           Still have questions?{" "}
           <a href="#contact" className="text-[#A78BFA] hover:underline">

@@ -28,7 +28,7 @@ export default function CTABanner() {
                 Let&apos;s Build the{" "}
                 <span className="text-gradient">Future Together</span>
               </h2>
-              <p className="text-white/45 max-w-lg mx-auto text-[15px] sm:text-base mb-8">
+              <p className="text-white/65 max-w-lg mx-auto text-[15px] sm:text-base mb-8">
                 Ready to transform your business with AI? Let&apos;s discuss your project
                 and find the perfect solution.
               </p>

@@ -135,7 +135,7 @@ export default function Navbar() {
                     Contact Us
                   </Button>
                 </Link>
-                <p className="text-[11px] text-white/25 text-center mt-4">
+                <p className="text-[11px] text-white/45 text-center mt-4">
                   Let&apos;s build something great
                 </p>
               </div>
