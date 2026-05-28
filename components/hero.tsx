@@ -87,7 +87,7 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-60" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A78BFA]" />
               </span>
-              {torontoTime && `${torontoTime} EST · `}2 spots open — June 2026
+              {torontoTime && `${torontoTime} EST · `}2 spots open — July 2026
             </motion.div>
 
             {/* Main headline */}
@@ -166,13 +166,15 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="relative flex items-center justify-center h-[360px] sm:h-[400px] lg:h-[520px] mt-2 sm:mt-0"
+            className="relative flex items-center justify-center h-[310px] sm:h-[400px] lg:h-[520px] mt-2 sm:mt-0"
           >
             {/* Ambient glow */}
             <div className="absolute w-[320px] h-[320px] rounded-full bg-[#7C3AED]/[0.06] blur-[80px] pointer-events-none" />
 
-            {/* Atom orbit — cards orbit the code typewriter */}
-            <AtomOrbit />
+            {/* Scale down on mobile so orbit fits without overflow */}
+            <div className="w-full h-full scale-[0.72] sm:scale-100 origin-center">
+              <AtomOrbit />
+            </div>
           </motion.div>
         </div>
       </div>

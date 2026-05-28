@@ -18,13 +18,13 @@ export default function CTABanner() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative rounded-[2rem] sm:rounded-3xl overflow-hidden p-8 sm:p-16 lg:p-20 text-center"
+            className="relative rounded-[2rem] sm:rounded-3xl overflow-hidden p-8 sm:p-16 lg:p-20 text-center border border-white/[0.05] hover:border-[#7C3AED]/25 transition-colors duration-500"
           >
             <div className="absolute inset-0 bg-[#7C3AED]/[0.08]" />
             <div className="absolute inset-0 bg-gradient-to-br from-[#7C3AED]/20 via-transparent to-[#7C3AED]/10" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[500px] h-[250px] sm:h-[300px] bg-[#7C3AED]/[0.15] rounded-full blur-[100px]" />
             <div className="relative z-10">
-              <h2 className="text-[1.75rem] sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+              <h2 className="text-[2rem] sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
                 Let&apos;s Build the{" "}
                 <span className="text-gradient">Future Together</span>
               </h2>
