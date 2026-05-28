@@ -7,44 +7,49 @@ export default function CustomCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only run on devices with a precise pointer (desktop/mouse)
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
     let mouseX = -200, mouseY = -200;
     let ringX  = -200, ringY  = -200;
-    let ringScale = 1;
+    let targetScale = 1, currentScale = 1;
     let rafId = 0;
 
     const onMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Expand ring when over interactive elements
-      const target = e.target as HTMLElement;
-      const interactive = target.closest('a, button, [role="button"], input, textarea, label');
-      ringScale = interactive ? 1.7 : 1;
+      const el = e.target as HTMLElement;
+      targetScale = el.closest('a, button, [role="button"], input, textarea, label')
+        ? 1.65
+        : 1;
     };
 
     const animate = () => {
-      // Dot follows instantly
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+      const dot  = dotRef.current;
+      const ring = ringRef.current;
+
+      // Dot: no lag — update directly from latest mouse position
+      if (dot) {
+        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
       }
 
-      // Ring lags with lerp
-      ringX += (mouseX - ringX) * 0.1;
-      ringY += (mouseY - ringY) * 0.1;
+      // Ring: lerp position (0.2 = snappy but still trails)
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
 
-      if (ringRef.current) {
-        ringRef.current.style.transform =
-          `translate(${ringX}px, ${ringY}px) scale(${ringScale})`;
+      // Scale: lerp so expand/contract eases instead of snapping
+      currentScale += (targetScale - currentScale) * 0.12;
+
+      if (ring) {
+        ring.style.transform =
+          `translate3d(${ringX}px, ${ringY}px, 0) scale(${currentScale})`;
       }
 
       rafId = requestAnimationFrame(animate);
     };
 
     document.documentElement.classList.add("custom-cursor");
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     rafId = requestAnimationFrame(animate);
 
     return () => {
@@ -56,7 +61,7 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Dot — follows cursor exactly */}
+      {/* Dot — snaps to cursor, no lag */}
       <div
         ref={dotRef}
         aria-hidden
@@ -66,12 +71,12 @@ export default function CustomCursor() {
           height: 10,
           borderRadius: "50%",
           background: "#A78BFA",
-          boxShadow: "0 0 8px rgba(167,139,250,0.7)",
+          boxShadow: "0 0 8px rgba(167,139,250,0.8)",
           translate: "-50% -50%",
           willChange: "transform",
         }}
       />
-      {/* Ring — lags behind, expands on hover */}
+      {/* Ring — lags slightly, no CSS transition (RAF handles all animation) */}
       <div
         ref={ringRef}
         aria-hidden
@@ -80,10 +85,9 @@ export default function CustomCursor() {
           width: 40,
           height: 40,
           borderRadius: "50%",
-          border: "1.5px solid rgba(124,58,237,0.55)",
-          boxShadow: "0 0 12px rgba(124,58,237,0.15)",
+          border: "1.5px solid rgba(124,58,237,0.6)",
+          boxShadow: "0 0 10px rgba(124,58,237,0.12)",
           translate: "-50% -50%",
-          transition: "transform 0.15s ease",
           willChange: "transform",
         }}
       />
