@@ -42,7 +42,7 @@ export default function Projects() {
             Featured{" "}
             <span className="text-gradient">Projects</span>
           </h2>
-          <p className="text-white/45 max-w-xl mx-auto text-[15px] sm:text-base">
+          <p className="text-white/65 max-w-xl mx-auto text-[15px] sm:text-base">
             Showcasing our latest AI-powered solutions and applications.
           </p>
         </motion.div>
@@ -77,7 +77,7 @@ export default function Projects() {
 
               <div className="p-5 sm:p-6">
                 <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
-                <p className="text-[14px] sm:text-sm text-white/45 leading-relaxed mb-4">
+                <p className="text-[14px] sm:text-sm text-white/65 leading-relaxed mb-4">
                   {project.description}
                 </p>
 
@@ -85,7 +85,7 @@ export default function Projects() {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-[11px] sm:text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-white/50 border border-white/[0.06] group-hover:border-[#7C3AED]/15 transition-colors duration-300"
+                      className="text-[11px] sm:text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-white/70 border border-white/[0.06] group-hover:border-[#7C3AED]/15 transition-colors duration-300"
                     >
                       {tag}
                     </span>

@@ -22,7 +22,7 @@ export default function Process() {
             A Proven{" "}
             <span className="text-gradient">Process</span>
           </h2>
-          <p className="text-white/45 max-w-xl mx-auto text-[15px] sm:text-base">
+          <p className="text-white/65 max-w-xl mx-auto text-[15px] sm:text-base">
             A proven process to take your project from idea to production.
           </p>
         </motion.div>
@@ -62,7 +62,7 @@ export default function Process() {
 
                 <div className="sm:mt-4">
                   <h3 className="font-semibold mb-1 text-[15px] sm:text-base">{step.title}</h3>
-                  <p className="text-[13px] sm:text-xs text-white/35 leading-relaxed sm:max-w-[180px] sm:mx-auto">
+                  <p className="text-[13px] sm:text-xs text-white/55 leading-relaxed sm:max-w-[180px] sm:mx-auto">
                     {step.description}
                   </p>
                 </div>

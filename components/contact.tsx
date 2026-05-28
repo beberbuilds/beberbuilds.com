@@ -65,7 +65,7 @@ export default function Contact() {
               Start Your{" "}
               <span className="text-gradient">Project Today</span>
             </h2>
-            <p className="text-white/45 text-[15px] sm:text-base mb-6 max-w-md">
+            <p className="text-white/65 text-[15px] sm:text-base mb-6 max-w-md">
               Have a project in mind? Let&apos;s build something amazing together.
             </p>
 
@@ -75,7 +75,7 @@ export default function Contact() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
                 Response within 24 hours
               </div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] border border-white/[0.07] text-[12px] text-white/40">
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] border border-white/[0.07] text-[12px] text-white/60">
                 🇨🇦 Based in Toronto, serving clients globally
               </div>
             </div>
@@ -91,7 +91,7 @@ export default function Contact() {
                     <info.icon className="w-5 h-5 text-[#A78BFA]" />
                   </div>
                   <div>
-                    <div className="text-[11px] sm:text-xs text-white/35">{info.label}</div>
+                    <div className="text-[11px] sm:text-xs text-white/55">{info.label}</div>
                     <div className="text-sm font-medium">{info.value}</div>
                   </div>
                 </motion.div>
@@ -119,7 +119,7 @@ export default function Contact() {
                     name="name"
                     required
                     placeholder="Your Name"
-                    className="input-mobile w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3.5 text-white placeholder:text-white/25 focus:outline-none focus:border-[#7C3AED]/50 focus:ring-1 focus:ring-[#7C3AED]/30 transition-all duration-200"
+                    className="input-mobile w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3.5 text-white placeholder:text-white/40 focus:outline-none focus:border-[#7C3AED]/50 focus:ring-1 focus:ring-[#7C3AED]/30 transition-all duration-200"
                   />
                 </div>
                 <div>
@@ -128,7 +128,7 @@ export default function Contact() {
                     name="email"
                     required
                     placeholder="Email Address"
-                    className="input-mobile w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3.5 text-white placeholder:text-white/25 focus:outline-none focus:border-[#7C3AED]/50 focus:ring-1 focus:ring-[#7C3AED]/30 transition-all duration-200"
+                    className="input-mobile w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3.5 text-white placeholder:text-white/40 focus:outline-none focus:border-[#7C3AED]/50 focus:ring-1 focus:ring-[#7C3AED]/30 transition-all duration-200"
                   />
                 </div>
                 <div>
@@ -137,7 +137,7 @@ export default function Contact() {
                     rows={5}
                     required
                     placeholder="Tell us about your project..."
-                    className="input-mobile w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3.5 text-white placeholder:text-white/25 focus:outline-none focus:border-[#7C3AED]/50 focus:ring-1 focus:ring-[#7C3AED]/30 transition-all duration-200 resize-none"
+                    className="input-mobile w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3.5 text-white placeholder:text-white/40 focus:outline-none focus:border-[#7C3AED]/50 focus:ring-1 focus:ring-[#7C3AED]/30 transition-all duration-200 resize-none"
                   />
                 </div>
                 <Button

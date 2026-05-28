@@ -68,7 +68,7 @@ function FooterColumn({
       >
         <h4 className="text-sm font-semibold text-white/90">{title}</h4>
         <ChevronDown
-          className={`w-4 h-4 text-white/30 sm:hidden transition-transform duration-200 ${
+          className={`w-4 h-4 text-white/50 sm:hidden transition-transform duration-200 ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -81,7 +81,7 @@ function FooterColumn({
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="text-[14px] text-white/35 hover:text-white transition-colors duration-200"
+                className="text-[14px] text-white/55 hover:text-white transition-colors duration-200"
               >
                 {link.label}
               </Link>
@@ -104,7 +104,7 @@ function FooterColumn({
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-[14px] text-white/35 hover:text-white transition-colors duration-200 block py-0.5"
+                    className="text-[14px] text-white/55 hover:text-white transition-colors duration-200 block py-0.5"
                   >
                     {link.label}
                   </Link>
@@ -141,7 +141,7 @@ export default function Footer() {
               </span>
             </Link>
 
-            <p className="text-[14px] sm:text-sm text-white/30 leading-relaxed mb-5 max-w-xs">
+            <p className="text-[14px] sm:text-sm text-white/50 leading-relaxed mb-5 max-w-xs">
               Building AI-powered solutions that help businesses automate, scale,
               and succeed in the digital age.
             </p>
@@ -150,7 +150,7 @@ export default function Footer() {
             <div className="space-y-2.5 mb-6">
               <a
                 href="mailto:hello@beberbuilds.com"
-                className="flex items-center gap-2.5 text-[13px] text-white/30 hover:text-[#A78BFA] transition-colors duration-200 group"
+                className="flex items-center gap-2.5 text-[13px] text-white/50 hover:text-[#A78BFA] transition-colors duration-200 group"
               >
                 <div className="w-7 h-7 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0 group-hover:bg-[#7C3AED]/10 transition-colors">
                   <Mail className="w-3.5 h-3.5 text-white/40 group-hover:text-[#A78BFA] transition-colors" />
@@ -159,14 +159,14 @@ export default function Footer() {
               </a>
               <a
                 href="tel:+16476165995"
-                className="flex items-center gap-2.5 text-[13px] text-white/30 hover:text-[#A78BFA] transition-colors duration-200 group"
+                className="flex items-center gap-2.5 text-[13px] text-white/50 hover:text-[#A78BFA] transition-colors duration-200 group"
               >
                 <div className="w-7 h-7 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0 group-hover:bg-[#7C3AED]/10 transition-colors">
                   <Phone className="w-3.5 h-3.5 text-white/40 group-hover:text-[#A78BFA] transition-colors" />
                 </div>
                 +1 (647) 616-5995
               </a>
-              <div className="flex items-center gap-2.5 text-[13px] text-white/30">
+              <div className="flex items-center gap-2.5 text-[13px] text-white/50">
                 <div className="w-7 h-7 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0">
                   <MapPin className="w-3.5 h-3.5 text-white/40" />
                 </div>
@@ -183,7 +183,7 @@ export default function Footer() {
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
-                    className="w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center justify-center text-white/30 hover:text-white hover:border-[#7C3AED]/25 hover:bg-[#7C3AED]/10 transition-all duration-200 hover:shadow-[0_0_15px_rgba(124,58,237,0.15)] group"
+                    className="w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center justify-center text-white/50 hover:text-white hover:border-[#7C3AED]/25 hover:bg-[#7C3AED]/10 transition-all duration-200 hover:shadow-[0_0_15px_rgba(124,58,237,0.15)] group"
                   >
                     <IconComponent className="w-4 h-4 group-hover:text-[#A78BFA] transition-colors" />
                   </a>
@@ -202,26 +202,26 @@ export default function Footer() {
       {/* ── Bottom bar ── */}
       <div className="border-t border-white/[0.04]">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[12px] sm:text-xs text-white/20 order-2 sm:order-1">
+          <p className="text-[12px] sm:text-xs text-white/40 order-2 sm:order-1">
             &copy; {new Date().getFullYear()} BeberBuilds. All rights reserved.
           </p>
 
           <div className="flex items-center gap-5 order-1 sm:order-2">
             <Link
               href="/privacy-policy"
-              className="text-[12px] sm:text-xs text-white/20 hover:text-white/50 transition-colors"
+              className="text-[12px] sm:text-xs text-white/40 hover:text-white/50 transition-colors"
             >
               Privacy
             </Link>
             <Link
               href="/terms-of-service"
-              className="text-[12px] sm:text-xs text-white/20 hover:text-white/50 transition-colors"
+              className="text-[12px] sm:text-xs text-white/40 hover:text-white/50 transition-colors"
             >
               Terms
             </Link>
             <button
               onClick={scrollToTop}
-              className="inline-flex items-center gap-1.5 text-[12px] sm:text-xs text-white/25 hover:text-[#A78BFA] transition-all duration-200 group"
+              className="inline-flex items-center gap-1.5 text-[12px] sm:text-xs text-white/45 hover:text-[#A78BFA] transition-all duration-200 group"
               aria-label="Back to top"
             >
               Back to top

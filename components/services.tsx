@@ -40,7 +40,7 @@ export default function Services() {
               </span>
             ))}
           </h2>
-          <p className="text-white/45 max-w-xl mx-auto text-[15px] sm:text-base">
+          <p className="text-white/65 max-w-xl mx-auto text-[15px] sm:text-base">
             End-to-end AI and development services tailored to your business needs.
           </p>
         </motion.div>
@@ -85,7 +85,7 @@ export default function Services() {
                       <h3 className={`font-semibold mb-2 ${isFeatured ? "text-xl sm:text-2xl" : "text-lg"}`}>
                         {service.title}
                       </h3>
-                      <p className={`text-white/45 leading-relaxed mb-5 ${isFeatured ? "text-[15px] sm:text-base max-w-lg" : "text-[14px] sm:text-sm"}`}>
+                      <p className={`text-white/65 leading-relaxed mb-5 ${isFeatured ? "text-[15px] sm:text-base max-w-lg" : "text-[14px] sm:text-sm"}`}>
                         {service.description}
                       </p>
 
@@ -95,7 +95,7 @@ export default function Services() {
                             {["Python", "OpenAI", "LangChain", "n8n", "Zapier"].map((tech) => (
                               <span
                                 key={tech}
-                                className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]"
+                                className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/60 border border-white/[0.06]"
                               >
                                 {tech}
                               </span>
@@ -110,7 +110,7 @@ export default function Services() {
                             ].map((s) => (
                               <div key={s.label} className="text-center">
                                 <div className="text-base font-bold text-gradient">{s.value}</div>
-                                <div className="text-[10px] text-white/30 mt-0.5">{s.label}</div>
+                                <div className="text-[10px] text-white/50 mt-0.5">{s.label}</div>
                               </div>
                             ))}
                           </div>

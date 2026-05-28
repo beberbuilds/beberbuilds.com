@@ -79,7 +79,7 @@ export default function Testimonials() {
               </span>
             ))}
           </h2>
-          <p className="text-white/45 max-w-xl mx-auto text-[15px] sm:text-base">
+          <p className="text-white/65 max-w-xl mx-auto text-[15px] sm:text-base">
             Real outcomes from real projects — no fluff, just results.
           </p>
         </motion.div>
@@ -100,7 +100,7 @@ export default function Testimonials() {
                 <div className="w-10 h-10 rounded-xl bg-[#7C3AED]/15 flex items-center justify-center shrink-0">
                   <r.icon className="w-5 h-5 text-[#A78BFA]" />
                 </div>
-                <span className="text-[11px] text-white/30 uppercase tracking-wider font-medium">
+                <span className="text-[11px] text-white/50 uppercase tracking-wider font-medium">
                   {r.category}
                 </span>
               </div>
@@ -109,7 +109,7 @@ export default function Testimonials() {
               <h3 className="text-base font-bold mb-3">{r.project}</h3>
 
               {/* Outcome text */}
-              <p className="text-[13px] sm:text-sm text-white/50 leading-relaxed mb-5 flex-1">
+              <p className="text-[13px] sm:text-sm text-white/70 leading-relaxed mb-5 flex-1">
                 {r.outcome}
               </p>
 
@@ -118,7 +118,7 @@ export default function Testimonials() {
                 {r.metrics.map((m) => (
                   <div key={m.label} className="text-center">
                     <div className="text-base font-bold text-gradient">{m.value}</div>
-                    <div className="text-[10px] text-white/30 mt-0.5">{m.label}</div>
+                    <div className="text-[10px] text-white/50 mt-0.5">{m.label}</div>
                   </div>
                 ))}
               </div>
@@ -129,7 +129,7 @@ export default function Testimonials() {
                   {r.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.05]"
+                      className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.04] text-white/60 border border-white/[0.05]"
                     >
                       {tag}
                     </span>
