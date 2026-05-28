@@ -132,6 +132,14 @@
   body {
     @apply bg-background text-foreground antialiased;
   }
+
+  /* Hide native cursor on desktop when custom cursor is active */
+  @media (pointer: fine) {
+    html.custom-cursor,
+    html.custom-cursor * {
+      cursor: none !important;
+    }
+  }
   html {
     @apply font-sans;
     scroll-behavior: smooth;

@@ -23,26 +23,9 @@ function handleMagneticLeave(e: React.MouseEvent<HTMLDivElement>) {
 export default function Hero() {
   const [calendlyOpen, setCalendlyOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [torontoTime, setTorontoTime] = useState("");
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const updateTime = () => {
-      setTorontoTime(
-        new Date().toLocaleTimeString("en-CA", {
-          timeZone: "America/Toronto",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-      );
-    };
-    updateTime();
-    const id = setInterval(updateTime, 60_000);
-    return () => clearInterval(id);
   }, []);
 
   const scrambledText = useTextScramble("AI‑Powered Software", mounted, 0.3);
@@ -76,20 +59,6 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-center lg:text-left"
           >
-            {/* Status badge with Toronto time */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#7C3AED]/30 bg-[#7C3AED]/[0.08] text-[#A78BFA] text-xs sm:text-sm mb-6 sm:mb-7 backdrop-blur-sm"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-60" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A78BFA]" />
-              </span>
-              {torontoTime && `${torontoTime} EST · `}2 spots open — July 2026
-            </motion.div>
-
             {/* Main headline */}
             <h1 className="text-[2.35rem] leading-[1.04] sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.02em] mb-5 sm:mb-7">
               We Build{" "}

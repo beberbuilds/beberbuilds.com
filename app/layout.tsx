@@ -5,6 +5,7 @@ import CookieBanner from "@/components/cookie-banner";
 import AuroraBackground from "@/components/aurora-background";
 import ScrollProgress from "@/components/scroll-progress";
 import WhatsAppButton from "@/components/whatsapp-button";
+import CustomCursor from "@/components/custom-cursor";
 import { Analytics } from "@vercel/analytics/react";
 
 const spaceGrotesk = Space_Grotesk({
@@ -92,6 +93,7 @@ export default function RootLayout({
             }),
           }}
         />
+        <CustomCursor />
         <ScrollProgress />
         {children}
         <CookieBanner />
