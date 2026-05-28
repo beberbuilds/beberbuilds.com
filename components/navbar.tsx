@@ -53,9 +53,10 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={resolveHref(link.href, pathname)}
-                className="text-sm text-white/70 hover:text-white transition-colors duration-200"
+                className="relative text-sm text-white/70 hover:text-white transition-colors duration-200 group py-1"
               >
                 {link.label}
+                <span className="absolute bottom-0 left-0 h-px w-full bg-[#A78BFA] scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left rounded-full" />
               </Link>
             ))}
           </div>

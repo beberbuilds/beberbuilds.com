@@ -37,33 +37,47 @@ function getPos(angle: number, phi: number) {
 }
 
 export default function AtomOrbit() {
-  const cardRefs = useRef<(HTMLDivElement | null)[]>(Array(6).fill(null));
-  const startRef = useRef<number | null>(null);
-  const rafRef   = useRef<number>(0);
+  const cardRefs    = useRef<(HTMLDivElement | null)[]>(Array(6).fill(null));
+  const startRef    = useRef<number | null>(null);
+  const rafRef      = useRef<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const visibleRef  = useRef(true);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { visibleRef.current = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
     const frame = (now: number) => {
       if (startRef.current === null) startRef.current = now;
       const elapsed = (now - startRef.current) / 1000;
 
-      CARDS.forEach(({ phiDeg, period, dir, t0 }, i) => {
-        const el = cardRefs.current[i];
-        if (!el) return;
+      if (visibleRef.current) {
+        CARDS.forEach(({ phiDeg, period, dir, t0 }, i) => {
+          const el = cardRefs.current[i];
+          if (!el) return;
 
-        const phi = (phiDeg * Math.PI) / 180;
-        const a   = t0 + dir * (elapsed / period) * Math.PI * 2;
-        const { x, y } = getPos(a, phi);
+          const phi = (phiDeg * Math.PI) / 180;
+          const a   = t0 + dir * (elapsed / period) * Math.PI * 2;
+          const { x, y } = getPos(a, phi);
 
-        // Depth cues — shrink + fade as card passes behind center
-        const norm    = (y + B) / (2 * B);       // 0 = front, 1 = back
-        const scale   = (1 - norm * 0.2).toFixed(3);
-        const opacity = (1 - norm * 0.4).toFixed(3);
-        const zIndex  = y > 0 ? "4" : "20";
+          const norm    = (y + B) / (2 * B);
+          const scale   = (1 - norm * 0.2).toFixed(3);
+          const opacity = (1 - norm * 0.4).toFixed(3);
+          const zIndex  = y > 0 ? "4" : "20";
 
-        el.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`;
-        el.style.opacity   = opacity;
-        el.style.zIndex    = zIndex;
-      });
+          el.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`;
+          el.style.opacity   = opacity;
+          el.style.zIndex    = zIndex;
+        });
+      }
 
       rafRef.current = requestAnimationFrame(frame);
     };
@@ -73,7 +87,7 @@ export default function AtomOrbit() {
   }, []);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
 
       {/* ── Orbital path SVG (1:1 px with card positions) ── */}
       <svg
