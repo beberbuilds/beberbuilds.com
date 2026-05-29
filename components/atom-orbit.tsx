@@ -132,7 +132,7 @@ export default function AtomOrbit() {
           ref={(el) => { cardRefs.current[i] = el; }}
           className="absolute top-1/2 left-1/2"
         >
-          <div className="flex items-center gap-2 glass-strong rounded-xl border border-white/[0.09] px-3 py-2 whitespace-nowrap shadow-lg backdrop-blur-sm">
+          <div className="flex items-center gap-2 bg-[#0d0b1e]/90 rounded-xl border border-white/[0.11] px-3 py-2 whitespace-nowrap shadow-lg">
             <div className="w-7 h-7 rounded-lg bg-[#7C3AED]/20 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(124,58,237,0.2)]">
               <Icon className="w-3.5 h-3.5 text-[#A78BFA]" />
             </div>
