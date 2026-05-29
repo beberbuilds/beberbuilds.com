@@ -40,7 +40,7 @@ export default function Process() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-4 lg:gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-6 lg:gap-4">
             {processSteps.map((step, i) => (
               <motion.div
                 key={step.title}
