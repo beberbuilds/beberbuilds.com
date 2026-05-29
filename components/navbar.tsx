@@ -62,7 +62,7 @@ export default function Navbar() {
           </div>
 
           <button
-            className="lg:hidden p-2.5 -mr-2 text-white/80 hover:text-white tap-area"
+            className="lg:hidden p-3 text-white/80 hover:text-white tap-area"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
           >
